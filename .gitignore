@@ -185,3 +185,7 @@ networktables.json
 simgui*.json
 *-window.json
 simgui.json
+
+/bin
+build/reports/problems/problems-report.html
+src/main/java/frc/robot/BuildConstants.java

@@ -18,7 +18,7 @@ import frc.robot.commands.SystemIdCommands;
 public class RobotContainer {
 
     // Subsystems
-    private final SwerveDriveSubsystem driveTrain;
+    private final SwerveDriveSubsystem drivetrain;
 
     // Controllers
     private final CommandXboxController driverController = new CommandXboxController(0);
@@ -30,7 +30,7 @@ public class RobotContainer {
         switch (Constants.currentMode) {
             // Instantiate input/output for their respective modes
             case REAL:
-                driveTrain = new SwerveDriveSubsystem(
+                drivetrain = new SwerveDriveSubsystem(
                         new GyroPigeonIO(),
                         new ModuleIOSpark(0),
                         new ModuleIOSpark(1),
@@ -38,7 +38,7 @@ public class RobotContainer {
                         new ModuleIOSpark(3));
                 break;
             case SIM:
-                driveTrain = new SwerveDriveSubsystem(
+                drivetrain = new SwerveDriveSubsystem(
                         new GyroIO() {},
                         new ModuleIOSim(),
                         new ModuleIOSim(),
@@ -47,7 +47,7 @@ public class RobotContainer {
                 break;
             default:
                 // Replay
-                driveTrain = new SwerveDriveSubsystem(
+                drivetrain = new SwerveDriveSubsystem(
                         new GyroIO() {},
                         new ModuleIO() {},
                         new ModuleIO() {},
@@ -62,27 +62,27 @@ public class RobotContainer {
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
         // Set up SysId routines
         autoChooser.addOption(
-            "Drive Wheel Radius Characterization", SystemIdCommands.wheelRadiusCharacterization(driveTrain));
+            "Drive Wheel Radius Characterization", SystemIdCommands.wheelRadiusCharacterization(drivetrain));
         autoChooser.addOption(
-            "Drive Simple FF Characterization", SystemIdCommands.feedforwardCharacterization(driveTrain));
+            "Drive Simple FF Characterization", SystemIdCommands.feedforwardCharacterization(drivetrain));
         autoChooser.addOption(
             "Drive SysId (Quasistatic Forward)",
-            driveTrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+            drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
         autoChooser.addOption(
             "Drive SysId (Quasistatic Reverse)",
-            driveTrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+            drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
         autoChooser.addOption(
-            "Drive SysId (Dynamic Forward)", driveTrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
+            "Drive SysId (Dynamic Forward)", drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
         autoChooser.addOption(
-            "Drive SysId (Dynamic Reverse)", driveTrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+            "Drive SysId (Dynamic Reverse)", drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
         // Configure the button bindings
         configureButtonBindings();
   }
 
     private void configureButtonBindings() {
         // Set the drivetrain default command
-        driveTrain.setDefaultCommand(new SwerveCommand(
-                driveTrain,
+        drivetrain.setDefaultCommand(new SwerveCommand(
+                drivetrain,
                 driverController::getLeftY,
                 driverController::getLeftX,
                 driverController::getRightX));

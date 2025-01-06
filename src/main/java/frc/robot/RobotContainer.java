@@ -30,6 +30,8 @@ public class RobotContainer {
     // Auto chooser
     private final LoggedDashboardChooser<Command> autoChooser;
 
+    private final Command driveToPose;
+
     public RobotContainer() {
         switch (Constants.currentMode) {
             // Instantiate input/output for their respective modes
@@ -80,11 +82,6 @@ public class RobotContainer {
         autoChooser.addOption(
             "Drive SysId (Dynamic Reverse)", drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
         
-
-        // Add in semi autonomous features (added to choosers for testing)
-        autoChooser.addOption("Align to Pose", new AlignToPose(drivetrain, new Pose2d(6.5, 6.5, new Rotation2d(0))));
-
-
         // Configure the button bindings
         configureButtonBindings();
   }

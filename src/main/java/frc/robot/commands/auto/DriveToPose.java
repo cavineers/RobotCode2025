@@ -11,15 +11,10 @@ import org.littletonrobotics.junction.Logger;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 
-public class AlignToPose extends Command {
-    private final SwerveDriveSubsystem drivetrain;
-    private final Pose2d targetPose;
+public class DriveToPose extends Command {
     private Command pathfindingCommand;
     
-    public AlignToPose(SwerveDriveSubsystem drivetrain, Pose2d targetPose) {
-        this.drivetrain = drivetrain;
-        this.targetPose = targetPose;
-
+    public DriveToPose(SwerveDriveSubsystem drivetrain, Pose2d targetPose) {
         // Create the constraints to use while pathfinding
         PathConstraints constraints = new PathConstraints(
             3.0, 4.0,
@@ -27,28 +22,30 @@ public class AlignToPose extends Command {
 
         // Since AutoBuilder is configured, we can use it to build pathfinding commands
         this.pathfindingCommand = AutoBuilder.pathfindToPose(targetPose, constraints);
-    
-        addRequirements(drivetrain);
     }
 
     @Override
     public void initialize() {
         this.pathfindingCommand.schedule();
-        Logger.recordOutput("Commands/AlignToPose", true);
+        Logger.recordOutput("Commands/driveToPose", true);
     }
 
     @Override
     public boolean isFinished() {
-        return this.pathfindingCommand.isFinished();
+        if (pathfindingCommand.isScheduled()) {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public void end(boolean interrupted) {
-        drivetrain.driveVelocity(new ChassisSpeeds(0, 0, 0));
-        Logger.recordOutput("Commands/AlignToPose", false);
-
         if (this.pathfindingCommand.isScheduled()) {
-            this.pathfindingCommand.end(interrupted);
+            this.pathfindingCommand.cancel();
         }
+        if (interrupted) {
+            System.out.println("driveToPose was interrupted");
+        }
+        Logger.recordOutput("Commands/driveToPose", false);
     }
 }

@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.lib.LocalADStarAK;
+import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
@@ -102,7 +103,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                 new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your
                                                 // Constants class
                         new PIDConstants(5, 0.0, 0.0), // Translation PID constants
-                        new PIDConstants(5, 0.0, 0.0) // Rotation PID constants idk why the default is 5
+                        new PIDConstants(Constants.DriveConstants.PathPlannerTurnP, 0.0, 0.0) // Rotation PID constants idk why the default is 5
                 ),
                 DriveConstants.robotConfig, // ROBOT CONFIGURATION
                 () -> {

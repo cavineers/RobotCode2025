@@ -3,6 +3,9 @@ package frc.robot;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -14,6 +17,7 @@ import frc.robot.subsystems.Drivetrain.ModuleIOSim;
 import frc.robot.subsystems.Drivetrain.ModuleIOSpark;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
 import frc.robot.commands.SystemIdCommands;
+import frc.robot.commands.auto.*;
 
 public class RobotContainer {
 
@@ -75,6 +79,12 @@ public class RobotContainer {
             "Drive SysId (Dynamic Forward)", drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
         autoChooser.addOption(
             "Drive SysId (Dynamic Reverse)", drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        
+
+        // Add in semi autonomous features (added to choosers for testing)
+        autoChooser.addOption("Align to Pose", new AlignToPose(drivetrain, new Pose2d(6.5, 6.5, new Rotation2d(0))));
+
+
         // Configure the button bindings
         configureButtonBindings();
   }

@@ -30,8 +30,6 @@ public class RobotContainer {
     // Auto chooser
     private final LoggedDashboardChooser<Command> autoChooser;
 
-    private final Command driveToPose;
-
     public RobotContainer() {
         switch (Constants.currentMode) {
             // Instantiate input/output for their respective modes

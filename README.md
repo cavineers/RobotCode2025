@@ -4,7 +4,9 @@
 
 This repository contains Team 4541's robot code for the First Robotics Competition Challenge Reefscape.
 
-![CavineersLogo](/4541logo.png)
+<p align="center">
+    <img src="4541logo.png" alt="CavineersLogo"/>
+</p>
 
 ## Major Updates from 2024
 
@@ -20,4 +22,10 @@ While a majority of the updates are either untested or in development, our issue
 - Reworked swerve drive
 - Better organization overall
 
+
+## Contributors
+
+<a href="https://github.com/cavineers/RobotCode2025/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=cavineers/RobotCode2025" />
+</a>
 

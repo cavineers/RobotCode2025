@@ -1,7 +1,10 @@
 package frc.robot.subsystems.Drivetrain;
 
-import static frc.robot.Constants.DriveConstants.*;
-import static frc.robot.Constants.ModuleConstants.*;
+import static frc.robot.constants.SwerveDriveConstants.DriveConstants.*;
+import static frc.robot.constants.SwerveDriveConstants.ModuleConstants.*;
+import static frc.robot.constants.MotorConstants.*; 
+import static frc.robot.constants.SwerveDriveConstants.*;
+import static frc.robot.constants.SensorConstants.*;
 import static frc.lib.SparkUtil.*;
 
 import com.revrobotics.AbsoluteEncoder;

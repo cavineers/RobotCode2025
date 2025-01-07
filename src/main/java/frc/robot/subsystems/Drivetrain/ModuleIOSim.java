@@ -1,6 +1,7 @@
 package frc.robot.subsystems.Drivetrain;
 
-import static frc.robot.Constants.DriveConstants.*;
+import static frc.robot.constants.SwerveDriveConstants.*;
+import static frc.robot.constants.MotorConstants.*;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -8,7 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.robot.Constants.ModuleConstants;
+import frc.robot.constants.SwerveDriveConstants.ModuleConstants;
 
 /** Physics sim implementation of module IO. */
 public class ModuleIOSim implements ModuleIO {

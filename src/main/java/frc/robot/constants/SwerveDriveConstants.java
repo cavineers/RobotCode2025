@@ -76,7 +76,7 @@ public class SwerveDriveConstants {
                 new Translation2d(-DriveConstants.kWheelBase / 2.0, DriveConstants.kTrackWidth / 2.0),
                 new Translation2d(-DriveConstants.kWheelBase / 2.0, -DriveConstants.kTrackWidth / 2.0)
             };
-        public static final SwerveDriveKinematics SwerveKinematics = new SwerveDriveKinematics(moduleTranslations);
+            public static final SwerveDriveKinematics SwerveKinematics = new SwerveDriveKinematics(moduleTranslations);
     }
     // Drive PID configuration
     public static final double driveKp = 0.0;

@@ -18,6 +18,7 @@ import frc.robot.subsystems.Drivetrain.ModuleIOSpark;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
 import frc.robot.commands.SystemIdCommands;
 import frc.robot.commands.auto.*;
+import frc.robot.constants.SimConstants;
 
 public class RobotContainer {
 
@@ -31,7 +32,7 @@ public class RobotContainer {
     private final LoggedDashboardChooser<Command> autoChooser;
 
     public RobotContainer() {
-        switch (Constants.currentMode) {
+        switch (SimConstants.currentMode) {
             // Instantiate input/output for their respective modes
             case REAL:
                 drivetrain = new SwerveDriveSubsystem(

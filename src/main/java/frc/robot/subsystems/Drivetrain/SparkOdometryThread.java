@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.DoubleSupplier;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.constants.SwerveDriveConstants.DriveConstants;
 
 /**
  * Provides an interface for asynchronously reading high-frequency measurements

@@ -7,8 +7,8 @@ import java.util.function.Supplier;
 
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.OIConstants;
+import frc.robot.constants.SwerveDriveConstants.DriveConstants;
+import frc.robot.constants.RemoteConstants.OIConstants;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 

@@ -1,6 +1,6 @@
 package frc.robot.subsystems.Drivetrain;
 
-import static frc.robot.Constants.DriveConstants.*;
+import static frc.robot.constants.SwerveDriveConstants.DriveConstants.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusCode;

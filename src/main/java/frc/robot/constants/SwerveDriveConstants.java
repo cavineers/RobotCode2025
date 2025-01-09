@@ -14,6 +14,9 @@ public class SwerveDriveConstants {
         public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
         public static final double kDriveEncoderRPM2RadPerSec = kDriveEncoderRot2Rad / 60;
         public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
+        
+        // Turn encoder configuration
+        public static final boolean turnEncoderInverted = true;
     }
 
     public static final class DriveConstants {
@@ -40,16 +43,6 @@ public class SwerveDriveConstants {
         public static final int kBackLeftAbsoluteEncoderPort = 12;
 
         public static final int kPigeonID = 23;
-
-        public static final boolean kFrontLeftTurningEncoderReversed = false;
-        public static final boolean kBackLeftTurningEncoderReversed = false;
-        public static final boolean kFrontRightTurningEncoderReversed = false;
-        public static final boolean kBackRightTurningEncoderReversed = false;
-
-        public static final boolean kFrontLeftDriveEncoderReversed = false;
-        public static final boolean kBackLeftDriveEncoderReversed = false;
-        public static final boolean kFrontRightDriveEncoderReversed = false;
-        public static final boolean kBackRightDriveEncoderReversed = false;
 
         public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond;
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;

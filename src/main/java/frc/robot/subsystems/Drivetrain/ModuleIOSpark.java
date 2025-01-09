@@ -87,7 +87,7 @@ public class ModuleIOSpark implements ModuleIO {
         var driveConfig = new SparkFlexConfig();
         driveConfig
                 .idleMode(IdleMode.kBrake)
-                .smartCurrentLimit(driveMotorCurrentLimit)
+                .smartCurrentLimit(kDriveMotorCurrentLimit)
                 .voltageCompensation(12.0);
         driveConfig.encoder
                 .positionConversionFactor(kDriveEncoderRot2Rad)
@@ -97,8 +97,8 @@ public class ModuleIOSpark implements ModuleIO {
         driveConfig.closedLoop
                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                 .pidf(
-                        driveKp, 0.0,
-                        driveKd, 0.0);
+                        kDriveKp, 0.0,
+                        kDriveKd, 0.0);
         driveConfig.signals
                 .primaryEncoderPositionAlwaysOn(true)
                 .primaryEncoderPositionPeriodMs((int) (1000.0 / kOdometryFrequency))
@@ -118,20 +118,20 @@ public class ModuleIOSpark implements ModuleIO {
         // Configure turn motor
         var turnConfig = new SparkMaxConfig();
         turnConfig
-                .inverted(turnInverted)
+                .inverted(kTurnInverted)
                 .idleMode(IdleMode.kBrake)
-                .smartCurrentLimit(turnMotorCurrentLimit)
+                .smartCurrentLimit(kTurnMotorCurrentLimit)
                 .voltageCompensation(12.0);
         turnConfig.absoluteEncoder
-                .inverted(turnEncoderInverted)
+                .inverted(kTurnEncoderInverted)
                 .positionConversionFactor(kTurningEncoderRot2Rad)
                 .velocityConversionFactor(kTurningEncoderRPM2RadPerSec)
                 .averageDepth(2);
         turnConfig.closedLoop
                 .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                 .positionWrappingEnabled(true)
-                .positionWrappingInputRange(turnPIDMinInput, turnPIDMaxInput) // may need to be adjusted to signed
-                .pidf(turnKp, 0.0, turnKd, 0.0);
+                .positionWrappingInputRange(kTurnPIDMinInput, kTurnPIDMaxInput) // may need to be adjusted to signed
+                .pidf(kTurnKp, 0.0, kTurnKd, 0.0);
         turnConfig.signals
                 .absoluteEncoderPositionAlwaysOn(true)
                 .absoluteEncoderPositionPeriodMs((int) (1000.0 / kOdometryFrequency))
@@ -202,7 +202,7 @@ public class ModuleIOSpark implements ModuleIO {
 
     @Override
     public void setDriveVelocity(double velocityRadPerSec) {
-        double ffVolts = driveKs * Math.signum(velocityRadPerSec) + driveKv * velocityRadPerSec;
+        double ffVolts = kDriveKs * Math.signum(velocityRadPerSec) + kDriveKv * velocityRadPerSec;
         driveController.setReference(
                 velocityRadPerSec, ControlType.kVelocity, ClosedLoopSlot.kSlot0, ffVolts, ArbFFUnits.kVoltage);
     }
@@ -210,7 +210,7 @@ public class ModuleIOSpark implements ModuleIO {
     @Override
     public void setTurnPosition(Rotation2d rotation) {
         double setpoint = MathUtil.inputModulus(
-                rotation.plus(zeroRotation).getRadians(), turnPIDMinInput, turnPIDMaxInput);
+                rotation.plus(zeroRotation).getRadians(), kTurnPIDMinInput, kTurnPIDMaxInput);
         turnController.setReference(setpoint, ControlType.kPosition);
     }
 }

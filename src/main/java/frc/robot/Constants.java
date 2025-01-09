@@ -98,52 +98,52 @@ public final class Constants {
                 new Translation2d(-DriveConstants.kWheelBase / 2.0, -DriveConstants.kTrackWidth / 2.0)
             };
 
-        public static final SwerveDriveKinematics SwerveKinematics = new SwerveDriveKinematics(moduleTranslations);
+        public static final SwerveDriveKinematics kSwerveKinematics = new SwerveDriveKinematics(moduleTranslations);
 
         // Drive motor configuration
-        public static final int driveMotorCurrentLimit = 50;
-        public static final DCMotor driveGearbox = DCMotor.getNEO(1);
+        public static final int kDriveMotorCurrentLimit = 50;
+        public static final DCMotor kDriveGearbox = DCMotor.getNEO(1);
 
         // Drive PID configuration
-        public static final double driveKp = 0.0;
-        public static final double driveKd = 0.0;
-        public static final double driveKs = 0.0;
-        public static final double driveKv = 0.0;
-        public static final double driveSimP = 1;
-        public static final double driveSimD = 0.0;
-        public static final double driveSimKs = 0.01370;
-        public static final double driveSimKv = 0.13394;
+        public static final double kDriveKp = 0.0;
+        public static final double kDriveKd = 0.0;
+        public static final double kDriveKs = 0.0;
+        public static final double kDriveKv = 0.0;
+        public static final double kDriveSimP = 1;
+        public static final double kDriveSimD = 0.0;
+        public static final double kDriveSimKs = 0.01370;
+        public static final double kDriveSimKv = 0.13394;
 
         // Turn motor configuration
-        public static final boolean turnInverted = false;
-        public static final int turnMotorCurrentLimit = 40;
-        public static final DCMotor turnGearbox = DCMotor.getNEO(1);
+        public static final boolean kTurnInverted = false;
+        public static final int kTurnMotorCurrentLimit = 40;
+        public static final DCMotor kTurnGearbox = DCMotor.getNEO(1);
 
-        // Turn encoder configuration
-        public static final boolean turnEncoderInverted = true;
+        // Turn ABSOLUTE encoder configuration
+        public static final boolean kTurnEncoderInverted = true;
         // Check the conversion factors
 
         // Turn PID configuration
-        public static final double turnKp = 2.0;
-        public static final double turnKd = 0.0;
-        public static final double turnSimP = 9.0;
-        public static final double turnSimD = 0.0;
-        public static final double turnPIDMinInput = 0; // Radians
-        public static final double turnPIDMaxInput = 2 * Math.PI; // Radians
+        public static final double kTurnKp = 2.0;
+        public static final double kTurnKd = 0.0;
+        public static final double kTurnSimP = 9.0;
+        public static final double kTurnSimD = 0.0;
+        public static final double kTurnPIDMinInput = 0; // Radians
+        public static final double kTurnPIDMaxInput = 2 * Math.PI; // Radians
 
         // PathPlanner configuration
-        public static final double robotMassKg = 74.088;
-        public static final double robotMOI = 6.883;
-        public static final double wheelCOF = 1.0;
+        public static final double kRobotMassKg = 74.088;
+        public static final double kRobotMOI = 6.883;
+        public static final double kWheelCOF = 1.0;
         public static final RobotConfig robotConfig = new RobotConfig(
-                robotMassKg,
-                robotMOI,
+                kRobotMassKg,
+                kRobotMOI,
                 new ModuleConfig(
                         wheelRadiusMeters,
                         kPhysicalMaxSpeedMetersPerSecond,
-                        wheelCOF,
-                        driveGearbox.withReduction(1 / ModuleConstants.kDriveMotorGearRatio),
-                        driveMotorCurrentLimit,
+                        kWheelCOF,
+                        kDriveGearbox.withReduction(1 / ModuleConstants.kDriveMotorGearRatio),
+                        kDriveMotorCurrentLimit,
                         1),
                 moduleTranslations);
         public static final double PathPlannerTurnP = 5.0;

@@ -52,7 +52,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     private final Alert gyroDisconnectedAlert = new Alert("Disconnected gyro.", AlertType.kError);
 
-    private final SwerveDriveKinematics kinematics = DriveConstants.SwerveKinematics;
+    private final SwerveDriveKinematics kinematics = DriveConstants.kSwerveKinematics;
 
     private Rotation2d gyroRotation = new Rotation2d();
 

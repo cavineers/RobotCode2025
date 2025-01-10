@@ -28,7 +28,7 @@ public final class Constants {
     public static final class ModuleConstants {
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
         public static final double kDriveMotorGearRatio = 1 / 6.75;
-        public static final double kTurningMotorGearRatio = 1 / (150.0 / 7);
+        public static final double kTurningMotorGearRatio = 1 / (150.0 / 7); //input to output
         public static final double kTurningDegreesToRad = Math.PI / 180;
         public static final double kDriveEncoderRot2Rad = kDriveMotorGearRatio * Math.PI * 2 * kWheelDiameterMeters;
         public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
@@ -79,7 +79,7 @@ public final class Constants {
         public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
         public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
 
-        public static final double kFrontLeftAbsoluteEncoderOffset = 0; 
+        public static final double kFrontLeftAbsoluteEncoderOffset = 0;  // In rotations (read straight from the encoder)
         public static final double kBackLeftAbsoluteEncoderOffset = 0; 
         public static final double kFrontRightAbsoluteEncoderOffset = 0; 
         public static final double kBackRightAbsoluteEncoderOffset = 0;

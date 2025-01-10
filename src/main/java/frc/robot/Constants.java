@@ -62,7 +62,7 @@ public final class Constants {
         public static final int kBackRightAbsoluteEncoderPort = 11;
         public static final int kBackLeftAbsoluteEncoderPort = 12;
 
-        public static final int kPigeonID = 23;
+        public static final int kPigeonID = 13;
 
         public static final boolean kFrontLeftTurningEncoderReversed = false;
         public static final boolean kBackLeftTurningEncoderReversed = false;
@@ -85,9 +85,9 @@ public final class Constants {
         public static final double kBackRightAbsoluteEncoderOffset = 0;
 
         // Distance between right and left wheels
-        public static final double kTrackWidth = Units.inchesToMeters(23.75);
+        public static final double kTrackWidth = Units.inchesToMeters(24.5);
         // Distance between front and back wheels
-        public static final double kWheelBase = Units.inchesToMeters(24.75);
+        public static final double kWheelBase = Units.inchesToMeters(24.5);
         public static final double kDriveBaseRads = Math.hypot(kTrackWidth / 2.0, kWheelBase / 2.0);
 
         public static final Translation2d[] moduleTranslations =

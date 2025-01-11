@@ -31,7 +31,7 @@ public final class Constants {
 
     public static final class ModuleConstants {
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
-        public static final double kDriveMotorGearRatio = 1 / 8.16;
+        public static final double kDriveMotorGearRatio = 1 / 6.13; // calculated by wheel
         public static final double kTurningMotorGearRatio = 1 / (12.8); //input to output
         public static final double kTurningDegreesToRad = Math.PI / 180;
         public static final double kDriveEncoderRot2Rad = kDriveMotorGearRatio * Math.PI * 2;
@@ -128,7 +128,7 @@ public final class Constants {
         // Check the conversion factors
 
         // Turn PID configuration
-        public static final double kTurnKp = 0.25;
+        public static final double kTurnKp = 0.35;
         public static final double kTurnKd = 0.1;
         public static final double kTurnSimP = 9.0;
         public static final double kTurnSimD = 0.0;

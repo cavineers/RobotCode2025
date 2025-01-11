@@ -110,7 +110,7 @@ public class ModuleIOSpark implements ModuleIO {
         turnController = turnSpark.getClosedLoopController();
 
         // Configure drive motor
-        var driveConfig = new SparkFlexConfig();
+        var driveConfig = new SparkMaxConfig();
         driveConfig
                 .idleMode(IdleMode.kBrake)
                 .smartCurrentLimit(kDriveMotorCurrentLimit)

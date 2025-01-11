@@ -153,7 +153,7 @@ public class ModuleIOSpark implements ModuleIO {
                 .positionConversionFactor(kTurningEncoderRot2Rad)
                 .velocityConversionFactor(kTurningEncoderRPM2RadPerSec);
         turnConfig.closedLoop
-                .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                 .positionWrappingEnabled(true)
                 .positionWrappingInputRange(kTurnPIDMinInput, kTurnPIDMaxInput) // may need to be adjusted to signed
                 .pidf(kTurnKp, 0.0, kTurnKd, 0.0);

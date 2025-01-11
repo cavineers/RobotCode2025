@@ -128,8 +128,8 @@ public final class Constants {
         public static final double kTurnKd = 0.0;
         public static final double kTurnSimP = 9.0;
         public static final double kTurnSimD = 0.0;
-        public static final double kTurnPIDMinInput = 0; // Radians
-        public static final double kTurnPIDMaxInput = 2 * Math.PI; // Radians
+        public static final double kTurnPIDMinInput = -Math.PI; // Radians
+        public static final double kTurnPIDMaxInput = Math.PI; // Radians
 
         // PathPlanner configuration
         public static final double kRobotMassKg = 74.088;

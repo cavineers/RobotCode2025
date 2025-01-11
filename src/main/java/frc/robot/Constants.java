@@ -1,5 +1,9 @@
 package frc.robot;
 
+import static frc.robot.Constants.ModuleConstants.kDriveEncoderRPM2RadPerSec;
+import static frc.robot.Constants.ModuleConstants.kDriveMotorGearRatio;
+import static frc.robot.Constants.ModuleConstants.kWheelDiameterMeters;
+
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 
@@ -27,10 +31,10 @@ public final class Constants {
 
     public static final class ModuleConstants {
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
-        public static final double kDriveMotorGearRatio = 1 / 6.75;
-        public static final double kTurningMotorGearRatio = 1 / (150.0 / 7); //input to output
+        public static final double kDriveMotorGearRatio = 1 / 8.16;
+        public static final double kTurningMotorGearRatio = 1 / (12.8); //input to output
         public static final double kTurningDegreesToRad = Math.PI / 180;
-        public static final double kDriveEncoderRot2Rad = kDriveMotorGearRatio * Math.PI * 2 * kWheelDiameterMeters;
+        public static final double kDriveEncoderRot2Rad = kDriveMotorGearRatio * Math.PI * 2;
         public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
         public static final double kDriveEncoderRPM2RadPerSec = kDriveEncoderRot2Rad / 60;
         public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
@@ -43,7 +47,7 @@ public final class Constants {
 
         public static final double kOdometryFrequency = 100.0;
 
-        public static final double kPhysicalMaxSpeedMetersPerSecond = 4.47; // Free speed of NEO * kDriveEncoderRot2Meter
+        public static final double kPhysicalMaxSpeedMetersPerSecond = 3.91; // Free speed of NEO * kDriveEncoderRot2Meter
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
         public static final double wheelRadiusMeters = Units.inchesToMeters(2);
 
@@ -76,11 +80,11 @@ public final class Constants {
 
         public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond;
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
-        public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
-        public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
+        public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 2;
+        public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 2.5;
 
         public static final double kFrontLeftAbsoluteEncoderOffset = 0;  // In rotations (read straight from the encoder)
-        public static final double kBackLeftAbsoluteEncoderOffset = 0; 
+        public static final double kBackLeftAbsoluteEncoderOffset = 0; // This is done by zeroing in cancoder
         public static final double kFrontRightAbsoluteEncoderOffset = 0; 
         public static final double kBackRightAbsoluteEncoderOffset = 0;
 
@@ -101,14 +105,14 @@ public final class Constants {
         public static final SwerveDriveKinematics kSwerveKinematics = new SwerveDriveKinematics(moduleTranslations);
 
         // Drive motor configuration
-        public static final int kDriveMotorCurrentLimit = 50;
+        public static final int kDriveMotorCurrentLimit = 40;
         public static final DCMotor kDriveGearbox = DCMotor.getNEO(1);
 
         // Drive PID configuration
         public static final double kDriveKp = 0.0;
         public static final double kDriveKd = 0.0;
-        public static final double kDriveKs = 0.0;
-        public static final double kDriveKv = 0.0;
+        public static final double kDriveKs = 0.08512;
+        public static final double kDriveKv = 0.16788;
         public static final double kDriveSimP = 1;
         public static final double kDriveSimD = 0.0;
         public static final double kDriveSimKs = 0.01370;
@@ -124,8 +128,8 @@ public final class Constants {
         // Check the conversion factors
 
         // Turn PID configuration
-        public static final double kTurnKp = 2.0;
-        public static final double kTurnKd = 0.0;
+        public static final double kTurnKp = 0.25;
+        public static final double kTurnKd = 0.1;
         public static final double kTurnSimP = 9.0;
         public static final double kTurnSimD = 0.0;
         public static final double kTurnPIDMinInput = 0; // Radians

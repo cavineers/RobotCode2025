@@ -96,15 +96,6 @@ public class ModuleIOSpark implements ModuleIO {
                     case 3 -> kBackRightAbsoluteEncoderPort;
                     default -> 0;
                 });
-        
-        // Configure absolute encoder
-        var absoluteEncoderConfig = new MagnetSensorConfigs();
-        // Add offsets and CCW+
-        absoluteEncoderConfig.MagnetOffset = zeroRotation;
-        absoluteEncoderConfig.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-
-        // Configure absolute encoder
-        turnAbsoluteEncoder.getConfigurator().apply(absoluteEncoderConfig);
 
         driveController = driveSpark.getClosedLoopController();
         turnController = turnSpark.getClosedLoopController();
@@ -144,19 +135,21 @@ public class ModuleIOSpark implements ModuleIO {
         // Configure turn motor
         var turnConfig = new SparkMaxConfig();
         turnConfig
-                .inverted(kTurnInverted)
                 .idleMode(IdleMode.kBrake)
                 .smartCurrentLimit(kTurnMotorCurrentLimit)
                 .voltageCompensation(12.0);
         turnConfig.encoder
-                .inverted(kTurnEncoderInverted)
                 .positionConversionFactor(kTurningEncoderRot2Rad)
-                .velocityConversionFactor(kTurningEncoderRPM2RadPerSec);
+                .velocityConversionFactor(kTurningEncoderRPM2RadPerSec)
+                .uvwMeasurementPeriod(10)
+                .uvwAverageDepth(2);
         turnConfig.closedLoop
                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                 .positionWrappingEnabled(true)
-                .positionWrappingInputRange(kTurnPIDMinInput, kTurnPIDMaxInput) // may need to be adjusted to signed
-                .pidf(kTurnKp, 0.0, kTurnKd, 0.0);
+                .positionWrappingInputRange(kTurnPIDMinInput, kTurnPIDMaxInput)
+                .pidf(
+                        kTurnKp, 0.0,
+                        kTurnKd, 0.0);
         turnConfig.signals
                 .primaryEncoderPositionAlwaysOn(true)
                 .primaryEncoderPositionPeriodMs((int) (1000.0 / kOdometryFrequency))
@@ -174,9 +167,9 @@ public class ModuleIOSpark implements ModuleIO {
         // Now apply the absolute encoder position to the turn motor relative encoder
         tryUntilOk(turnSpark,
                 5,
-                () -> turnEncoder.setPosition(turnAbsoluteEncoder.getAbsolutePosition().getValueAsDouble() * 2 * Math.PI * 1/kTurningMotorGearRatio)); // Rotations of out to radians of input (AV*Out/InGearRatio*2pi)
+                () -> turnEncoder.setPosition(turnAbsoluteEncoder.getAbsolutePosition().getValueAsDouble() * 2 * Math.PI)); // Rotations of out to radians of input (AV*Out/InGearRatio*2pi)
         
-        Logger.recordOutput("ModuleAngles/Module" + module, turnAbsoluteEncoder.getPosition().getValueAsDouble());
+        // Logger.recordOutput("ModuleAngles/Module" + module, turnAbsoluteEncoder.getPosition().getValueAsDouble()); // This can be done using the phoenix live source
         // Create odometry queues
         timestampQueue = SparkOdometryThread.getInstance().makeTimestampQueue();
         drivePositionQueue = SparkOdometryThread.getInstance().registerSignal(driveSpark, driveEncoder::getPosition);

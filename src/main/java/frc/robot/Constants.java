@@ -1,9 +1,5 @@
 package frc.robot;
 
-import static frc.robot.Constants.ModuleConstants.kDriveEncoderRPM2RadPerSec;
-import static frc.robot.Constants.ModuleConstants.kDriveMotorGearRatio;
-import static frc.robot.Constants.ModuleConstants.kWheelDiameterMeters;
-
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 
@@ -30,8 +26,7 @@ public final class Constants {
     }
 
     public static final class ModuleConstants {
-        public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
-        public static final double kDriveMotorGearRatio = 1 / 6.13; // calculated by wheel
+        public static final double kDriveMotorGearRatio = 1 / 6.12; // calculated by wheel
         public static final double kTurningMotorGearRatio = 1 / (12.8); //input to output
         public static final double kTurningDegreesToRad = Math.PI / 180;
         public static final double kDriveEncoderRot2Rad = kDriveMotorGearRatio * Math.PI * 2;
@@ -49,7 +44,7 @@ public final class Constants {
 
         public static final double kPhysicalMaxSpeedMetersPerSecond = 3.91; // Free speed of NEO * kDriveEncoderRot2Meter
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
-        public static final double wheelRadiusMeters = Units.inchesToMeters(2);
+        public static final double kWheelRadiusMeters = Units.inchesToMeters(1.963);
 
         public static final int kFrontLeftDriveCanID = 1;
         public static final int kFrontRightDriveCanID = 3;
@@ -143,7 +138,7 @@ public final class Constants {
                 kRobotMassKg,
                 kRobotMOI,
                 new ModuleConfig(
-                        wheelRadiusMeters,
+                        kWheelRadiusMeters,
                         kPhysicalMaxSpeedMetersPerSecond,
                         kWheelCOF,
                         kDriveGearbox.withReduction(1 / ModuleConstants.kDriveMotorGearRatio),

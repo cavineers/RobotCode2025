@@ -7,10 +7,12 @@ import java.util.function.Supplier;
 
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class SwerveCommand extends Command {
 
@@ -60,9 +62,17 @@ public class SwerveCommand extends Command {
         turningSpeed = turningLimiter.calculate(turningSpeed)
             * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
         
+        
+        // Flipped
+        boolean flipped = false;
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+            flipped = alliance.get() == DriverStation.Alliance.Red;
+        }
+
         // Convert to field relative chassis speeds
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turningSpeed,
-            swerveSubsystem.getPose().getRotation());
+            flipped ? swerveSubsystem.getPose().getRotation().plus(Rotation2d.fromRadians(Math.PI)) : swerveSubsystem.getPose().getRotation());
         
         // Set the swerve modules to the specified speeds
         swerveSubsystem.driveVelocity(speeds);

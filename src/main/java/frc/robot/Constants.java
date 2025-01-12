@@ -1,9 +1,5 @@
 package frc.robot;
 
-import static frc.robot.Constants.ModuleConstants.kDriveEncoderRPM2RadPerSec;
-import static frc.robot.Constants.ModuleConstants.kDriveMotorGearRatio;
-import static frc.robot.Constants.ModuleConstants.kWheelDiameterMeters;
-
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 

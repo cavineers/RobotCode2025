@@ -5,7 +5,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.lib.LocalADStarAK;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.Drivetrain.SwerveDriveConstants.DriveConstants;
+import frc.robot.subsystems.Drivetrain.SwerveDriveConstants.PathPlanConstants;
+import frc.robot.subsystems.Drivetrain.SwerveDriveConstants.TranslationConstants;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -51,7 +53,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     private final Alert gyroDisconnectedAlert = new Alert("Disconnected gyro.", AlertType.kError);
 
-    private final SwerveDriveKinematics kinematics = DriveConstants.SwerveKinematics;
+    private final SwerveDriveKinematics kinematics = TranslationConstants.SwerveKinematics;
 
     private Rotation2d gyroRotation = new Rotation2d();
 
@@ -104,7 +106,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                         new PIDConstants(5, 0.0, 0.0), // Translation PID constants
                         new PIDConstants(5, 0.0, 0.0) // Rotation PID constants idk why the default is 5
                 ),
-                DriveConstants.robotConfig, // ROBOT CONFIGURATION
+                PathPlanConstants.robotConfig, // ROBOT CONFIGURATION
                 () -> {
                     // Boolean supplier that controls when the path will be mirrored for the red
                     // alliance

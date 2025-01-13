@@ -4,12 +4,13 @@ import com.revrobotics.REVLibError;
 import com.revrobotics.spark.SparkBase;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import frc.robot.subsystems.Drivetrain.SwerveDriveConstants.DriveConstants;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.DoubleSupplier;
-import frc.robot.Constants.DriveConstants;
 
 /**
  * Provides an interface for asynchronously reading high-frequency measurements

@@ -16,6 +16,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
@@ -47,6 +48,9 @@ public class ModuleIOSpark implements ModuleIO {
     private final Queue<Double> timestampQueue;
     private final Queue<Double> drivePositionQueue;
     private final Queue<Double> turnPositionQueue;
+
+    // Spark Configurations
+    private SparkMaxConfig turnConfig;
 
     // Connection debouncers
     private final Debouncer driveConnectedDebounce = new Debouncer(0.5);
@@ -127,7 +131,7 @@ public class ModuleIOSpark implements ModuleIO {
         tryUntilOk(driveSpark, 5, () -> driveEncoder.setPosition(0.0));
 
         // Configure turn motor
-        var turnConfig = new SparkMaxConfig();
+        turnConfig = new SparkMaxConfig();
         turnConfig
                 .idleMode(IdleMode.kBrake)
                 .smartCurrentLimit(kTurnMotorCurrentLimit)
@@ -230,5 +234,15 @@ public class ModuleIOSpark implements ModuleIO {
         double setpoint = MathUtil.inputModulus(
                 rotation.getRadians(), kTurnPIDMinInput, kTurnPIDMaxInput);
         turnController.setReference(setpoint, ControlType.kPosition);
+    }
+
+    @Override
+    public void setTurningPID(double kp, double ki, double kd) {
+        turnConfig.closedLoop.pidf(kp, ki, kd, 0.0);
+        tryUntilOk(
+                turnSpark,
+                5,
+                () -> turnSpark.configure(
+                        turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
     }
 }

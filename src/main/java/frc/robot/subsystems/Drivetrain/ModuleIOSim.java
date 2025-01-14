@@ -101,4 +101,11 @@ public class ModuleIOSim implements ModuleIO {
         turnClosedLoop = true;
         turnController.setSetpoint(rotation.getRadians());
     }
+
+    @Override
+    public void setTurningPID(double kp, double ki, double kd) {
+        turnController.setP(kp);
+        turnController.setI(ki);
+        turnController.setD(kd);
+    }
 }

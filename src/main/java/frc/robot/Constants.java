@@ -42,8 +42,8 @@ public final class Constants {
 
         public static final double kOdometryFrequency = 100.0;
 
-        public static final double kPhysicalMaxSpeedMetersPerSecond = 3.91; // Free speed of NEO * kDriveEncoderRot2Meter
-        public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
+        public static final double kPhysicalMaxSpeedMetersPerSecond = 3.63; // Free speed of NEO * kDriveEncoderRot2Meter
+        public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = Units.degreesToRadians(500);
         public static final double kWheelRadiusMeters = Units.inchesToMeters(1.963);
 
         public static final int kFrontLeftDriveCanID = 1;
@@ -106,8 +106,8 @@ public final class Constants {
         // Drive PID configuration
         public static final double kDriveKp = 0.0;
         public static final double kDriveKd = 0.0;
-        public static final double kDriveKs = 0.08512;
-        public static final double kDriveKv = 0.16788;
+        public static final double kDriveKs = 0.10431;
+        public static final double kDriveKv = 0.115;
         public static final double kDriveSimP = 1;
         public static final double kDriveSimD = 0.0;
         public static final double kDriveSimKs = 0.01370;
@@ -124,7 +124,7 @@ public final class Constants {
 
         // Turn PID configuration
         public static final double kTurnKp = 0.35;
-        public static final double kTurnKd = 0.1;
+        public static final double kTurnKd = 0.0;
         public static final double kTurnSimP = 9.0;
         public static final double kTurnSimD = 0.0;
         public static final double kTurnPIDMinInput = 0; // Radians

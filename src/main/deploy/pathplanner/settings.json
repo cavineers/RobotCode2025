@@ -3,7 +3,8 @@
   "robotLength": 0.9,
   "holonomicMode": true,
   "pathFolders": [
-    "3PieceMiddleRedCage"
+    "3PieceMiddleRedCage",
+    "Example2L4"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,

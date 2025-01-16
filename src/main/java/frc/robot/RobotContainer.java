@@ -14,12 +14,17 @@ import frc.robot.subsystems.Drivetrain.ModuleIO;
 import frc.robot.subsystems.Drivetrain.ModuleIOSim;
 import frc.robot.subsystems.Drivetrain.ModuleIOSpark;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
+import frc.robot.subsystems.Example.Example;
+import frc.robot.subsystems.Example.ExampleIO;
+import frc.robot.subsystems.Example.ExampleIOSim;
+import frc.robot.subsystems.Example.ExampleIOSpark;
 import frc.robot.commands.SystemIdCommands;
 
 public class RobotContainer {
 
     // Subsystems
     private final SwerveDriveSubsystem drivetrain;
+    private final Example exampleSubsystem;
 
     // Controllers
     private final CommandXboxController driverController = new CommandXboxController(0);
@@ -37,6 +42,8 @@ public class RobotContainer {
                         new ModuleIOSpark(1),
                         new ModuleIOSpark(2),
                         new ModuleIOSpark(3));
+
+                exampleSubsystem = new Example(new ExampleIOSpark());
                 break;
             case SIM:
                 drivetrain = new SwerveDriveSubsystem(
@@ -45,6 +52,8 @@ public class RobotContainer {
                         new ModuleIOSim(),
                         new ModuleIOSim(),
                         new ModuleIOSim());
+                
+                exampleSubsystem = new Example(new ExampleIOSim());
                 break;
             default:
                 // Replay
@@ -54,6 +63,8 @@ public class RobotContainer {
                         new ModuleIO() {},
                         new ModuleIO() {},
                         new ModuleIO() {});
+
+                exampleSubsystem = new Example(new ExampleIO(){});
                 break;
         }
         configureButtonBindings();

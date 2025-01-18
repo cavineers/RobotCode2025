@@ -14,9 +14,7 @@ public class Elevator extends SubsystemBase {
     @Override
     public void periodic() { 
         io.updateInputs(inputs); 
-        Logger.processInputs("Elevator", inputs); 
-
-        io.setVoltage(5);
+        Logger.processInputs("Elevator", inputs);
     }
 
     public void setVoltage(double volts) {

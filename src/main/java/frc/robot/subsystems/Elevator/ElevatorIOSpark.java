@@ -8,12 +8,14 @@ import static frc.robot.subsystems.Elevator.ElevatorConstants.kRightMotorCanID;
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 public class ElevatorIOSpark implements ElevatorIO {
-    private final SparkMax rightMotor = new SparkMax(kLeftMotorCanID, MotorType.kBrushless);
-    private final SparkMax leftMotor = new SparkMax(kRightMotorCanID, MotorType.kBrushless);
+    
+    private final SparkFlex rightMotor = new SparkFlex(kLeftMotorCanID, MotorType.kBrushless);
+    private final SparkFlex leftMotor = new SparkFlex(kRightMotorCanID, MotorType.kBrushless);
     private final RelativeEncoder rightEncoder = rightMotor.getEncoder();
     private final RelativeEncoder leftEncoder = leftMotor.getEncoder();
 
@@ -27,7 +29,7 @@ public class ElevatorIOSpark implements ElevatorIO {
         updateMotorInputs(inputs, rightMotor, rightEncoder);
     }
 
-    public void updateMotorInputs(ElevatorIOInputs inputs, SparkMax motor, RelativeEncoder encoder) {
+    public void updateMotorInputs(ElevatorIOInputs inputs, SparkFlex motor, RelativeEncoder encoder) {
         ifOk(motor, encoder::getPosition, (value) -> inputs.positionRad = value); 
         ifOk(motor, encoder::getVelocity, (value) -> inputs.velocityRadPerSec = value);
         ifOk(

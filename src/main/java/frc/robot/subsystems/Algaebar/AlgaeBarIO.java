@@ -4,7 +4,6 @@ import org.littletonrobotics.junction.AutoLog;
 
 public interface AlgaeBarIO {
     
-    @AutoLog
     public static class AlgaeBarIOInputs {
         public double positionRad = 0.0;
         public double velocityRadPerSec = 0.0;

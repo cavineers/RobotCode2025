@@ -2,7 +2,9 @@ package frc.robot.subsystems.Algaebar;
 
 import static frc.lib.SparkUtil.*;
 
-import static frc.robot.subsystems.Algaebar.AlgaeBarConstants.kAlgaeBarCanID;
+import static frc.robot.subsystems.Algaebar.AlgaeBarConstants.kAlgaeBarRotateCanID;
+import static frc.robot.subsystems.Algaebar.AlgaeBarConstants.kAlgaeBarCoralCanID;
+
 
 import java.util.function.DoubleSupplier;
 
@@ -11,11 +13,11 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 public class AlgaeBarIOSpark implements AlgaeBarIO {
-    private final SparkMax motor = new SparkMax(kAlgaeBarCanID, MotorType.kBrushless);
-    private final RelativeEncoder encoder = motor.getEncoder();
+    private final SparkMax rotateMotor = new SparkMax(kAlgaeBarRotateCanID, MotorType.kBrushless);
+    private final RelativeEncoder rotateEncoder = rotateMotor.getEncoder();
 
-    private final SparkMax motor = new SparkMax(kAlgaeBarCanID, MotorType.kBrushless);
-    private final RelativeEncoder encoder = motor.getEncoder();
+    private final SparkMax coralMotor = new SparkMax(kAlgaeBarCoralCanID, MotorType.kBrushless);
+    private final RelativeEncoder coralEncoder = coralMotor.getEncoder();
 
     public AlgaeBarIOSpark(){
         //could do motor configuration here
@@ -23,17 +25,24 @@ public class AlgaeBarIOSpark implements AlgaeBarIO {
 
     @Override
     public void updateInputs(AlgaeBarIOInputs inputs) {
-        ifOk(motor, encoder::getPosition, (value) -> inputs.positionRad = value); //only 
-        ifOk(motor, encoder::getVelocity, (value) -> inputs.velocityRadPerSec = value);
+        ifOk(rotateMotor, rotateEncoder::getPosition, (value) -> inputs.positionRad = value); //only 
+        ifOk(rotateMotor, rotateEncoder::getVelocity, (value) -> inputs.velocityRadPerSec = value);
         ifOk(
-            motor,
-                new DoubleSupplier[] {motor::getAppliedOutput, motor::getBusVoltage},
+            rotateMotor,
+                new DoubleSupplier[] {rotateMotor::getAppliedOutput, rotateMotor::getBusVoltage},
                 (values) -> inputs.appliedVolts = values[0] * values[1]);
-        ifOk(motor, motor::getOutputCurrent, (value) -> inputs.currentAmps = value);       
+        ifOk(rotateMotor, rotateMotor::getOutputCurrent, (value) -> inputs.currentAmps = value);       
+
+        ifOk(coralMotor, coralEncoder::getPosition, (value) -> inputs.positionRad = value); //only 
+        ifOk(coralMotor, coralEncoder::getVelocity, (value) -> inputs.velocityRadPerSec = value);
+        ifOk(
+            coralMotor,
+                new DoubleSupplier[] {coralMotor::getAppliedOutput, coralMotor::getBusVoltage},
+                (values) -> inputs.appliedVolts = values[0] * values[1]);
+        ifOk(coralMotor, coralMotor::getOutputCurrent, (value) -> inputs.currentAmps = value);      
     } 
 
-    @Override
-    public void setVoltage(double volts) {
-        motor.setVoltage(volts);
+    public void setVoltage(SparkMax motor, double volts) {
+            motor.setVoltage(volts);
         }
     }

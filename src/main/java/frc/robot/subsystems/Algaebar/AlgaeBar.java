@@ -17,8 +17,6 @@ public class AlgaeBar extends SubsystemBase {
         io.updateInputs(inputs); //inputs is passed as a reference here
         Logger.processInputs("AlgaeBar", inputs); //required for logging and replay to work
 
-        //Set the voltage to something random every periodic for fun
-        io.setVoltage(Math.random() * 12.0);
     }
 
     public void setVoltage(double volts) {
@@ -29,4 +27,3 @@ public class AlgaeBar extends SubsystemBase {
         io.setVoltage(percentage * 12.0);
     }
 }
-//output("hello world");

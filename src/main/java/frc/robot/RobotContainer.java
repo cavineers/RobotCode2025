@@ -64,7 +64,7 @@ public class RobotContainer {
                         new ModuleIO() {},
                         new ModuleIO() {});
 
-                algaeBar = new AlgaeBar(new AlgaeBarIO());
+                algaeBar = new AlgaeBar(new AlgaeBarIO(){});
                 break;
         }
         configureButtonBindings();
@@ -99,6 +99,10 @@ public class RobotContainer {
                 driverController::getLeftY,
                 driverController::getLeftX,
                 driverController::getRightX));
+
+        driverController.a().whileTrue(algaeBar.setVoltageCommand(-12.0));
+        driverController.y().whileTrue(algaeBar.setVoltageCommand(12.0));
+
     }
 
     public Command getAutonomousCommand() {

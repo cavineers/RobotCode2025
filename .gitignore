@@ -190,3 +190,5 @@ BuildConstants.java
 
 .vscode
 simgui-ds.json
+
+.apt_generated*

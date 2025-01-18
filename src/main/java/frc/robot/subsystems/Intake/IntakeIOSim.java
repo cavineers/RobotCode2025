@@ -15,7 +15,7 @@ public class IntakeIOSim implements IntakeIO {
 
     private double appliedVolts = 0.0; // the applied voltagge to the motor (can't be read from the motor)
 
-    @Override;
+    @Override
     public void updateInputs(IntaekIOInputs inputs) {//called from a peridic method
         motor.setInputVoltage(appliedVolts);
         motor.update(0.02);
@@ -26,7 +26,7 @@ public class IntakeIOSim implements IntakeIO {
         inputs.currentAmpsp = motor.getCurrentDrawAmps;
     }
 
-    @Override;
+    @Override
     public void setVoltage(double volts){
         appliedVolts = MathUtil.clamp(volts, -12.0, 12.0); //clamp voltage to 12V -12V
     }

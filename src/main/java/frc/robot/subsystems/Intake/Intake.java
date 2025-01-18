@@ -10,11 +10,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
+import org.littletonrobotics.junction.logger;
 
-//no io setup yet
 
-public class Intake {
-    
+public class Intake extends SubsystemBase {
+    private final IntakeIO io;
+    private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
+
     public enum IntakeMotorState{ 
         ON,
         OFF,
@@ -76,8 +78,17 @@ public class Intake {
     }
 
     public void periodic() {
-        SmartDashboard.putBoolean("INTAKE IR", getCoralSensor());
+        io.updateInputs(inputs);
+        Logger.processInputs("Intake", inputs);
 
+        io.setVoltage(Math.random() * 12.0);
     }
 
+    public void setVoltage(double volts) {
+        io.setVoltage(volts);
+    }
+
+    public void setPercentage(double percentage){
+        io.setVoltage(percentage *12.0);
+    }
 }

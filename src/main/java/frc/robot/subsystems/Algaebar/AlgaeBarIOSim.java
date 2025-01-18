@@ -1,6 +1,6 @@
-package frc.robot.subsystems.Example;
+package frc.robot.subsystems.algaebariosim;
 
-import static frc.robot.subsystems.Example.ExampleConstants.*;
+import static frc.robot.subsystems.AlgaeBar.AlgaeBarConstants.*;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Example;
+package frc.robot.subsystems.algaebarconstants;
 
 public class AlgaeBarConstants {
     public static final int algaeBarCANID = 1;

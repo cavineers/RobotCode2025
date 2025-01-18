@@ -1,4 +1,4 @@
-package frc.robot.subsystem.AlageBar;
+package frc.robot.subsystem.algaebario;
 
 import org.littletonrobotics.junction.AutoLog;
 
@@ -17,6 +17,6 @@ public interface AlgaeBarIO {
     }
 
     /** Run open loop at the specified voltage.*/
-    public deafult void setVolatge(double volts){
+    public default void setVoltage(double volts){
     }
 }

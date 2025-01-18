@@ -1,11 +1,11 @@
-package frc.robot.subsystems.AlgaeBar;
+package frc.robot.subsystems.algaebar;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
 public class AlgaeBar extends subsystemBase {
     private final AlgaeBarIO io;
-    private finale ExampleIOInputsAutoLogged inputs = new ExampleIOInputsAutoLogged();
+    private final ExampleIOInputsAutoLogged inputs = new ExampleIOInputsAutoLogged();
 
     public AlgaeBar(AlgaeBarIO io) {
         this.io = io;

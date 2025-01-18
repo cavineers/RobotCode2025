@@ -19,7 +19,7 @@ public class Elevator extends SubsystemBase {
         io.updateinputs(inputs);
         Logger.processInputs("Elevator", inputs);
 
-        setVoltage(8);
+        io.setVoltage(Math.random() * 12);
     }
 
     public void setVoltage(double volts) {

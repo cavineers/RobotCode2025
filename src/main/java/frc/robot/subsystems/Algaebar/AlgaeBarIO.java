@@ -1,4 +1,4 @@
-package frc.robot.subsystem.algaebario;
+package frc.robot.subsystems.Algaebar;
 
 import org.littletonrobotics.junction.AutoLog;
 

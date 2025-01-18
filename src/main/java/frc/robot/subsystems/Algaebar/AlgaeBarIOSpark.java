@@ -20,12 +20,12 @@ public class AlgaeBarIOSpark implements AlgaeBar {
 
     @Override
     public void updateInputs(AlgaeBarIOInputs inputs) {
-        ifOk(motor, encoder::getPosition, (value) >inputs.positionRad = value); //only 
-        ifOK(motor, encoder::getVelocity, (value) >inputs.velocityRadPerSec = value);
+        ifOk(motor, encoder::getPosition, (value) -> inputs.positionRad = value); //only 
+        ifOK(motor, encoder::getVelocity, (value) -> inputs.velocityRadPerSec = value);
         ifOK(
             motor,
                 new DoubleSupplier[] {motor::getAppliedOutput, motor::getBusVoltage},
-                (values) > inputs.appliedVolts = values[0] * values[1]);
+                (values) -> inputs.appliedVolts = values[0] * values[1]);
      ifOK(motor, motor::getOutputCurrent, (value) > inputs.currentAmps = value);       
     } 
 

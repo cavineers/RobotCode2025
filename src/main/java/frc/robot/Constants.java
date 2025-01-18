@@ -17,7 +17,21 @@ public class Constants {
     public static final class DIO {
         }
 
-    
+    public static final class CanIDs {
+
+        public static final int LeftIntakeCanID = 1; //subject to change to upper/lower 
+        public static final int RightIntakeCanID = 2; //changability in id numbers 
+    }
+
+    public static final class Intake {
+
+        public static final double LeftIntakeForwardSpeed = 0.5; //change to actual speeds
+        public static final double RightIntakeForwardSpeed = 0.5;
+        public static final double LeftIntakeBackwardSpeed = 0.5;
+        public static final double RightIntakeBackwardSpeed = 0.5;
+        
+
+    }
     public static final Mode simMode = Mode.SIM; 
     public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 

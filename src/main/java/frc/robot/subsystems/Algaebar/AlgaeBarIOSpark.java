@@ -1,15 +1,19 @@
 package frc.robot.subsystems.Algaebar;
 
 import static frc.lib.SparkUtil.*;
-import static frc.robot.subsystems.Algaebar.AlgaeBarConstants.*;
 
+import static frc.robot.subsystems.Algaebar.AlgaeBarConstants.kAlgaeBarCanID;
 
 import java.util.function.DoubleSupplier;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 public class AlgaeBarIOSpark implements AlgaeBarIO {
+    private final SparkMax motor = new SparkMax(kAlgaeBarCanID, MotorType.kBrushless);
+    private final RelativeEncoder encoder = motor.getEncoder();
+
     private final SparkMax motor = new SparkMax(kAlgaeBarCanID, MotorType.kBrushless);
     private final RelativeEncoder encoder = motor.getEncoder();
 
@@ -30,6 +34,6 @@ public class AlgaeBarIOSpark implements AlgaeBarIO {
 
     @Override
     public void setVoltage(double volts) {
-        
+        motor.setVoltage(volts);
         }
     }

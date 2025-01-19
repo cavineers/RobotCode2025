@@ -1,5 +1,7 @@
 package frc.robot;
 
+import static frc.robot.subsystems.Vision.VisionConstants.*;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -18,11 +20,13 @@ import frc.robot.subsystems.Drivetrain.ModuleIOSpark;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
 import frc.robot.commands.SystemIdCommands;
 import frc.robot.commands.auto.*;
+import frc.robot.subsystems.Vision.*;
 
 public class RobotContainer {
 
     // Subsystems
     private final SwerveDriveSubsystem drivetrain;
+    private final Vision vision;
 
     // Controllers
     private final CommandXboxController driverController = new CommandXboxController(0);
@@ -43,6 +47,11 @@ public class RobotContainer {
                         new ModuleIOSpark(1),
                         new ModuleIOSpark(2),
                         new ModuleIOSpark(3));
+
+                vision = new Vision(
+                    drivetrain::addVisionMeasurement,
+                    new VisionIOPhoton(frontCameraName, robotToFrontCam),
+                    new VisionIOPhoton(backCameraName, robotToBackCam));
                 break;
             case SIM:
                 drivetrain = new SwerveDriveSubsystem(
@@ -51,6 +60,11 @@ public class RobotContainer {
                         new ModuleIOSim(),
                         new ModuleIOSim(),
                         new ModuleIOSim());
+
+                vision = new Vision(
+                    drivetrain::addVisionMeasurement,
+                    new VisionIOPhotonSim(frontCameraName, robotToFrontCam, () -> drivetrain.getPose()),
+                    new VisionIOPhotonSim(backCameraName, robotToBackCam, () -> drivetrain.getPose()));
                 break;
             default:
                 // Replay
@@ -60,6 +74,8 @@ public class RobotContainer {
                         new ModuleIO() {},
                         new ModuleIO() {},
                         new ModuleIO() {});
+
+                vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
                 break;
         }
         // Setup the debug command

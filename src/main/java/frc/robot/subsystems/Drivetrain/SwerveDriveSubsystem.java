@@ -41,7 +41,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     private SysIdRoutine sysId;
 
-    Optional<Alliance> ally = DriverStation.getAlliance();
+    private Optional<Alliance> ally = DriverStation.getAlliance();
 
     // Gyro Interface
     private final GyroIO gyroIO;
@@ -106,18 +106,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                         new PIDConstants(Constants.DriveConstants.PathPlannerTurnP, 0.0, 0.0) // Rotation PID constants idk why the default is 5
                 ),
                 DriveConstants.robotConfig, // ROBOT CONFIGURATION
-                () -> {
-                    // Boolean supplier that controls when the path will be mirrored for the red
-                    // alliance
-                    // This will flip the path being followed to the red side of the field.
-                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-                    var alliance = DriverStation.getAlliance();
-                    if (alliance.isPresent()) {
-                        return alliance.get() == DriverStation.Alliance.Red;
-                    }
-                    return false;
-                }, // Whether to flip the path
+                this::shouldFlipPose, // Method to determine if the path should be flipped
                 this // Reference to this subsystem to set requirements
         );
 
@@ -227,6 +216,14 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         for (Module module : modules) {
             module.stop();
         }
+    }
+
+    /**
+     * Supplier to determine if the path should be flipped
+     * @return flipped
+     */
+    public Boolean shouldFlipPose() {
+        return ally.isPresent() && ally.get() == Alliance.Red;
     }
 
     /**

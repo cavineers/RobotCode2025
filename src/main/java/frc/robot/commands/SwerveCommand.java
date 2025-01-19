@@ -64,11 +64,7 @@ public class SwerveCommand extends Command {
         
         
         // Flipped
-        boolean flipped = false;
-        var alliance = DriverStation.getAlliance();
-        if (alliance.isPresent()) {
-            flipped = alliance.get() == DriverStation.Alliance.Red;
-        }
+        boolean flipped = swerveSubsystem.shouldFlipPose();
 
         // Convert to field relative chassis speeds
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turningSpeed,

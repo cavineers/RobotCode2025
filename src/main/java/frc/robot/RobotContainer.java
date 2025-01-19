@@ -63,7 +63,7 @@ public class RobotContainer {
                 break;
         }
         // Setup the debug command
-        this.debugCommand = new PointToTarget(drivetrain, new Pose2d(6.350, 0, new Rotation2d(0)), driverController::getLeftY, driverController::getLeftX);
+        this.debugCommand = new DriveToPose(drivetrain, new Pose2d(1.574, 0.695, new Rotation2d(0)));
 
         configureButtonBindings();
 

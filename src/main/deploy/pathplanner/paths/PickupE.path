@@ -67,7 +67,7 @@
   "folder": "3PieceMiddleRedCage",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -126.5
+    "rotation": 53.5
   },
   "useDefaultConstraints": true
 }

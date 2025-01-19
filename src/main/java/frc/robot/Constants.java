@@ -75,7 +75,7 @@ public final class Constants {
 
         public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond;
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
-        public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 2;
+        public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3.5;
         public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 2.5;
 
         public static final double kFrontLeftAbsoluteEncoderOffset = 0;  // In rotations (read straight from the encoder)

@@ -58,4 +58,12 @@ public class ElevatorIOSim implements ElevatorIO {
         setVoltage(speed * 12.0);
         setVoltage(speed * 12.0);
     }
+
+    public void checkBoundry() {
+        if(motorSetPoint > ElevatorConstants.kMaxRotations) {
+            motorSetPoint = ElevatorConstants.kMaxRotations;
+        } else if(motorSetPoint < ElevatorConstants.kMinRotations) {
+            motorSetPoint = ElevatorConstants.kMinRotations;
+        }
+    }
 }

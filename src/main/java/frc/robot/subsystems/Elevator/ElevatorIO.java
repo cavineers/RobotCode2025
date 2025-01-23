@@ -22,6 +22,8 @@ public interface ElevatorIO {
     }
 
     public default void updateSetPoint() {
+    }
 
+    public default void checkBoundry() {
     }
 }

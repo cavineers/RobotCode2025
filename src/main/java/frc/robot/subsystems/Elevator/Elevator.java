@@ -20,6 +20,7 @@ public class Elevator extends SubsystemBase {
         Logger.processInputs("Elevator", inputs);
 
         io.updateSetPoint();
+        io.checkBoundry();
     }
 
     public Command setVoltageCommand(double volts) {

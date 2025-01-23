@@ -27,7 +27,6 @@ public class ElevatorIOSpark implements ElevatorIO {
     private double motorSetPoint = 0;
 
     public ElevatorIOSpark() {
-
     }
 
     @Override
@@ -63,6 +62,14 @@ public class ElevatorIOSpark implements ElevatorIO {
         double speed = elevPid.calculate(getElevMotorPosition());
         setVoltage((speed * 12.0), rightMotor);
         setVoltage((speed * 12.0), leftMotor);
+    }
+
+    public void checkBoundry() {
+        if(motorSetPoint > ElevatorConstants.kMaxRotations) {
+            motorSetPoint = ElevatorConstants.kMaxRotations;
+        } else if(motorSetPoint < ElevatorConstants.kMinRotations) {
+            motorSetPoint = ElevatorConstants.kMinRotations;
+        }
     }
 
 }

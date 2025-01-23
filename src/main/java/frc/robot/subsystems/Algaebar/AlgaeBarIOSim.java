@@ -31,17 +31,6 @@ public class AlgaeBarIOSim implements AlgaeBarIO {
     } 
     
     @Override
-    public void updateInputs(AlgaeBarIOInputs inputs){ // called from a periodic method
-        algaebarCoralMotor.setInputVoltage(appliedVolts);
-        algaebarCoralMotor.update(0.02);
-
-        inputs.positionRad = algaebarCoralMotor.getAngularPositionRad();
-        inputs.velocityRadPerSec = algaebarCoralMotor.getAngularVelocityRadPerSec();
-        inputs.appliedVolts = appliedVolts;
-        inputs.currentAmps = algaebarCoralMotor.getCurrentDrawAmps();
-    } 
-    
-    @Override
     public void setVoltage(double volts) {
         appliedVolts = MathUtil.clamp(volts, -12.0, 12.0); // clamp the voltage to -12V to 12V
     }  

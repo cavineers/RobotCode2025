@@ -1,6 +1,8 @@
 package frc.robot.subsystems.Funnel;
+
 import static frc.robot.subsystems.Funnel.FunnelConstants.*;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;

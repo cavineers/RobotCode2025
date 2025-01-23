@@ -12,12 +12,19 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.math.controller.PIDController;
+
 public class ElevatorIOSpark implements ElevatorIO {
     
     private final SparkFlex rightMotor = new SparkFlex(kLeftMotorCanID, MotorType.kBrushless);
     private final SparkFlex leftMotor = new SparkFlex(kRightMotorCanID, MotorType.kBrushless);
+
     private final RelativeEncoder rightEncoder = rightMotor.getEncoder();
     private final RelativeEncoder leftEncoder = leftMotor.getEncoder();
+
+    PIDController elevPid = new PIDController(ElevatorConstants.kProportionalGain, ElevatorConstants.kIntegralTerm, ElevatorConstants.kDerivativeTerm);
+
+    private double motorSetPoint = 0;
 
     public ElevatorIOSpark() {
 
@@ -39,7 +46,23 @@ public class ElevatorIOSpark implements ElevatorIO {
         ifOk(motor, motor::getOutputCurrent, (value) -> inputs.currentAmps = value);
     }
 
-    public void setVoltage(double volts, SparkMax motor) {
+    public void setVoltage(double volts, SparkFlex motor) {
         motor.setVoltage(volts);
     }
+
+    public double getElevMotorPosition() {
+        return rightEncoder.getPosition();
+    }
+
+    public void setSetPoint(double setPoint) {
+        motorSetPoint = setPoint;
+    }
+
+    public void updateSetPoint() {
+        elevPid.setSetpoint(motorSetPoint);
+        double speed = elevPid.calculate(getElevMotorPosition());
+        setVoltage((speed * 12.0), rightMotor);
+        setVoltage((speed * 12.0), leftMotor);
+    }
+
 }

@@ -19,6 +19,7 @@ import frc.robot.subsystems.Elevator.ElevatorIO;
 import frc.robot.subsystems.Elevator.ElevatorIOSim;
 import frc.robot.subsystems.Elevator.ElevatorIOSpark;
 import frc.robot.commands.SystemIdCommands;
+import frc.robot.commands.elevator.ActivatePreset;
 
 public class RobotContainer {
 
@@ -99,6 +100,11 @@ public class RobotContainer {
                 driverController::getLeftY,
                 driverController::getLeftX,
                 driverController::getRightX));
+
+        driverController.a().onTrue(new ActivatePreset(elevator, 100.0));
+        driverController.b().onTrue(new ActivatePreset(elevator, -100.0));
+        driverController.x().whileTrue(elevator.setVoltageCommand(12.0));
+        driverController.y().whileTrue(elevator.setVoltageCommand(-12.0));
     }
 
     public Command getAutonomousCommand() {

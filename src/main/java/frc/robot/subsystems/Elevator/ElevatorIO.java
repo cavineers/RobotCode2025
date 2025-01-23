@@ -17,4 +17,11 @@ public interface ElevatorIO {
 
     public default void setVoltage(double volts) {
     }
+
+    public default void setSetPoint(double setPoint) {
+    }
+
+    public default void updateSetPoint() {
+
+    }
 }

@@ -87,7 +87,8 @@ public final class Constants {
         public static final double kTrackWidth = Units.inchesToMeters(24.5);
         // Distance between front and back wheels
         public static final double kWheelBase = Units.inchesToMeters(24.5);
-        public static final double kDriveBaseRads = Math.hypot(kTrackWidth / 2.0, kWheelBase / 2.0);
+        public static final double kDriveBaseRadius = Math.hypot(kTrackWidth / 2.0, kWheelBase / 2.0);
+        public static final double kSideLength = Units.inchesToMeters(32.5); // 2.5 inches bumper: Represents full width of the robot
 
         public static final Translation2d[] moduleTranslations =
             new Translation2d[] {

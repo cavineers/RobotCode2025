@@ -6,8 +6,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
+
+import frc.robot.Constants.DriveConstants;
+
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
@@ -15,27 +19,32 @@ import com.pathplanner.lib.path.PathConstraints;
 public class DriveToPose extends Command {
     private Command pathfindingCommand;
     private final SwerveDriveSubsystem drivetrain;
-    private final Pose2d targetPose;
+    private final Supplier<Pose2d> targetPoseSupplier;
+    private Pose2d targetPose;
     private final PathConstraints constraints;
     
-    public DriveToPose(SwerveDriveSubsystem drivetrain, Pose2d targetPose) {
+    public DriveToPose(SwerveDriveSubsystem drivetrain, Supplier<Pose2d> targetPose) {
         // Create the constraints to use while pathfinding
         this.constraints = new PathConstraints(
-            3.0, 4.0,
-            Units.degreesToRadians(540), Units.degreesToRadians(720));
-        
+            DriveConstants.kPhysicalMaxSpeedMetersPerSecond, DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond,
+            DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond, DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
         this.drivetrain = drivetrain;
-        this.targetPose = targetPose;
+        this.targetPoseSupplier = targetPose;
     }  
 
 
     @Override
     public void initialize() {
+        this.targetPose = targetPoseSupplier.get();
         // Since AutoBuilder is configured, we can use it to build pathfinding commands
         this.pathfindingCommand = drivetrain.shouldFlipPose()
             ? AutoBuilder.pathfindToPoseFlipped(targetPose, constraints) 
             : AutoBuilder.pathfindToPose(targetPose, constraints);
         this.pathfindingCommand.schedule();
+    }
+
+    @Override 
+    public void execute() {
         Logger.recordOutput("Commands/driveToPose", true);
     }
 

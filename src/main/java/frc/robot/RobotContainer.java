@@ -32,7 +32,6 @@ public class RobotContainer {
     private final CommandXboxController driverController = new CommandXboxController(0);
     
     // Commands
-    private final Command debugCommand;
 
     // Auto chooser
     private final LoggedDashboardChooser<Command> autoChooser;
@@ -78,9 +77,6 @@ public class RobotContainer {
                 vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
                 break;
         }
-        // Setup the debug command
-        this.debugCommand = new DriveToPose(drivetrain, new Pose2d(1.574, 0.695, new Rotation2d(0)));
-
         configureButtonBindings();
 
 
@@ -115,7 +111,7 @@ public class RobotContainer {
                 driverController::getRightX));
 
         // Bind the A button to the new PointToTarget command
-        driverController.a().whileTrue(this.debugCommand);
+        driverController.a().whileTrue(new DriveToPose(drivetrain, drivetrain::getClosestReefPose));
     }
 
     public Command getAutonomousCommand() {

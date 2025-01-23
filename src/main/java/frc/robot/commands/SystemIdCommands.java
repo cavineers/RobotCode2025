@@ -136,7 +136,7 @@ public class SystemIdCommands {
                             wheelDelta += Math.abs(positions[i] - state.positions[i]) / 4.0;
                         }
                         double wheelRadius =
-                            (state.gyroDelta * DriveConstants.kDriveBaseRads) / wheelDelta;
+                            (state.gyroDelta * DriveConstants.kDriveBaseRadius) / wheelDelta;
 
                         NumberFormat formatter = new DecimalFormat("#0.000");
                         System.out.println(

@@ -8,18 +8,24 @@ import frc.lib.LocalADStarAK;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+
+import java.util.ArrayList;
 import java.util.Optional;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
@@ -45,6 +51,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private SysIdRoutine sysId;
 
     private Optional<Alliance> ally = DriverStation.getAlliance();
+
+    // April Tag layout
+    public static AprilTagFieldLayout aprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+
 
     // Gyro Interface
     private final GyroIO gyroIO;
@@ -182,6 +192,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             }
 
             poseEstimator.updateWithTime(odometryTimestamps[i], gyroRotation, modulePositions);
+
+            Logger.recordOutput("Vision/ClosestTag", getClosestReefPose());
         }
 
     }
@@ -223,7 +235,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     /**
      * Supplier to determine if the path should be flipped
-     * @return flipped
+     * @return flipped if Red
      */
     public Boolean shouldFlipPose() {
         return ally.isPresent() && ally.get() == Alliance.Red;
@@ -347,5 +359,42 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     /** Returns a command to run a dynamic test in the specified direction. */
     public Command sysIdDynamic(SysIdRoutine.Direction direction) {
         return run(() -> runCharacterization(0.0)).withTimeout(1.0).andThen(sysId.dynamic(direction));
+    }
+    
+    /**
+     * Returns the closest reef april tag Pose2D to the robot
+     *     Respective to the FMS alliance color
+     */
+    public Pose2d getClosestReefPose() {
+        boolean isRedAlliance = this.shouldFlipPose();
+
+        Pose2d closest = null;
+        for (AprilTag tag : aprilTagLayout.getTags()) {
+            // Guard clause
+            if ((!isRedAlliance && (tag.ID < 17 || tag.ID > 22)) || (isRedAlliance && (tag.ID < 6 || tag.ID > 11))) {
+                continue; // Check to make sure the tag is in the correct range for each alliance from field drawing
+            }
+            Translation2d tagPose = tag.pose.toPose2d().getTranslation(); // Convert to translation
+            Translation2d robotPose = this.getPose().getTranslation(); // Convert to translation
+             
+            double distanceToTag = tagPose.getDistance(robotPose);
+            if (closest == null || distanceToTag < closest.getTranslation().getDistance(robotPose)) {
+                closest = tag.pose.toPose2d(); // closer tag or first tag
+            }
+        }
+
+        // Now add the offset from the robot to the front bumper
+        // Get the rotation of the tag
+        Rotation2d tagRotation = closest.getRotation();
+        // Convert the rotation to a direction vector
+        Translation2d direction = new Translation2d(tagRotation.getCos(), tagRotation.getSin());
+        // Normalize the direction vector to a magnitude of 1
+        direction = direction.div(direction.getNorm());
+
+        Translation2d projectedTranslation = closest.getTranslation().plus(direction.times(DriveConstants.kSideLength / 2.0));
+        // Create the new pose
+        closest = new Pose2d(projectedTranslation, closest.getRotation());      
+        
+        return closest;
     }
 }

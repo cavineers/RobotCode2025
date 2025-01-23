@@ -40,7 +40,6 @@ public class AlgaeBarIOSim implements AlgaeBarIO {
         inputs.appliedVolts = appliedVolts;
         inputs.currentAmps = algaebarCoralMotor.getCurrentDrawAmps();
     } 
-
     
     @Override
     public void setVoltage(double volts) {

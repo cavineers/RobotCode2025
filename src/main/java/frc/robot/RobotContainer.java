@@ -8,6 +8,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.SwerveCommand;
+import frc.robot.subsystems.Algaebar.AlgaeBar;
+import frc.robot.subsystems.Algaebar.AlgaeBarIO;
+import frc.robot.subsystems.Algaebar.AlgaeBarIOSim;
+import frc.robot.subsystems.Algaebar.AlgaeBarIOSpark;
 import frc.robot.subsystems.Drivetrain.GyroIO;
 import frc.robot.subsystems.Drivetrain.GyroPigeonIO;
 import frc.robot.subsystems.Drivetrain.ModuleIO;
@@ -20,6 +24,7 @@ public class RobotContainer {
 
     // Subsystems
     private final SwerveDriveSubsystem drivetrain;
+    private final AlgaeBar algaeBar;
 
     // Controllers
     private final CommandXboxController driverController = new CommandXboxController(0);
@@ -37,6 +42,8 @@ public class RobotContainer {
                         new ModuleIOSpark(1),
                         new ModuleIOSpark(2),
                         new ModuleIOSpark(3));
+
+                algaeBar = new AlgaeBar(new AlgaeBarIOSpark());
                 break;
             case SIM:
                 drivetrain = new SwerveDriveSubsystem(
@@ -45,6 +52,8 @@ public class RobotContainer {
                         new ModuleIOSim(),
                         new ModuleIOSim(),
                         new ModuleIOSim());
+
+                algaeBar = new AlgaeBar(new AlgaeBarIOSim());
                 break;
             default:
                 // Replay
@@ -54,6 +63,8 @@ public class RobotContainer {
                         new ModuleIO() {},
                         new ModuleIO() {},
                         new ModuleIO() {});
+
+                algaeBar = new AlgaeBar(new AlgaeBarIO(){});
                 break;
         }
         configureButtonBindings();
@@ -88,9 +99,14 @@ public class RobotContainer {
                 driverController::getLeftY,
                 driverController::getLeftX,
                 driverController::getRightX));
+
+        driverController.a().whileTrue(algaeBar.setVoltageCommand(-12.0));
+        driverController.y().whileTrue(algaeBar.setVoltageCommand(12.0));
+
     }
 
     public Command getAutonomousCommand() {
         return autoChooser.get();
     }
 }
+//hello how are you

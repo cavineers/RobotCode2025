@@ -62,8 +62,8 @@ public class RobotContainer {
 
                 vision = new Vision(
                     drivetrain::addVisionMeasurement,
-                    new VisionIOPhotonSim(frontCameraName, robotToFrontCam, () -> drivetrain.getPose()),
-                    new VisionIOPhotonSim(backCameraName, robotToBackCam, () -> drivetrain.getPose()));
+                    new VisionIOPhotonSim(frontCameraName, robotToFrontCam, () -> drivetrain.getPose()));
+                    // new VisionIOPhotonSim(backCameraName, robotToBackCam, () -> drivetrain.getPose()));
                 break;
             default:
                 // Replay

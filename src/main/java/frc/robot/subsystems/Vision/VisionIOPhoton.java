@@ -4,10 +4,15 @@ import static frc.robot.subsystems.Vision.VisionConstants.*;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
+
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonCamera;
 
 /**
@@ -38,6 +43,7 @@ public class VisionIOPhoton implements VisionIO {
         for (var result : camera.getAllUnreadResults()) {
             // Add pose observation
             if (result.multitagResult.isPresent()) { // Multitag result
+                Logger.recordOutput("Vision/multitagPNP", true);
                 var multitagResult = result.multitagResult.get();
 
                 // Calculate robot pose
@@ -65,6 +71,7 @@ public class VisionIOPhoton implements VisionIO {
                                 )); // Observation type
 
             } else if (!result.targets.isEmpty()) { // Single tag result
+                Logger.recordOutput("Vision/multitagPNP", false);
                 var target = result.targets.get(0);
 
                 // Calculate robot pose
@@ -89,6 +96,25 @@ public class VisionIOPhoton implements VisionIO {
                                     1, // Tag count
                                     cameraToTarget.getTranslation().getNorm())); 
                 }
+            }
+            
+            // create the translation list
+            HashMap<Integer, TagTranslation> tagTranslations = new HashMap<>();
+            for (var target : result.targets) {
+                // Save tag translation to logger
+                Translation2d translation = target.bestCameraToTarget.getTranslation().toTranslation2d();
+
+                // Add tag translation
+                TagTranslation tagTranslation = new TagTranslation(target.fiducialId, translation);
+                tagTranslations.put(tagTranslation.tagId(), tagTranslation);
+            }
+            
+            inputs.tagTranslations = new TagTranslation[tagTranslations.size()];
+            System.out.println("Number of tag translations: " + tagTranslations.size());
+            int i = 0;
+            for (TagTranslation tagTranslation : tagTranslations.values()) {
+                inputs.tagTranslations[i] = tagTranslation;
+                i++;
             }
         }
 

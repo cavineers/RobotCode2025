@@ -8,6 +8,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Alert;
@@ -141,4 +142,37 @@ public class Vision extends SubsystemBase {
                 double timestampSeconds,
                 Matrix<N3, N1> visionMeasurementStdDevs);
     }
+
+    /**
+     * Check if a tag is visible to any camera
+     * @param tagId
+     * @return
+     */
+    public boolean hasTag(int tagId) {
+        for (int i = 0; i < inputs.length; i++) {
+            for (int id : inputs[i].tagIds) { 
+                if (id == tagId) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Get the pose of a tag from any camera
+     * @param tagId
+     * @return
+     */
+    public Translation2d getSingleTargetTranslation(int tagId) {
+        for (int i = 0; i < inputs.length; i++) {
+            for (int id : inputs[i].tagIds) {
+                if (id == tagId) {
+                    // return inputs[i].tagPoses.get(tagId);
+                }
+            }
+        }
+        return new Translation2d();
+    }
+
 }

@@ -8,7 +8,7 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 public class AlgaeBarIOSim implements AlgaeBarIO {
-    // create a simulation model of the motor
+    
     private DCMotorSim algaebarRotateMotor = new DCMotorSim(
         LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 0.004, 1), // 1:1 gearbox for the example
         DCMotor.getNEO(1));

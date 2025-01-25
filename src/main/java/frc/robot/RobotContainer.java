@@ -28,7 +28,6 @@ public class RobotContainer {
 
     // Subsystems
     private final SwerveDriveSubsystem drivetrain;
-    private final AlgaeBar algaeBar;
     private final Funnel funnel;
 
     // Controllers
@@ -48,7 +47,6 @@ public class RobotContainer {
                         new ModuleIOSpark(2),
                         new ModuleIOSpark(3));
 
-                algaeBar = new AlgaeBar(new AlgaeBarIOSpark());
                 funnel = new Funnel(new FunnelIOSpark());
                 break;
             case SIM:
@@ -59,7 +57,6 @@ public class RobotContainer {
                         new ModuleIOSim(),
                         new ModuleIOSim());
 
-                algaeBar = new AlgaeBar(new AlgaeBarIOSim());
                 funnel = new Funnel(new FunnelIOSim());
                 break;
             default:
@@ -71,7 +68,6 @@ public class RobotContainer {
                         new ModuleIO() {},
                         new ModuleIO() {});
 
-                algaeBar = new AlgaeBar(new AlgaeBarIO(){});
                 funnel = new Funnel(new FunnelIO(){});
                 break;
         }

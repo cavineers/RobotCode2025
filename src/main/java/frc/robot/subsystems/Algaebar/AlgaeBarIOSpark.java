@@ -31,10 +31,21 @@ public class AlgaeBarIOSpark implements AlgaeBarIO {
             rotateMotor,
                 new DoubleSupplier[] {rotateMotor::getAppliedOutput, rotateMotor::getBusVoltage},
                 (values) -> inputs.appliedVolts = values[0] * values[1]);
-        ifOk(rotateMotor, rotateMotor::getOutputCurrent, (value) -> inputs.currentAmps = value);          
+        ifOk(rotateMotor, rotateMotor::getOutputCurrent, (value) -> inputs.currentAmps = value);   
+        
+        ifOk(coralMotor, coralEncoder::getPosition, (value) -> inputs.positionRad = value); //only 
+        ifOk(coralMotor, coralEncoder::getVelocity, (value) -> inputs.velocityRadPerSec = value);
+        ifOk(
+            coralMotor,
+                new DoubleSupplier[] {coralMotor::getAppliedOutput, coralMotor::getBusVoltage},
+                (values) -> inputs.appliedVolts = values[0] * values[1]);
+        ifOk(coralMotor, coralMotor::getOutputCurrent, (value) -> inputs.currentAmps = value);   
     } 
+
     @Override
     public void setVoltage(double volts) {
             rotateMotor.setVoltage(volts);
+
+            coralMotor.setVoltage(volts);
         }
     }

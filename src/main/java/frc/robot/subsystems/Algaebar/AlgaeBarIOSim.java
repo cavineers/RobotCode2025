@@ -1,6 +1,6 @@
 package frc.robot.subsystems.Algaebar;
 
-import static frc.robot.subsystems.Algaebar.AlgaeBarConstants.*;
+//import static frc.robot.subsystems.Algaebar.AlgaeBarConstants.*;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -36,7 +36,6 @@ public class AlgaeBarIOSim implements AlgaeBarIO {
 
         inputs.positionRad = algaebarCoralMotor.getAngularPositionRad();
         inputs.velocityRadPerSec = algaebarCoralMotor.getAngularVelocityRadPerSec();
-        inputs.appliedVolts = appliedVolts;
         inputs.currentAmps = algaebarCoralMotor.getCurrentDrawAmps();
     } 
     

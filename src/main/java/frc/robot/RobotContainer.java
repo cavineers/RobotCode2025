@@ -18,6 +18,10 @@ import frc.robot.subsystems.Drivetrain.ModuleIO;
 import frc.robot.subsystems.Drivetrain.ModuleIOSim;
 import frc.robot.subsystems.Drivetrain.ModuleIOSpark;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
+import frc.robot.subsystems.Funnel.Funnel;
+import frc.robot.subsystems.Funnel.FunnelIO;
+import frc.robot.subsystems.Funnel.FunnelIOSim;
+import frc.robot.subsystems.Funnel.FunnelIOSpark;
 import frc.robot.commands.SystemIdCommands;
 
 public class RobotContainer {
@@ -25,6 +29,7 @@ public class RobotContainer {
     // Subsystems
     private final SwerveDriveSubsystem drivetrain;
     private final AlgaeBar algaeBar;
+    private final Funnel funnel;
 
     // Controllers
     private final CommandXboxController driverController = new CommandXboxController(0);
@@ -44,6 +49,7 @@ public class RobotContainer {
                         new ModuleIOSpark(3));
 
                 algaeBar = new AlgaeBar(new AlgaeBarIOSpark());
+                funnel = new Funnel(new FunnelIOSpark());
                 break;
             case SIM:
                 drivetrain = new SwerveDriveSubsystem(
@@ -54,6 +60,7 @@ public class RobotContainer {
                         new ModuleIOSim());
 
                 algaeBar = new AlgaeBar(new AlgaeBarIOSim());
+                funnel = new Funnel(new FunnelIOSim());
                 break;
             default:
                 // Replay
@@ -65,6 +72,7 @@ public class RobotContainer {
                         new ModuleIO() {});
 
                 algaeBar = new AlgaeBar(new AlgaeBarIO(){});
+                funnel = new Funnel(new FunnelIO(){});
                 break;
         }
         configureButtonBindings();
@@ -100,8 +108,8 @@ public class RobotContainer {
                 driverController::getLeftX,
                 driverController::getRightX));
 
-        driverController.a().whileTrue(algaeBar.setVoltageCommand(-12.0));
-        driverController.y().whileTrue(algaeBar.setVoltageCommand(12.0));
+        driverController.a().whileTrue(funnel.setVoltageCommand(-12.0));
+        driverController.y().whileTrue(funnel.setVoltageCommand(12.0));
 
     }
 

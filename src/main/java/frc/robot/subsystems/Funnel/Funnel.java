@@ -1,5 +1,7 @@
 package frc.robot.subsystems.Funnel;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
@@ -11,23 +13,23 @@ public class Funnel extends SubsystemBase{
         this.io = io;
     }
 
-        @Override
-        public void periodic() {
-            io.updateInputs(inputs);
-            Logger.processInputs("INPUT EXAMPLE", inputs);
-        //What inputs do we want here ^
-    
-        io.setVoltage(Math.random() * 12.0); 
-        //Power level here ^
+    @Override
+    public void periodic() {
+        io.updateInputs(inputs);
+        Logger.processInputs("INPUT EXAMPLE", inputs);
     }
 
-public void setVoltage(double volts) {
-    io.setVoltage (volts);
+    public void setVoltage(double volts) {
+        io.setVoltage (volts);
     }
 
     public void setPercentage(double percentage) {
         io.setVoltage(percentage * 12.0);
         //Something important is here ^
+    }
+
+    public Command setVoltageCommand(double volts) {
+        return Commands.run(() -> io.setVoltage(volts), this).finallyDo(interrupted -> io.setVoltage(0));
     }
 
 }

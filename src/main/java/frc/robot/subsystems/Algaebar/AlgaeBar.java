@@ -1,10 +1,6 @@
 package frc.robot.subsystems.Algaebar;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.Algaebar.AlgaeBarIO.AlgaeBarIOInputs;
-
 import org.littletonrobotics.junction.Logger;
 
 public class AlgaeBar extends SubsystemBase {
@@ -13,7 +9,6 @@ public class AlgaeBar extends SubsystemBase {
 
     public AlgaeBar(AlgaeBarIO io) {
         this.io = io;
-
     }
 
     @Override
@@ -21,10 +16,8 @@ public class AlgaeBar extends SubsystemBase {
         io.updateInputs(inputs); //inputs is passed as a reference here
         Logger.processInputs("AlgaeBar", inputs); //required for logging and replay to work
 
-    }
-
-    public Command setVoltageCommand(double volts) {
-        return Commands.run(() -> io.setVoltage(volts), this).finallyDo(interrupted -> io.setVoltage(0));
+        //Set the voltage to something random every periodic for fun
+        io.setVoltage(Math.random() * 12.0);
     }
 
     public void setVoltage(double volts) {

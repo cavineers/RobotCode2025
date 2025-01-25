@@ -17,6 +17,14 @@ public class Funnel extends SubsystemBase{
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("INPUT EXAMPLE", inputs);
+        @Override
+        public void periodic() {
+            io.updateInputs(inputs);
+            Logger.processInputs("Funnel", inputs);
+        
+    
+        io.setVoltage(Math.random() * 12.0); 
+        //Power level here ^
     }
 
     public void setVoltage(double volts) {

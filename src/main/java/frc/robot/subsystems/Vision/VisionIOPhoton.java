@@ -99,22 +99,20 @@ public class VisionIOPhoton implements VisionIO {
             }
             
             // create the translation list
-            HashMap<Integer, TagTranslation> tagTranslations = new HashMap<>();
+            LinkedList<TagTranslationInformation> tagTranslations = new LinkedList<>();
             for (var target : result.targets) {
                 // Save tag translation to logger
                 Translation2d translation = target.bestCameraToTarget.getTranslation().toTranslation2d();
 
                 // Add tag translation
-                TagTranslation tagTranslation = new TagTranslation(target.fiducialId, translation);
-                tagTranslations.put(tagTranslation.tagId(), tagTranslation);
+                TagTranslationInformation tagTranslation = new TagTranslationInformation(target.fiducialId, translation);
+                tagTranslations.add(tagTranslation);
             }
             
-            inputs.tagTranslations = new TagTranslation[tagTranslations.size()];
-            System.out.println("Number of tag translations: " + tagTranslations.size());
-            int i = 0;
-            for (TagTranslation tagTranslation : tagTranslations.values()) {
-                inputs.tagTranslations[i] = tagTranslation;
-                i++;
+            inputs.tagTranslations = new TagTranslationInformation[tagTranslations.size()];
+
+            for (int i = 0; i < tagTranslations.size(); i++) {
+                inputs.tagTranslations[i] = tagTranslations.get(i);
             }
         }
 

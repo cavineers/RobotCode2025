@@ -14,6 +14,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.Vision.VisionIO.TagTranslationInformation;
 
 public class Vision extends SubsystemBase {
     private final VisionIO[] ios;
@@ -166,10 +167,9 @@ public class Vision extends SubsystemBase {
      */
     public Translation2d getSingleTargetTranslation(int tagId) {
         for (int i = 0; i < inputs.length; i++) {
-            for (int id : inputs[i].tagIds) {
-                if (id == tagId) {
-                    // return inputs[i].tagPoses.get(tagId);
-                }
+            for (TagTranslationInformation tagInfo : inputs[i].tagTranslations) {
+                if (tagInfo.tagId() == tagId)
+                    return tagInfo.translation();
             }
         }
         return new Translation2d();

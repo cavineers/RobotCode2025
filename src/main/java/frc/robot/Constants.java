@@ -146,6 +146,7 @@ public final class Constants {
                         kDriveMotorCurrentLimit,
                         1),
                 moduleTranslations);
+        public static final double PathPlannerDriveP = 5.0;
         public static final double PathPlannerTurnP = 5.0;
     }
 

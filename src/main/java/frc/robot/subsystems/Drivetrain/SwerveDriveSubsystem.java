@@ -115,7 +115,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                                                                  // RELATIVE ChassisSpeeds
                 new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your
                                                 // Constants class
-                        new PIDConstants(5, 0.0, 0.0), // Translation PID constants
+                        new PIDConstants(Constants.DriveConstants.PathPlannerDriveP, 0.0, 0.0), // Translation PID constants
                         new PIDConstants(Constants.DriveConstants.PathPlannerTurnP, 0.0, 0.0) // Rotation PID constants idk why the default is 5
                 ),
                 DriveConstants.robotConfig, // ROBOT CONFIGURATION

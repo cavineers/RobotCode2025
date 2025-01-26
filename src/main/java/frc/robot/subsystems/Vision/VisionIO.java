@@ -1,10 +1,7 @@
 package frc.robot.subsystems.Vision;
 
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import java.util.HashMap;
-
 import org.littletonrobotics.junction.AutoLog;
 
 public interface VisionIO {
@@ -13,7 +10,7 @@ public interface VisionIO {
         public boolean connected = false;
         public PoseObservation[] poseObservations = new PoseObservation[0];
         public int[] tagIds = new int[0];
-        public TagTranslation[] tagTranslations = new TagTranslation[0];
+        public TagTranslationInformation[] tagTranslations = new TagTranslationInformation[0];
     }
 
     /** 
@@ -31,7 +28,7 @@ public interface VisionIO {
     /**
      * The robot relative translation to a single tag.
      */
-    public static record TagTranslation(
+    public static record TagTranslationInformation(
             int tagId,
             Translation2d translation
         ) {

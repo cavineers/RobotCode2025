@@ -48,7 +48,6 @@ public class PointToTarget extends Command {
     @Override
     public void initialize(){
         // Log that this command has been scheduled
-        Logger.recordOutput("Commands/pointToTarget", true);
         Logger.recordOutput("PointToTarget/Target", targetPose);
     }
 
@@ -68,6 +67,8 @@ public class PointToTarget extends Command {
         Logger.recordOutput("PointToTarget/AngleToTarget", angleToTarget);
         Logger.recordOutput("PointToTarget/AngleDifference", angleDifference);
         Logger.recordOutput("PointToTarget/TurningSpeed", turningSpeed);
+        Logger.recordOutput("Commands/pointToTarget", true);
+
 
 
         // Get real-time joystick inputs (SAME AS SWERVECOMMAND)

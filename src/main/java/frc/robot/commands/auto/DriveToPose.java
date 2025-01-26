@@ -1,11 +1,9 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
@@ -23,15 +21,26 @@ public class DriveToPose extends Command {
     private Pose2d targetPose;
     private final PathConstraints constraints;
     
-    public DriveToPose(SwerveDriveSubsystem drivetrain, Supplier<Pose2d> targetPose) {
+    public DriveToPose(SwerveDriveSubsystem drivetrain, Supplier<Pose2d> targetPoseSupplier) {
         // Create the constraints to use while pathfinding
         this.constraints = new PathConstraints(
             DriveConstants.kPhysicalMaxSpeedMetersPerSecond, DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond,
             DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond, DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
         this.drivetrain = drivetrain;
-        this.targetPoseSupplier = targetPose;
-    }  
+        this.targetPoseSupplier = targetPoseSupplier;
+    }
 
+    public DriveToPose(SwerveDriveSubsystem drivetrain, Pose2d targetPose){
+        // Handles the case where we just want to create drive to a single constant pose commands
+        this.constraints = new PathConstraints(
+            DriveConstants.kPhysicalMaxSpeedMetersPerSecond, DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond,
+            DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond, DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
+        
+        this.drivetrain = drivetrain;
+        this.targetPose = targetPose;
+
+        this.targetPoseSupplier = () -> {return targetPose;};
+    }
 
     @Override
     public void initialize() {

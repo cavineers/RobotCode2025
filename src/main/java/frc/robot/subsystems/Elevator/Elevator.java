@@ -26,4 +26,8 @@ public class Elevator extends SubsystemBase {
     public Command setVoltageCommand(double volts) {
         return Commands.run(() -> io.setVoltage(volts), this).finallyDo(interrupted -> io.setVoltage(0));
     }
+
+    public Command goToPresetCommand(double rotations) {
+        return Commands.run(() -> io.setSetPoint(rotations), this).finallyDo(interrupted -> io.setVoltage(0));
+    }
 }

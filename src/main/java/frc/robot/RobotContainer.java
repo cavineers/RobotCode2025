@@ -15,11 +15,11 @@ import frc.robot.subsystems.Drivetrain.ModuleIOSim;
 import frc.robot.subsystems.Drivetrain.ModuleIOSpark;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
 import frc.robot.subsystems.Elevator.Elevator;
+import frc.robot.subsystems.Elevator.ElevatorConstants;
 import frc.robot.subsystems.Elevator.ElevatorIO;
 import frc.robot.subsystems.Elevator.ElevatorIOSim;
 import frc.robot.subsystems.Elevator.ElevatorIOSpark;
 import frc.robot.commands.SystemIdCommands;
-import frc.robot.commands.elevator.ActivatePreset;
 
 public class RobotContainer {
 
@@ -101,10 +101,10 @@ public class RobotContainer {
                 driverController::getLeftX,
                 driverController::getRightX));
 
-        driverController.a().onTrue(new ActivatePreset(elevator, 100.0));
-        driverController.b().onTrue(new ActivatePreset(elevator, -100.0));
-        driverController.x().whileTrue(elevator.setVoltageCommand(12.0));
-        driverController.y().whileTrue(elevator.setVoltageCommand(-12.0));
+        driverController.a().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL1RotationsRad));
+        driverController.b().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL2RotationsRad));
+        driverController.x().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL3RotationsRad));
+        driverController.y().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL4RotationsRad));
     }
 
     public Command getAutonomousCommand() {

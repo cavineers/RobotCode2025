@@ -5,9 +5,10 @@ public class ElevatorConstants {
     public static final int kRightMotorCanID = 2;
     public static final int kGearRatio = 1;
 
-    public static final double kL2RotationsRad = 20;
-    public static final double kL3RotationsRad = 30;
-    public static final double kL4RotationsRad = 40;
+    public static final double kL1RotationsRad = 100;
+    public static final double kL2RotationsRad = 200;
+    public static final double kL3RotationsRad = 300;
+    public static final double kL4RotationsRad = 400;
 
     public static final double kMinRotations = 0;
     public static final double kMaxRotations = 50;

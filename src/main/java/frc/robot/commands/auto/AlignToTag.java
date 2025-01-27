@@ -26,13 +26,17 @@ public class AlignToTag extends Command {
     private PIDController translationXController = new PIDController(Constants.DriveConstants.PathPlannerDriveP*1.75, 0, 0);
     private PIDController translationYController = new PIDController(Constants.DriveConstants.PathPlannerDriveP*1.75, 0, 0);
     private PIDController rotationController = new PIDController(Constants.DriveConstants.PathPlannerTurnP, 0, 0);
-    
 
     public AlignToTag(SwerveDriveSubsystem drivetrain, Vision vision, int tagId){
         this.drivetrain = drivetrain;
         this.vision = vision;
         this.tagId = tagId;
         this.offset = new Translation2d(Constants.DriveConstants.kSideLength/2.0+0.1, 0); // divide by a little less than half (leaves a gap)
+        this.goalRotation = vision.getFieldTagPose(tagId).getRotation().getAngle() + Math.PI;
+
+        this.rotationController.setTolerance(0.01);
+        this.translationXController.setTolerance(0.01);
+        this.translationYController.setTolerance(0.01);
     }
 
     @Override
@@ -40,7 +44,7 @@ public class AlignToTag extends Command {
         // feeding in the distance away from setpoints to PID
         this.translationXController.setSetpoint(0); // zero difference between the current and goal translation
         this.translationYController.setSetpoint(0); 
-        this.rotationController.setSetpoint(0);
+        this.rotationController.setSetpoint(this.goalRotation); // set the rotation setpoint to the goal rotation
         this.rotationController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
@@ -58,13 +62,13 @@ public class AlignToTag extends Command {
         ChassisSpeeds speeds = new ChassisSpeeds(xSpeed, ySpeed, turnSpeed);
         Logger.recordOutput("AlignToTarget/Speeds", speeds);
         Logger.recordOutput("AlignToTarget/TranslationToPose", translationToPose);
-        Logger.recordOutput("AlignToTarget/Rotation", drivetrain.getRotation().getRadians());
+        Logger.recordOutput("AlignToTarget/GoalRotation", this.goalRotation);
 
         this.drivetrain.driveVelocity(speeds);
 
 
-        double currentDist = this.vision.getFieldTagPose(tagId).getTranslation().toTranslation2d().getDistance(this.drivetrain.getPose().getTranslation());
-        Logger.recordOutput("AlignToTarget/DistanceBetweenPoses", currentDist);
+        // double currentDist = this.vision.getFieldTagPose(tagId).getTranslation().toTranslation2d().getDistance(this.drivetrain.getPose().getTranslation());
+        // Logger.recordOutput("AlignToTarget/DistanceBetweenPoses", currentDist);
     }
 
     @Override

@@ -31,7 +31,7 @@ public class AlignToTag extends Command {
         this.drivetrain = drivetrain;
         this.vision = vision;
         this.tagId = tagId;
-        this.offset = new Translation2d(Constants.DriveConstants.kSideLength, 0); // 35 inches out from the tag
+        this.offset = new Translation2d(Constants.DriveConstants.kSideLength/2.0, 0); // 35 inches out from the tag
     }
 
     @Override

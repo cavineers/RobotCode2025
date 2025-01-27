@@ -18,7 +18,7 @@ public class ElevatorIOSim implements ElevatorIO {
             LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 0.004, kGearRatio),
             DCMotor.getNEO(1));
 
-    PIDController elevPid = new PIDController(ElevatorConstants.kProportionalGain, ElevatorConstants.kIntegralTerm, ElevatorConstants.kDerivativeTerm);
+    PIDController elevPid = new PIDController(ElevatorConstants.kProportionalGainSim, ElevatorConstants.kIntegralTermSim, ElevatorConstants.kDerivativeTermSim);
 
     private double motorSetPoint = 0;
 

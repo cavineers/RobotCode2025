@@ -13,7 +13,11 @@ public class ElevatorConstants {
     public static final double kMinRotations = 0;
     public static final double kMaxRotations = 50;
 
-    public static final double kProportionalGain = 0.03;
-    public static final double kIntegralTerm = 0;
-    public static final double kDerivativeTerm = 0;
+    public static final double kProportionalGainSpark = 0.03;
+    public static final double kIntegralTermSpark = 0;
+    public static final double kDerivativeTermSpark = 0;
+
+    public static final double kProportionalGainSim = 0.01;
+    public static final double kIntegralTermSim = 0;
+    public static final double kDerivativeTermSim = 0;
 }

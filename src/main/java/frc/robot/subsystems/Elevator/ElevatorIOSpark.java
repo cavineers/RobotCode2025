@@ -22,7 +22,7 @@ public class ElevatorIOSpark implements ElevatorIO {
     private final RelativeEncoder rightEncoder = rightMotor.getEncoder();
     private final RelativeEncoder leftEncoder = leftMotor.getEncoder();
 
-    PIDController elevPid = new PIDController(ElevatorConstants.kProportionalGain, ElevatorConstants.kIntegralTerm, ElevatorConstants.kDerivativeTerm);
+    PIDController elevPid = new PIDController(ElevatorConstants.kProportionalGainSpark, ElevatorConstants.kIntegralTermSpark, ElevatorConstants.kDerivativeTermSpark);
 
     private double motorSetPoint = 0;
 

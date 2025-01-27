@@ -14,8 +14,8 @@ public class VisionConstants {
     public static String backCameraName = "camera1";
 
     // Camera palcements
-    public static Transform3d robotToFrontCam = new Transform3d(0.1, 0.0, 0, new Rotation3d(0.0,0, 0.0));
-    public static Transform3d robotToBackCam = new Transform3d(-0.1, 0.0, 0, new Rotation3d(0.0, 0, Math.PI));
+    public static Transform3d robotToFrontCam = new Transform3d(-0.25, 0.0, 0, new Rotation3d(0.0,0, 0));
+    public static Transform3d robotToBackCam = new Transform3d(0, 0.0, 0, new Rotation3d(0.0, 0, Math.PI));
 
     public static double maxAmbiguity = 0.3;
     public static double maxZError = 0.75;

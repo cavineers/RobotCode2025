@@ -175,4 +175,12 @@ public class Vision extends SubsystemBase {
         return new Translation2d();
     }
 
+    /**
+     * Gets the tag pose
+     * @param TagId
+     * @return The pose of the tag
+     */
+    public Pose3d getFieldTagPose(int tagId) {
+        return aprilTagLayout.getTagPose(tagId).get();
+    }
 }

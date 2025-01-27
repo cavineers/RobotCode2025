@@ -102,8 +102,8 @@ public class VisionIOPhoton implements VisionIO {
             LinkedList<TagTranslationInformation> tagTranslations = new LinkedList<>();
             for (var target : result.targets) {
                 // Save tag translation to logger
-                Translation2d translation = target.bestCameraToTarget.getTranslation().toTranslation2d();
-
+                Translation2d translation = target.bestCameraToTarget.getTranslation().toTranslation2d()
+                        .plus(robotToCamera.getTranslation().toTranslation2d());
                 // Add tag translation
                 TagTranslationInformation tagTranslation = new TagTranslationInformation(target.fiducialId, translation);
                 tagTranslations.add(tagTranslation);

@@ -39,6 +39,7 @@ import com.revrobotics.spark.SparkMax;
     private boolean isSensorHit(DigitalInput sensor) {
             return sensor.get(); //put in actual threshold
         }
+
     public void updateInputs(IntakeIOInputs inputs) {
            if (isSensorHit(leftSensor) || isSensorHit(rightSensor)) {
             inputs.velocityRadPerSec = 0;
@@ -46,5 +47,7 @@ import com.revrobotics.spark.SparkMax;
             ifOk(leftMotor, leftEncoder::getPosition, value -> inputs.positionRad = value);
             ifOk(rightMotor, rightEncoder::getPosition, value -> inputs.positionRad = value); 
     }
+
+    
 }
 }     

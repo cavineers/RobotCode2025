@@ -14,12 +14,17 @@ import frc.robot.subsystems.Drivetrain.ModuleIO;
 import frc.robot.subsystems.Drivetrain.ModuleIOSim;
 import frc.robot.subsystems.Drivetrain.ModuleIOSpark;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
+import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.Intake.IntakeIO;
+import frc.robot.subsystems.Intake.IntakeIOSim;
+import frc.robot.subsystems.Intake.IntakeIOSpark;
 import frc.robot.commands.SystemIdCommands;
 
 public class RobotContainer {
 
     // Subsystems
     private final SwerveDriveSubsystem drivetrain;
+    private final Intake intake;
 
     // Controllers
     private final CommandXboxController driverController = new CommandXboxController(0);
@@ -37,6 +42,8 @@ public class RobotContainer {
                         new ModuleIOSpark(1),
                         new ModuleIOSpark(2),
                         new ModuleIOSpark(3));
+                
+                intake = new Intake(new IntakeIOSpark());
                 break;
             case SIM:
                 drivetrain = new SwerveDriveSubsystem(
@@ -45,6 +52,8 @@ public class RobotContainer {
                         new ModuleIOSim(),
                         new ModuleIOSim(),
                         new ModuleIOSim());
+
+                intake = new Intake(new IntakeIOSim());
                 break;
             default:
                 // Replay
@@ -54,6 +63,8 @@ public class RobotContainer {
                         new ModuleIO() {},
                         new ModuleIO() {},
                         new ModuleIO() {});
+
+                intake = new Intake(new IntakeIO(){});
                 break;
         }
         configureButtonBindings();
@@ -88,6 +99,9 @@ public class RobotContainer {
                 driverController::getLeftY,
                 driverController::getLeftX,
                 driverController::getRightX));
+
+        driverController.x().whileTrue(intake.setVoltageCommand(12.0));
+        driverController.y().whileTrue(intake.setVoltageCommand(-12.0));
     }
 
     public Command getAutonomousCommand() {

@@ -24,7 +24,7 @@ public class ElevatorIOSpark implements ElevatorIO {
 
     PIDController elevPid = new PIDController(ElevatorConstants.kProportionalGainSpark, ElevatorConstants.kIntegralTermSpark, ElevatorConstants.kDerivativeTermSpark);
 
-    private double motorSetPoint = 0;
+    private double motorSetpoint = 0;
 
     public ElevatorIOSpark() {
     }
@@ -53,22 +53,22 @@ public class ElevatorIOSpark implements ElevatorIO {
         return rightEncoder.getPosition();
     }
 
-    public void setSetPoint(double setPoint) {
-        motorSetPoint = setPoint;
+    public void setSetpoint(double setpoint) {
+        motorSetpoint = setpoint;
     }
 
-    public void updateSetPoint() {
-        elevPid.setSetpoint(motorSetPoint);
+    public void updateSetpoint() {
+        elevPid.setSetpoint(motorSetpoint);
         double speed = elevPid.calculate(getElevMotorPosition());
         setVoltage((speed * 12.0), rightMotor);
         setVoltage((speed * 12.0), leftMotor);
     }
 
     public void checkBoundry() {
-        if(motorSetPoint > ElevatorConstants.kMaxRotations) {
-            motorSetPoint = ElevatorConstants.kMaxRotations;
-        } else if(motorSetPoint < ElevatorConstants.kMinRotations) {
-            motorSetPoint = ElevatorConstants.kMinRotations;
+        if(motorSetpoint > ElevatorConstants.kMaxRotations) {
+            motorSetpoint = ElevatorConstants.kMaxRotations;
+        } else if(motorSetpoint < ElevatorConstants.kMinRotations) {
+            motorSetpoint = ElevatorConstants.kMinRotations;
         }
     }
 

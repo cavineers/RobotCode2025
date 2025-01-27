@@ -18,10 +18,10 @@ public interface ElevatorIO {
     public default void setVoltage(double volts) {
     }
 
-    public default void setSetPoint(double setPoint) {
+    public default void setSetpoint(double setpoint) {
     }
 
-    public default void updateSetPoint() {
+    public default void updateSetpoint() {
     }
 
     public default void checkBoundry() {

@@ -16,7 +16,7 @@ public class Funnel extends SubsystemBase{
     @Override
     public void periodic() {
         io.updateInputs(inputs);
-        Logger.processInputs("INPUT EXAMPLE", inputs);
+        Logger.processInputs("Funnel", inputs);
         
     }
 
@@ -26,7 +26,7 @@ public class Funnel extends SubsystemBase{
 
     public void setPercentage(double percentage) {
         io.setVoltage(percentage * 12.0);
-        //Something important is here ^
+        
     }
 
     public Command setVoltageCommand(double volts) {

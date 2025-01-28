@@ -3,6 +3,8 @@ package frc.robot.subsystems.Drivetrain;
 import static frc.robot.subsystems.Drivetrain.SwerveDriveConstants.DriveConstants.kOdometryFrequency;
 import static frc.robot.subsystems.Drivetrain.SwerveDriveConstants.DriveConstants.kPigeonID;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 
 import org.littletonrobotics.junction.AutoLog;
@@ -29,6 +31,8 @@ public class GyroPigeonIO implements GyroIO {
     private final StatusSignal<LinearAcceleration> AccelerationY = pigeon.getAccelerationY();
     private final Queue<Double> yawTimestampQueue;
     private final StatusSignal<AngularVelocity> yawVelocity = pigeon.getAngularVelocityZWorld();
+    private List<Double> combinedAccelList;
+    
 
     public GyroPigeonIO() {
         pigeon.getConfigurator().apply(new Pigeon2Configuration());
@@ -38,6 +42,7 @@ public class GyroPigeonIO implements GyroIO {
         pigeon.optimizeBusUtilization();
         yawTimestampQueue = SparkOdometryThread.getInstance().makeTimestampQueue();
         yawPositionQueue = SparkOdometryThread.getInstance().registerSignal(yaw::getValueAsDouble);
+        combinedAccelList = new ArrayList<>();
     }
 
     
@@ -57,6 +62,7 @@ public class GyroPigeonIO implements GyroIO {
         double accelY = AccelerationY.getValueAsDouble();
         double combinedAccel = Math.sqrt(accelX * accelX + accelY * accelY);
 
-        inputs.combinedAccel = combinedAccelQueue.stream().mapToDouble((Double value) -> value).toArray();
+        combinedAccelList.add(combinedAccel);
+        inputs.combinedAccel = combinedAccelList.stream().mapToDouble(Double::doubleValue).toArray();
     }
 }

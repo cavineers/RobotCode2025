@@ -15,4 +15,5 @@ public interface GyroIO {
     public Rotation2d[] odometryYawPositions = new Rotation2d[] {};
     public double[] combinedAccel = new double[] {};
   }
+  public default void updateInputs(GyroIOInputs inputs) {}
 }

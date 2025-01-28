@@ -3,7 +3,10 @@ package frc.robot.subsystems.Elevator;
 public class ElevatorConstants {
     public static final int kLeftMotorCanID = 1;
     public static final int kRightMotorCanID = 2;
-    public static final int kGearRatio = 1;
+
+    public static final double kGearRatio = 1;
+
+    public static final int kLimitSwitchID = 0;
 
     public static final double kL1RotationsRad = 100;
     public static final double kL2RotationsRad = 200;

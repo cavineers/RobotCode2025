@@ -7,6 +7,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import edu.wpi.first.wpilibj.simulation.DIOSim;
 
 public class ElevatorIOSim implements ElevatorIO {
     
@@ -18,6 +19,8 @@ public class ElevatorIOSim implements ElevatorIO {
             LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 0.004, kGearRatio),
             DCMotor.getNEO(1));
 
+    private DIOSim limitSwitch = new DIOSim(ElevatorConstants.kLimitSwitchID);
+
     PIDController elevPid = new PIDController(ElevatorConstants.kProportionalGainSim, ElevatorConstants.kIntegralTermSim, ElevatorConstants.kDerivativeTermSim);
 
     private double motorSetpoint = 0;
@@ -27,6 +30,8 @@ public class ElevatorIOSim implements ElevatorIO {
     public void updateInputs(ElevatorIOInputs inputs) { 
         updateMotorInputs(inputs, leftMotor);
         updateMotorInputs(inputs, rightMotor);
+
+        inputs.limitSwitch = getLimitSwitch();
     }
 
     public void updateMotorInputs(ElevatorIOInputs inputs, DCMotorSim motor) {
@@ -38,14 +43,17 @@ public class ElevatorIOSim implements ElevatorIO {
         inputs.appliedVolts = appliedVolts;
         inputs.currentAmps = motor.getCurrentDrawAmps();
     }
-
-    @Override
-    public void setVoltage(double volts) {
-        appliedVolts = MathUtil.clamp(volts, -12.0, 12.0); 
-    }
-
+    
     public double getElevMotorPosition() {
         return rightMotor.getAngularPositionRad();
+    }
+
+    public boolean getLimitSwitch() {
+        return limitSwitch.getValue();
+    }
+
+    public void setVoltage(double volts) {
+        appliedVolts = MathUtil.clamp(volts, -12.0, 12.0); 
     }
 
     public void setSetpoint(double setpoint) {

@@ -13,6 +13,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 public class ElevatorIOSpark implements ElevatorIO {
     
@@ -21,6 +22,8 @@ public class ElevatorIOSpark implements ElevatorIO {
 
     private final RelativeEncoder rightEncoder = rightMotor.getEncoder();
     private final RelativeEncoder leftEncoder = leftMotor.getEncoder();
+
+    private final DigitalInput limitSwitch = new DigitalInput(ElevatorConstants.kLimitSwitchID);
 
     PIDController elevPid = new PIDController(ElevatorConstants.kProportionalGainSpark, ElevatorConstants.kIntegralTermSpark, ElevatorConstants.kDerivativeTermSpark);
 
@@ -33,6 +36,8 @@ public class ElevatorIOSpark implements ElevatorIO {
     public void updateInputs(ElevatorIOInputs inputs) {
         updateMotorInputs(inputs, leftMotor, leftEncoder);
         updateMotorInputs(inputs, rightMotor, rightEncoder);
+
+        inputs.limitSwitch = getLimitSwitch();
     }
 
     public void updateMotorInputs(ElevatorIOInputs inputs, SparkFlex motor, RelativeEncoder encoder) {
@@ -45,12 +50,16 @@ public class ElevatorIOSpark implements ElevatorIO {
         ifOk(motor, motor::getOutputCurrent, (value) -> inputs.currentAmps = value);
     }
 
-    public void setVoltage(double volts, SparkFlex motor) {
-        motor.setVoltage(volts);
-    }
-
     public double getElevMotorPosition() {
         return rightEncoder.getPosition();
+    }
+
+    public boolean getLimitSwitch() {
+        return limitSwitch.get();
+    }
+
+    public void setVoltage(double volts, SparkFlex motor) {
+        motor.setVoltage(volts);
     }
 
     public void setSetpoint(double setpoint) {

@@ -24,7 +24,6 @@ public class ElevatorIOSim implements ElevatorIO {
     PIDController elevPid = new PIDController(ElevatorConstants.kProportionalGainSim, ElevatorConstants.kIntegralTermSim, ElevatorConstants.kDerivativeTermSim);
 
     private double motorSetpoint = 0;
-
     private double appliedVolts = 0.0; 
 
     public void updateInputs(ElevatorIOInputs inputs) { 

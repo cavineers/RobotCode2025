@@ -11,16 +11,15 @@ public class Elevator extends SubsystemBase {
 
     public Elevator(ElevatorIO io) {
         this.io = io;
-
     }
 
     @Override
     public void periodic() { 
         io.updateInputs(inputs); 
-        Logger.processInputs("Elevator", inputs);
-
         io.updateSetpoint();
         io.checkBoundry();
+
+        Logger.processInputs("Elevator", inputs);
     }
 
     public Command setVoltageCommand(double volts) {

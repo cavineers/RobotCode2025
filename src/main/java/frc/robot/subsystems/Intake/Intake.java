@@ -10,9 +10,12 @@ public class Intake extends SubsystemBase{
     private final IntakeIO io;
     private final IntakeIOInputsAutoLogged inputs = new  IntakeIOInputsAutoLogged();
 
+   
     public Intake(IntakeIO io) {
         this.io = io;
 }
+    
+    
     @Override
     public void periodic() {
         io.updateInputs(inputs); 
@@ -20,14 +23,20 @@ public class Intake extends SubsystemBase{
 
     }
 
+    
+    
     public Command setVoltageCommand(double volts) {
         return Commands.run(() -> io.setVoltage(volts), this).finallyDo(interrupted -> io.setVoltage(0));
     }
 
+   
+   
     public void setVoltage(double volts) {
         io.setVoltage(volts);
     }
 
+   
+   
     public void setPercentage(double percentage) {
         io.setVoltage(percentage * 12.0);
     }

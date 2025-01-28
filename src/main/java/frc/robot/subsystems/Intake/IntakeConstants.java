@@ -11,8 +11,8 @@ public class IntakeConstants {
 
     public static final double kRightIntakeForwardSpeed = 0.5;
     public static final double kLeftIntakeForwardSpeed = 0.5;
-    public static final double kRightIntakeReverseSpeed = 0.5;
-    public static final double kLeftIntakeReverseSpeed = 0.5;
+    public static final double kRightIntakeReverseSpeed = -0.5;
+    public static final double kLeftIntakeReverseSpeed = -0.5;
 
     //led setup
     

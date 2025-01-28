@@ -1,16 +1,15 @@
 package frc.robot.subsystems.Intake;
 
+import static frc.robot.subsystems.Intake.IntakeConstants.kLeftIntakeCanID;
+import static frc.robot.subsystems.Intake.IntakeConstants.kRightIntakeCanID; 
 
-    import static frc.lib.SparkUtil.*;
-    
-    import com.revrobotics.RelativeEncoder;
-    import com.revrobotics.spark.SparkLowLevel.MotorType;
+import static frc.lib.SparkUtil.*;
 
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
-
 import com.revrobotics.spark.SparkMax;
-    import static frc.robot.subsystems.Intake.IntakeConstants.kLeftIntakeCanID;
-    import static frc.robot.subsystems.Intake.IntakeConstants.kRightIntakeCanID;
+    
     
     
     
@@ -42,7 +41,8 @@ import com.revrobotics.spark.SparkMax;
 
     public void updateInputs(IntakeIOInputs inputs) {
            if (isSensorHit(leftSensor) || isSensorHit(rightSensor)) {
-            inputs.velocityRadPerSec = 0;
+               leftMotor.setVoltage(0);
+               rightMotor.setVoltage(0);
     } else {
             ifOk(leftMotor, leftEncoder::getPosition, value -> inputs.positionRad = value);
             ifOk(rightMotor, rightEncoder::getPosition, value -> inputs.positionRad = value); 

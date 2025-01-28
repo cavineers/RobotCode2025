@@ -14,7 +14,7 @@ public class ElevatorConstants {
     public static final double kL4RotationsRad = 400;
 
     public static final double kMinRotations = 0;
-    public static final double kMaxRotations = 50;
+    public static final double kMaxRotations = 350;
 
     public static final double kProportionalGainSpark = 0.03;
     public static final double kIntegralTermSpark = 0;

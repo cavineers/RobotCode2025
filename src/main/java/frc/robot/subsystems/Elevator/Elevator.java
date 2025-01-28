@@ -16,8 +16,8 @@ public class Elevator extends SubsystemBase {
     @Override
     public void periodic() { 
         io.updateInputs(inputs); 
-        io.updateSetpoint();
         io.checkBoundry();
+        io.updateSetpoint();
 
         Logger.processInputs("Elevator", inputs);
     }

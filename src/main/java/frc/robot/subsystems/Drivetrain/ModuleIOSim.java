@@ -1,8 +1,6 @@
 package frc.robot.subsystems.Drivetrain;
 
-import static frc.robot.subsystems.Drivetrain.SwerveDriveConstants.MotorConstants.*;
-import static frc.robot.subsystems.Drivetrain.SwerveDriveConstants.*;
-
+import static frc.robot.subsystems.Drivetrain.SwerveDriveConstants.DriveConstants.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;

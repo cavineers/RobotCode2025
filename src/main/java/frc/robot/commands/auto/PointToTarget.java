@@ -9,7 +9,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import org.littletonrobotics.junction.Logger;
 import frc.robot.Constants;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.Drivetrain.SwerveDriveConstants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
 
@@ -41,7 +41,7 @@ public class PointToTarget extends Command {
         this.yJoystick = yJoystick;
         this.xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
         this.yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
-        this.turnController = new PIDController(Constants.DriveConstants.PathPlannerTurnP, 0, 0);
+        this.turnController = new PIDController(DriveConstants.PathPlannerTurnP, 0, 0);
         this.turnController.enableContinuousInput(-Math.PI, Math.PI);
     }
 

@@ -12,6 +12,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
 import frc.robot.subsystems.Vision.Vision;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import frc.robot.subsystems.Drivetrain.SwerveDriveConstants.DriveConstants;
 
 public class AlignToTag extends Command {
 
@@ -23,15 +24,15 @@ public class AlignToTag extends Command {
     private Translation2d translationToPose;
 
     // PIDs for movement
-    private PIDController translationXController = new PIDController(Constants.DriveConstants.PathPlannerDriveP*1.75, 0, 0);
-    private PIDController translationYController = new PIDController(Constants.DriveConstants.PathPlannerDriveP*1.75, 0, 0);
-    private PIDController rotationController = new PIDController(Constants.DriveConstants.PathPlannerTurnP, 0, 0);
+    private PIDController translationXController = new PIDController(DriveConstants.PathPlannerDriveP*1.75, 0, 0);
+    private PIDController translationYController = new PIDController(DriveConstants.PathPlannerDriveP*1.75, 0, 0);
+    private PIDController rotationController = new PIDController(DriveConstants.PathPlannerTurnP, 0, 0);
 
     public AlignToTag(SwerveDriveSubsystem drivetrain, Vision vision, int tagId){
         this.drivetrain = drivetrain;
         this.vision = vision;
         this.tagId = tagId;
-        this.offset = new Translation2d(Constants.DriveConstants.kSideLength/2.0+0.1, 0); // divide by a little less than half (leaves a gap)
+        this.offset = new Translation2d(DriveConstants.kSideLength/2.0+0.1, 0); // divide by a little less than half (leaves a gap)
         this.goalRotation = vision.getFieldTagPose(tagId).getRotation().getAngle() + Math.PI;
 
         this.rotationController.setTolerance(0.01);

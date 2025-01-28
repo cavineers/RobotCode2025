@@ -7,12 +7,10 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.util.Units;
 import org.littletonrobotics.junction.Logger;
-
-import frc.robot.subsystems.Drivetrain.SwerveDriveConstants.DriveConstants;
-
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
+
+import static frc.robot.subsystems.Drivetrain.SwerveDriveConstants.*;
 
 public class DriveToPose extends Command {
     private Command pathfindingCommand;

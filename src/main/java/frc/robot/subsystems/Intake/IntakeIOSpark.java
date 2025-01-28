@@ -19,15 +19,15 @@ import com.revrobotics.spark.SparkMax;
         private final SparkMax rightMotor = new SparkMax(kRightIntakeCanID, MotorType.kBrushless);
         private final RelativeEncoder leftEncoder = leftMotor.getEncoder();
         private final RelativeEncoder rightEncoder = rightMotor.getEncoder();
-        public DigitalInput leftSensor = new DigitalInput(IntakeConstants.CoralSensorLeft);
-        public DigitalInput rightSensor = new DigitalInput(IntakeConstants.CoralSensorRight);
+        public DigitalInput leftSensor = new DigitalInput(IntakeConstants.kCoralSensorLeft);
+        public DigitalInput rightSensor = new DigitalInput(IntakeConstants.kCoralSensorRight);
 
     
         public IntakeIOSpark(){
-            //motor config?
+            //motor config 
         }
     
-        // Removed duplicate method
+   
         
         
         @Override

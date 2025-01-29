@@ -341,4 +341,17 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public Command sysIdDynamic(SysIdRoutine.Direction direction) {
         return run(() -> runCharacterization(0.0)).withTimeout(1.0).andThen(sysId.dynamic(direction));
     }
+
+    /** Returns whether the automatic tilt saftey should run 
+     * @return boolean needs safety
+     */
+    public boolean needsSafety() {
+        if (gyroInputs.pitchPosition.getDegrees() > 8) {
+            return true;
+        }
+        if (gyroInputs.rollPosition.getDegrees() > 8) {
+            return true;
+        }
+        return false;
+    }
 }

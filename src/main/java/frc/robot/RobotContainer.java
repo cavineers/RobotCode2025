@@ -44,7 +44,7 @@ public class RobotContainer {
                         new ModuleIOSpark(2),
                         new ModuleIOSpark(3));
 
-                elevator = new Elevator(new ElevatorIOSpark());
+                elevator = new Elevator(new ElevatorIOSpark(), drivetrain::needsSafety);
                 break;
             case SIM:
                 drivetrain = new SwerveDriveSubsystem(
@@ -54,7 +54,7 @@ public class RobotContainer {
                         new ModuleIOSim(),
                         new ModuleIOSim());
 
-                elevator = new Elevator(new ElevatorIOSim());
+                elevator = new Elevator(new ElevatorIOSim(), drivetrain::needsSafety);
                 break;
             default:
                 // Replay
@@ -65,7 +65,7 @@ public class RobotContainer {
                         new ModuleIO() {},
                         new ModuleIO() {});
 
-                elevator = new Elevator(new ElevatorIO(){});
+                elevator = new Elevator(new ElevatorIO(){}, drivetrain::needsSafety);
                 break;
         }
         configureButtonBindings();

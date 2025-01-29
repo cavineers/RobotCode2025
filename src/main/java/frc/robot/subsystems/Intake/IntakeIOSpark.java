@@ -35,19 +35,19 @@ import com.revrobotics.spark.SparkMax;
             rightMotor.setVoltage(volts);
         }
 
-    private boolean isSensorHit(DigitalInput sensor) {
-            return sensor.get(); //put in actual threshold
-        }
-
     public void updateInputs(IntakeIOInputs inputs) {
-           if (isSensorHit(leftSensor) || isSensorHit(rightSensor)) {
-               leftMotor.setVoltage(0);
-               rightMotor.setVoltage(0);
-    } else {
-            ifOk(leftMotor, leftEncoder::getPosition, value -> inputs.positionRad = value);
-            ifOk(rightMotor, rightEncoder::getPosition, value -> inputs.positionRad = value); 
+        ifOk(leftMotor, leftEncoder::getPosition, value -> inputs.positionRadLeft = value);
+        ifOk(rightMotor, rightEncoder::getPosition, value -> inputs.positionRadRight = value); 
+        ifOk(leftMotor, leftEncoder::getPosition, value -> inputs.appliedVoltsLeft = value);
+        ifOk(rightMotor, rightEncoder::getPosition, value -> inputs.appliedVoltsRight = value);
+        ifOk(leftMotor, leftEncoder::getPosition, value -> inputs.currentAmpsLeft = value);
+        ifOk(rightMotor, rightEncoder::getPosition, value -> inputs.currentAmpsRight = value);
+        ifOk(leftMotor, leftEncoder::getPosition, value -> inputs.velocityRadPerSecLeft = value);
+        ifOk(rightMotor, rightEncoder::getPosition, value -> inputs.velocityRadPerSecRight = value);
+        inputs.leftSensor = leftSensor.get();
+        inputs.rightSensor = rightSensor.get();
     }
 
     
 }
-}     
+     

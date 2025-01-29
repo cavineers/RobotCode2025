@@ -10,7 +10,6 @@ public class Intake extends SubsystemBase{
     private final IntakeIO io;
     private final IntakeIOInputsAutoLogged inputs = new  IntakeIOInputsAutoLogged();
 
-   
     public Intake(IntakeIO io) {
         this.io = io;
 }
@@ -20,19 +19,23 @@ public class Intake extends SubsystemBase{
     public void periodic() {
         io.updateInputs(inputs); 
         Logger.processInputs("Intake", inputs); 
-
+        if (inputs.leftSensor)
+            setVoltage(0);
+        
     }
 
     
     
     public Command setVoltageCommand(double volts) {
-        return Commands.run(() -> io.setVoltage(volts), this).finallyDo(interrupted -> io.setVoltage(0));
+        return Commands.startEnd(() -> setVoltage(volts), () -> setVoltage(0), this);
     }
 
-   
-   
     public void setVoltage(double volts) {
-        io.setVoltage(volts);
+        if (inputs.leftSensor){
+            io.setVoltage(0);
+        }else{
+            io.setVoltage(volts);
+        }
     }
 
    

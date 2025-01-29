@@ -6,9 +6,11 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+//import edu.wpi.first.wpilibj.simulation.EncoderSim;
+//import edu.wpi.first.wpilibj.Encoder;
 
 public class AlgaeBarIOSim implements AlgaeBarIO {
-    // create a simulation model of the motor
+    //create a simulation model of the motor
     private DCMotorSim algaebarRotateMotor = new DCMotorSim(
         LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 0.004, 1), // 1:1 gearbox for the example
         DCMotor.getNEO(1));
@@ -16,27 +18,30 @@ public class AlgaeBarIOSim implements AlgaeBarIO {
     private DCMotorSim algaebarCoralMotor = new DCMotorSim(
         LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 0.004, 1),
         DCMotor.getNEO(1));
-    
+
+    //private EncoderSim algaebarFirstSensor = new EncoderSim(
+        //LinearSystemId.createEncoderSystem(Encoder.getNEO(1), 0.004, 1),
+        //Encoder.getNEO(1)); 
+        
     private double appliedVolts = 0.0; // The applied voltage to the motor (can't be read from the motor this is set by us)
 
     @Override
-    public void updateInputs(AlgaeBarIOInputs inputs){ // called from a periodic method
+    public void updateInputs(AlgaeBarIOInputs inputs) { // called from a periodic method
         algaebarRotateMotor.setInputVoltage(appliedVolts);
         algaebarRotateMotor.update(0.02);
 
-        inputs.positionRad = algaebarRotateMotor.getAngularPositionRad();
-        inputs.velocityRadPerSec = algaebarRotateMotor.getAngularVelocityRadPerSec();
-        inputs.appliedVolts = appliedVolts;
-        inputs.currentAmps = algaebarRotateMotor.getCurrentDrawAmps();
-
-
+        inputs.rotateMotorPositionRad = algaebarRotateMotor.getAngularPositionRad();
+        inputs.rotateMotorVelocityRadPerSec = algaebarRotateMotor.getAngularVelocityRadPerSec();
+        inputs.rotateMotorAppliedVolts = appliedVolts;
+        inputs.rotateMotorCurrentAmps = algaebarRotateMotor.getCurrentDrawAmps();
 
         algaebarCoralMotor.setInputVoltage(appliedVolts);
         algaebarCoralMotor.update(0.02);
 
-        inputs.positionRad = algaebarCoralMotor.getAngularPositionRad();
-        inputs.velocityRadPerSec = algaebarCoralMotor.getAngularVelocityRadPerSec();
-        inputs.currentAmps = algaebarCoralMotor.getCurrentDrawAmps();
+        inputs.coralMotorPositionRad = algaebarCoralMotor.getAngularPositionRad();
+        inputs.coralMotorVelocityRadPerSec = algaebarCoralMotor.getAngularVelocityRadPerSec();
+        inputs.coralMotorAppliedVolts = appliedVolts;
+        inputs.coralMotorCurrentAmps = algaebarCoralMotor.getCurrentDrawAmps();
     } 
     
     @Override

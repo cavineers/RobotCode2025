@@ -8,7 +8,7 @@ import static frc.robot.subsystems.Algaebar.AlgaeBarConstants.kAlgaeBarCoralCanI
 
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj.DigitalInput;
+//import edu.wpi.first.wpilibj.DigitalInput;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -21,8 +21,8 @@ public class AlgaeBarIOSpark implements AlgaeBarIO {
     private final SparkMax coralMotor = new SparkMax(kAlgaeBarCoralCanID, MotorType.kBrushless);
     private final RelativeEncoder coralEncoder = coralMotor.getEncoder();
 
-    public DigitalInput firstSensor = new DigitalInput(AlgaeBarConstants.algaeBarSensorOne); //change sensor names as appropriate
-    public DigitalInput secondSensor = new DigitalInput(AlgaeBarConstants.algaeBarSensorTwo);
+    //public DigitalInput firstSensor = new DigitalInput(AlgaeBarConstants.algaeBarSensorOne); //change sensor names as appropriate
+    //public DigitalInput secondSensor = new DigitalInput(AlgaeBarConstants.algaeBarSensorTwo);
 
     public AlgaeBarIOSpark(){
         //could do motor configuration here
@@ -30,28 +30,21 @@ public class AlgaeBarIOSpark implements AlgaeBarIO {
 
     @Override
     public void updateInputs(AlgaeBarIOInputs inputs) {
-        ifOk(rotateMotor, rotateEncoder::getPosition, (value) -> inputs.positionRad = value); //only 
-        ifOk(rotateMotor, rotateEncoder::getVelocity, (value) -> inputs.velocityRadPerSec = value);
+        ifOk(rotateMotor, rotateEncoder::getPosition, (value) -> inputs.rotateMotorPositionRad = value);   //only 
+        ifOk(rotateMotor, rotateEncoder::getVelocity, (value) -> inputs.rotateMotorVelocityRadPerSec = value);
         ifOk(
             rotateMotor,
                 new DoubleSupplier[] {rotateMotor::getAppliedOutput, rotateMotor::getBusVoltage},
-                (values) -> inputs.appliedVolts = values[0] * values[1]);
-        ifOk(rotateMotor, rotateMotor::getOutputCurrent, (value) -> inputs.currentAmps = value);   
+                (values) -> inputs.rotateMotorAppliedVolts = values[0] * values[1]);
+        ifOk(rotateMotor, rotateMotor::getOutputCurrent, (value) -> inputs.rotateMotorCurrentAmps = value);   
         
-        ifOk(coralMotor, coralEncoder::getPosition, (value) -> inputs.positionRad = value); 
-        ifOk(coralMotor, coralEncoder::getVelocity, (value) -> inputs.velocityRadPerSec = value);
+        ifOk(coralMotor, coralEncoder::getPosition, (value) -> inputs.coralMotorPositionRad = value); 
+        ifOk(coralMotor, coralEncoder::getVelocity, (value) -> inputs.coralMotorVelocityRadPerSec = value);
         ifOk(
             coralMotor,
                 new DoubleSupplier[] {coralMotor::getAppliedOutput, coralMotor::getBusVoltage},
-                (values) -> inputs.appliedVolts = values[0] * values[1]);
-        ifOk(coralMotor, coralMotor::getOutputCurrent, (value) -> inputs.currentAmps = value);   
-
-        if (isSensorHit(firstSensor) || isSensorHit(secondSensor)) {
-            inputs.velocityRadPerSec = 0;
-        } else {
-            ifOk(rotateMotor, rotateEncoder::getPosition, value -> inputs.positionRad = value);
-            ifOk(coralMotor, coralEncoder::getPosition, value -> inputs.positionRad = value);
-    }
+                (values) -> inputs.coralMotorAppliedVolts = values[0] * values[1]);
+        ifOk(coralMotor, coralMotor::getOutputCurrent, (value) -> inputs.coralMotorCurrentAmps= value); 
     } 
 
     @Override
@@ -59,9 +52,5 @@ public class AlgaeBarIOSpark implements AlgaeBarIO {
             rotateMotor.setVoltage(volts);
 
             coralMotor.setVoltage(volts);
-        }
-
-        private boolean isSensorHit(DigitalInput sensor) {
-            return sensor.get();
         }
  }

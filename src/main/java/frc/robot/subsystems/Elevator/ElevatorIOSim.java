@@ -30,6 +30,10 @@ public class ElevatorIOSim implements ElevatorIO {
         updateMotorInputs(inputs, leftMotor);
         updateMotorInputs(inputs, rightMotor);
 
+        double speed = elevPid.calculate(getElevMotorPosition());
+        setVoltage(speed * 12.0);
+        setVoltage(speed * 12.0);
+
         inputs.limitSwitch = getLimitSwitch();
     }
 
@@ -61,9 +65,6 @@ public class ElevatorIOSim implements ElevatorIO {
 
     public void updateSetpoint() {
         elevPid.setSetpoint(motorSetpoint);
-        double speed = elevPid.calculate(getElevMotorPosition());
-        setVoltage(speed * 12.0);
-        setVoltage(speed * 12.0);
     }
 
     public void checkBoundry() {

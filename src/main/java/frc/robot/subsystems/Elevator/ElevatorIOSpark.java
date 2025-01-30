@@ -37,6 +37,10 @@ public class ElevatorIOSpark implements ElevatorIO {
         updateMotorInputs(inputs, leftMotor, leftEncoder);
         updateMotorInputs(inputs, rightMotor, rightEncoder);
 
+        double speed = elevPid.calculate(getElevMotorPosition());
+        setVoltage((speed * 12.0), rightMotor);
+        setVoltage((speed * 12.0), leftMotor);
+
         inputs.limitSwitch = getLimitSwitch();
     }
 
@@ -68,9 +72,6 @@ public class ElevatorIOSpark implements ElevatorIO {
 
     public void updateSetpoint() {
         elevPid.setSetpoint(motorSetpoint);
-        double speed = elevPid.calculate(getElevMotorPosition());
-        setVoltage((speed * 12.0), rightMotor);
-        setVoltage((speed * 12.0), leftMotor);
     }
 
     public void checkBoundry() {

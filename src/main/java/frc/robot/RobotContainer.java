@@ -14,17 +14,17 @@ import frc.robot.subsystems.Drivetrain.ModuleIO;
 import frc.robot.subsystems.Drivetrain.ModuleIOSim;
 import frc.robot.subsystems.Drivetrain.ModuleIOSpark;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
-import frc.robot.subsystems.Intake.Intake;
-import frc.robot.subsystems.Intake.IntakeIO;
-import frc.robot.subsystems.Intake.IntakeIOSim;
-import frc.robot.subsystems.Intake.IntakeIOSpark;
+import frc.robot.subsystems.EndEffector.EndEffector;
+import frc.robot.subsystems.EndEffector.EndEffectorIO;
+import frc.robot.subsystems.EndEffector.EndEffectorIOSim;
+import frc.robot.subsystems.EndEffector.EndEffectorIOSpark;
 import frc.robot.commands.SystemIdCommands;
 
 public class RobotContainer {
 
     // Subsystems
     private final SwerveDriveSubsystem drivetrain;
-    private final Intake intake;
+    private final EndEffector endEffector;
 
     // Controllers
     private final CommandXboxController driverController = new CommandXboxController(0);
@@ -43,7 +43,7 @@ public class RobotContainer {
                         new ModuleIOSpark(2),
                         new ModuleIOSpark(3));
                 
-                intake = new Intake(new IntakeIOSpark());
+                endEffector = new EndEffector(new EndEffectorIOSpark());
                 break;
             case SIM:
                 drivetrain = new SwerveDriveSubsystem(
@@ -53,7 +53,7 @@ public class RobotContainer {
                         new ModuleIOSim(),
                         new ModuleIOSim());
 
-                intake = new Intake(new IntakeIOSim());
+                endEffector = new EndEffector(new EndEffectorIOSim());
                 break;
             default:
                 // Replay
@@ -64,7 +64,7 @@ public class RobotContainer {
                         new ModuleIO() {},
                         new ModuleIO() {});
 
-                intake = new Intake(new IntakeIO(){});
+                endEffector = new EndEffector(new EndEffectorIO(){});
                 break;
         }
         configureButtonBindings();
@@ -100,8 +100,8 @@ public class RobotContainer {
                 driverController::getLeftX,
                 driverController::getRightX));
 
-        driverController.x().whileTrue(intake.setVoltageCommand(12.0));
-        driverController.y().whileTrue(intake.setVoltageCommand(-12.0));
+        driverController.x().whileTrue(endEffector.setVoltageCommand(12.0));
+        driverController.y().whileTrue(endEffector.setVoltageCommand(-12.0));
     }
 
     public Command getAutonomousCommand() {

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Intake;
+package frc.robot.subsystems.EndEffector;
 
 import org.littletonrobotics.junction.Logger;
 
@@ -6,11 +6,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Intake extends SubsystemBase{
-    private final IntakeIO io;
-    private final IntakeIOInputsAutoLogged inputs = new  IntakeIOInputsAutoLogged();
+public class EndEffector extends SubsystemBase{
+    private final EndEffectorIO io;
+    private final EndEffectorIOInputsAutoLogged inputs = new  EndEffectorIOInputsAutoLogged();
 
-    public Intake(IntakeIO io) {
+    public EndEffector(EndEffectorIO io) {
         this.io = io;
 }
     
@@ -18,7 +18,7 @@ public class Intake extends SubsystemBase{
     @Override
     public void periodic() {
         io.updateInputs(inputs); 
-        Logger.processInputs("Intake", inputs); 
+        Logger.processInputs("EndEffector", inputs); 
         if (inputs.leftSensor)
             setVoltage(0);
         

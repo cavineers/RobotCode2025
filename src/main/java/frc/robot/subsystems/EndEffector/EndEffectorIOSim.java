@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Intake;
+package frc.robot.subsystems.EndEffector;
 
 
 import edu.wpi.first.math.MathUtil;
@@ -7,7 +7,7 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 
-public class IntakeIOSim implements IntakeIO {
+public class EndEffectorIOSim implements EndEffectorIO {
    
     private DCMotorSim motor = new DCMotorSim(
         LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 0.004, 1), 
@@ -18,7 +18,7 @@ public class IntakeIOSim implements IntakeIO {
 
 
     @Override
-    public void updateInputs(IntakeIOInputs inputs) {
+    public void updateInputs(EndEffectorIOInputs inputs) {
         motor.setInputVoltage(appliedVolts);
         motor.update(0.02);
 

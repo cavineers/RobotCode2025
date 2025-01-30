@@ -10,6 +10,8 @@ public interface FunnelIO {
         public double velocityRadPerSec = 0.0;
         public double appliedVolts = 0.0;
         public double currentAmps = 0.0;
+
+        public boolean funnelSensor1 = false;
     } 
 
 

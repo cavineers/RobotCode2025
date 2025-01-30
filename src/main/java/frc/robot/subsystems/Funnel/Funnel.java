@@ -17,11 +17,21 @@ public class Funnel extends SubsystemBase{
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Funnel", inputs);
+        if (inputs.funnelSensor1)
+            setVoltage(0);
         
     }
 
+    public Command setVoltgaeCommand(double volts) {
+        return Commands.startEnd(() -> setVoltage(volts), () -> setVoltage(0), this);
+    }
+
     public void setVoltage(double volts) {
-        io.setVoltage (volts);
+       if(inputs.funnelSensor1){
+        io.setVoltage(0);
+       }else{
+        io.setVoltage(volts);
+       }
     }
 
     public void setPercentage(double percentage) {

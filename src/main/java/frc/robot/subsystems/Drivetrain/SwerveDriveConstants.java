@@ -46,7 +46,7 @@ public class SwerveDriveConstants {
         public static final int kBackRightAbsoluteEncoderPort = 11;
         public static final int kBackLeftAbsoluteEncoderPort = 12;
 
-        public static final int kPigeonID = 23;
+        public static final int kPigeonID = 13;
 
         public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond;
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;

@@ -193,6 +193,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             poseEstimator.updateWithTime(odometryTimestamps[i], gyroRotation, modulePositions);
         }
 
+        // Log whether the angle is out of acceptable ranges
+        Logger.recordOutput("Drivetrain/NeedsSafety", this.needsSafety());
+
     }
 
     /**
@@ -346,10 +349,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * @return boolean needs safety
      */
     public boolean needsSafety() {
-        if (gyroInputs.pitchPosition.getDegrees() > 8) {
+        if (Math.abs(gyroInputs.pitchPosition.getDegrees()) > 8) {
             return true;
         }
-        if (gyroInputs.rollPosition.getDegrees() > 8) {
+        if (Math.abs(gyroInputs.rollPosition.getDegrees()) > 8) {
             return true;
         }
         return false;

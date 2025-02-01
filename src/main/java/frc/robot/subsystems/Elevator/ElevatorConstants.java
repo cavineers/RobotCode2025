@@ -1,8 +1,8 @@
 package frc.robot.subsystems.Elevator;
 
 public class ElevatorConstants {
-    public static final int kLeftMotorCanID = 1;
-    public static final int kRightMotorCanID = 2;
+    public static final int kLeftMotorCanID = 52;
+    public static final int kRightMotorCanID = 51;
 
     public static final int kLimitSwitchID = 0;
 

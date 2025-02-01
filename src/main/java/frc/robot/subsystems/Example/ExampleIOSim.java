@@ -25,12 +25,11 @@ public class ExampleIOSim implements ExampleIO {
         inputs.appliedVolts = appliedVolts;
         inputs.currentAmps = motor.getCurrentDrawAmps();
 
-        // Add the most recent current Amps to the history and shift all other values left
-        inputs.recentAmpsHistory = new double[100];
-        for (int i = 0; i < 98; i++){
-            inputs.recentAmpsHistory[i] = 
+        for (int i = 0; i < inputs.recentAmpsHistory.length - 1; i++) {
+            inputs.recentAmpsHistory[i] = inputs.recentAmpsHistory[i + 1];
         }
-
+        // Set the last element to currentAmps
+        inputs.recentAmpsHistory[inputs.recentAmpsHistory.length - 1] = inputs.currentAmps;
     }
 
     @Override

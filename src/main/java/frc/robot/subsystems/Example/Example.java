@@ -17,8 +17,17 @@ public class Example extends SubsystemBase {
     @Override
     public void periodic() { // Called once per scheduler run
         io.updateInputs(inputs); // inputs is passed as a reference here
-        if (inputs.currentAmps > kCuttOffAmps) {
+
+        double sum = 0;
+        for (double value : inputs.recentAmpsHistory) {
+            sum += value;
+        }
+        Logger.recordOutput("Example/AverageAmps", sum / inputs.recentAmpsHistory.length);
+        if (sum / inputs.recentAmpsHistory.length > kCutOffAmps) {
             io.setVoltage(0.0);
+            Logger.recordOutput("Example/CutOff", true);
+        } else {
+            Logger.recordOutput("Example/CutOff", false);
         }
 
         Logger.processInputs("Example", inputs); // required for logging and replay to work

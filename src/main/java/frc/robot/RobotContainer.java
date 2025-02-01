@@ -99,6 +99,9 @@ public class RobotContainer {
                 driverController::getLeftY,
                 driverController::getLeftX,
                 driverController::getRightX));
+
+        // Bind a button to a command
+        driverController.a().whileTrue(exampleSubsystem.setVoltageCommand(4.0));
     }
 
     public Command getAutonomousCommand() {

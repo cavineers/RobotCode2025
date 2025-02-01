@@ -24,6 +24,13 @@ public class ExampleIOSim implements ExampleIO {
         inputs.velocityRadPerSec = motor.getAngularVelocityRadPerSec();
         inputs.appliedVolts = appliedVolts;
         inputs.currentAmps = motor.getCurrentDrawAmps();
+
+        // Add the most recent current Amps to the history and shift all other values left
+        inputs.recentAmpsHistory = new double[100];
+        for (int i = 0; i < 98; i++){
+            inputs.recentAmpsHistory[i] = 
+        }
+
     }
 
     @Override

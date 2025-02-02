@@ -6,23 +6,36 @@ public interface ElevatorIO {
     
     @AutoLog
     public static class ElevatorIOInputs {
-        public double positionRad = 0.0;
-        public double velocityRadPerSec = 0.0;
-        public double appliedVolts = 0.0;
-        public double currentAmps = 0.0;
+        public double leftPositionRotations = 0.0;
+        public double leftVelocityRPM = 0.0;
+        public double leftAppliedVolts = 0.0;
+        public double leftCurrentAmps = 0.0;
+
+        public double rightPositionRotations = 0.0;
+        public double rightVelocityRPM = 0.0;
+        public double rightAppliedVolts = 0.0;
+        public double rightCurrentAmps = 0.0;
+
         public boolean limitSwitch;
     }
 
     public default void updateInputs(ElevatorIOInputs inputs) {
     }
 
+    /**
+     * Sets the voltage applied to the motor.
+     * @deprecated Use {@link #updateSetpoint(double)} instead
+     */
+    @Deprecated
     public default void setVoltage(double volts) {
     }
-
-    public default void setSetpoint(double setpoint) {
-    }
-
-    public default void updateSetpoint() {
+    
+    /**
+     * Set the setpoint for the elevator
+     * @param setpoint
+     * @implNote This method must clip setpoint to the maximum and minimum values
+     */
+    public default void updateSetpoint(double setpoint) {
     }
 
     public default void checkBoundry() {

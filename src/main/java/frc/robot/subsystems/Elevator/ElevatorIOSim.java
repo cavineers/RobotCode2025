@@ -2,6 +2,8 @@ package frc.robot.subsystems.Elevator;
 
 import static frc.robot.subsystems.Elevator.ElevatorConstants.*;
 
+import org.littletonrobotics.junction.AutoLogOutput;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -23,55 +25,52 @@ public class ElevatorIOSim implements ElevatorIO {
 
     PIDController elevPid = new PIDController(ElevatorConstants.kProportionalGainSim, ElevatorConstants.kIntegralTermSim, ElevatorConstants.kDerivativeTermSim);
 
+    @AutoLogOutput(key = "Elevator/Setpoint")
     private double motorSetpoint = 0;
     private double appliedVolts = 0.0; 
 
     public void updateInputs(ElevatorIOInputs inputs) { 
-        updateMotorInputs(inputs, leftMotor);
-        updateMotorInputs(inputs, rightMotor);
+        // Apply voltages updates to motors
+        appliedVolts = elevPid.calculate(rightMotor.getAngularPositionRotations()) + kGravityTermSim;
+        rightMotor.setInputVoltage(appliedVolts);
+        leftMotor.setInputVoltage(appliedVolts);
+        rightMotor.update(0.02);
+        leftMotor.update(0.02);
 
-        double speed = elevPid.calculate(getElevMotorPosition());
-        setVoltage(speed * 12.0);
-        setVoltage(speed * 12.0);
+        inputs.leftPositionRotations = leftMotor.getAngularPositionRotations();
+        inputs.leftVelocityRPM = leftMotor.getAngularVelocityRPM();
+        inputs.leftAppliedVolts = leftMotor.getInputVoltage();
+        inputs.leftCurrentAmps = leftMotor.getCurrentDrawAmps();
+
+        inputs.rightPositionRotations = rightMotor.getAngularPositionRotations();
+        inputs.rightVelocityRPM = rightMotor.getAngularVelocityRPM();
+        inputs.rightAppliedVolts = rightMotor.getInputVoltage();
+        inputs.rightCurrentAmps = rightMotor.getCurrentDrawAmps();
 
         inputs.limitSwitch = getLimitSwitch();
     }
 
-    public void updateMotorInputs(ElevatorIOInputs inputs, DCMotorSim motor) {
-        motor.setInputVoltage(appliedVolts);
-        motor.update(0.02);
-
-        inputs.positionRad = motor.getAngularPositionRad();
-        inputs.velocityRadPerSec = motor.getAngularVelocityRadPerSec();
-        inputs.appliedVolts = appliedVolts;
-        inputs.currentAmps = motor.getCurrentDrawAmps();
-    }
-    
-    public double getElevMotorPosition() {
-        return rightMotor.getAngularPositionRad();
-    }
 
     public boolean getLimitSwitch() {
         return limitSwitch.getValue();
     }
 
+    @Deprecated
     public void setVoltage(double volts) {
         appliedVolts = MathUtil.clamp(volts, -12.0, 12.0); 
     }
 
-    public void setSetpoint(double setpoint) {
-        motorSetpoint = setpoint;
-    }
-
-    public void updateSetpoint() {
+    public void updateSetpoint(double motorSetpoint) {
+        this.motorSetpoint = clipSetpoint(motorSetpoint);
         elevPid.setSetpoint(motorSetpoint);
     }
 
-    public void checkBoundry() {
+    public double clipSetpoint(double setpoint) {
         if(motorSetpoint > ElevatorConstants.kMaxRotations) {
-            motorSetpoint = ElevatorConstants.kMaxRotations;
+            return ElevatorConstants.kMaxRotations;
         } else if(motorSetpoint < ElevatorConstants.kMinRotations) {
-            motorSetpoint = ElevatorConstants.kMinRotations;
+            return ElevatorConstants.kMinRotations;
         }
+        return setpoint;
     }
 }

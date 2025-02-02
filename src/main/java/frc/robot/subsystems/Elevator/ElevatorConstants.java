@@ -19,8 +19,16 @@ public class ElevatorConstants {
     public static final double kProportionalGainSpark = 0.03;
     public static final double kIntegralTermSpark = 0;
     public static final double kDerivativeTermSpark = 0;
+    public static final double kStaticFrictionTermSpark = 0.0;
+    public static final double kGravityTermSpark = 0.0;
+    public static final double kTolerance = 0.1;
 
-    public static final double kProportionalGainSim = 0.004;
+
+    public static final double kProportionalGainSim = 7;
     public static final double kIntegralTermSim = 0;
-    public static final double kDerivativeTermSim = 0;
+    public static final double kDerivativeTermSim = 1.75;
+    public static final double kStaticFrictionTermSim = 0.0;
+    public static final double kGravityTermSim = 0.0;
+
+    public static final int kCurrentLimit = 40;
 }

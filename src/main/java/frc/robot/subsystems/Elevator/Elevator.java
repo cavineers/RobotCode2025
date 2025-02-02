@@ -16,8 +16,6 @@ public class Elevator extends SubsystemBase {
     @Override
     public void periodic() { 
         io.updateInputs(inputs); 
-        io.checkBoundry();
-        io.updateSetpoint();
 
         Logger.processInputs("Elevator", inputs);
     }
@@ -27,6 +25,6 @@ public class Elevator extends SubsystemBase {
     }
 
     public Command goToPresetCommand(double rotations) {
-        return Commands.run(() -> io.setSetpoint(rotations), this).finallyDo(interrupted -> io.setVoltage(0));
+        return Commands.run(() -> io.updateSetpoint(rotations), this);
     }
 }

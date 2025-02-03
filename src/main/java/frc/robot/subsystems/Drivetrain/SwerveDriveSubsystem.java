@@ -195,6 +195,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
         // Log whether the angle is out of acceptable ranges
         Logger.recordOutput("Drivetrain/NeedsSafety", this.needsSafety());
+        Logger.recordOutput("Drivetrain/FrontTip", this.frontTip());
+        Logger.recordOutput("Drivetrain/SideTip", this.sideTip());
 
     }
 
@@ -348,11 +350,25 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     /** Returns whether the automatic tilt saftey should run 
      * @return boolean needs safety
      */
-    public boolean needsSafety() {
-        if (Math.abs(gyroInputs.pitchPosition.getDegrees()) > 8) {
+    public boolean frontTip() {
+        if (Math.abs(gyroInputs.pitchPosition.getDegrees()) > 3.5) {
             return true;
         }
-        if (Math.abs(gyroInputs.rollPosition.getDegrees()) > 8) {
+        return false;
+    }
+
+    public boolean sideTip() {
+        if (Math.abs(gyroInputs.rollPosition.getDegrees()) > 3.5) {
+            return true;
+        }
+        return false;
+    }
+    
+     public boolean needsSafety() {
+        if (frontTip()) {
+            return true;
+        }
+        if (sideTip()) {
             return true;
         }
         return false;

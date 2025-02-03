@@ -101,10 +101,10 @@ public class RobotContainer {
                 driverController::getLeftX,
                 driverController::getRightX));
 
-        driverController.a().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL1RotationsRad));
-        driverController.b().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL2RotationsRad));
-        driverController.x().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL3RotationsRad));
-        driverController.y().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL4RotationsRad));
+        driverController.a().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL1RotationsRotations));
+        driverController.b().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL2RotationsRotations));
+        driverController.x().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL3RotationsRotations));
+        driverController.y().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL4RotationsRotations));
     }
 
     public Command getAutonomousCommand() {

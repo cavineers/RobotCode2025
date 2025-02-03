@@ -14,12 +14,12 @@ import edu.wpi.first.wpilibj.simulation.DIOSim;
 public class ElevatorIOSim implements ElevatorIO {
     
     private DCMotorSim rightMotor = new DCMotorSim(
-            LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 0.004, kGearRatio),
-            DCMotor.getNEO(1));
+            LinearSystemId.createDCMotorSystem(DCMotor.getNeoVortex(2), 0.004, kGearRatio),
+            DCMotor.getNeoVortex(2));
     
-    private DCMotorSim leftMotor = new DCMotorSim(
-            LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 0.004, kGearRatio),
-            DCMotor.getNEO(1));
+    // private DCMotorSim leftMotor = new DCMotorSim(
+    //         LinearSystemId.createDCMotorSystem(DCMotor.getNeoVortex(1), 0.004, kGearRatio),
+    //         DCMotor.getNeoVortex(1));
 
     private DIOSim limitSwitch = new DIOSim(ElevatorConstants.kLimitSwitchID);
 
@@ -33,14 +33,12 @@ public class ElevatorIOSim implements ElevatorIO {
         // Apply voltages updates to motors
         appliedVolts = elevPid.calculate(rightMotor.getAngularPositionRotations()) + kGravityTermSim;
         rightMotor.setInputVoltage(appliedVolts);
-        leftMotor.setInputVoltage(appliedVolts);
         rightMotor.update(0.02);
-        leftMotor.update(0.02);
 
-        inputs.leftPositionRotations = leftMotor.getAngularPositionRotations();
-        inputs.leftVelocityRPM = leftMotor.getAngularVelocityRPM();
-        inputs.leftAppliedVolts = leftMotor.getInputVoltage();
-        inputs.leftCurrentAmps = leftMotor.getCurrentDrawAmps();
+        inputs.leftPositionRotations = rightMotor.getAngularPositionRotations();
+        inputs.leftVelocityRPM = rightMotor.getAngularVelocityRPM();
+        inputs.leftAppliedVolts = rightMotor.getInputVoltage();
+        inputs.leftCurrentAmps = rightMotor.getCurrentDrawAmps();
 
         inputs.rightPositionRotations = rightMotor.getAngularPositionRotations();
         inputs.rightVelocityRPM = rightMotor.getAngularVelocityRPM();

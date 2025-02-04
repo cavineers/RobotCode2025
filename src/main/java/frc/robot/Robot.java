@@ -93,6 +93,8 @@ public class Robot extends LoggedRobot {
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
 
+        Logger.recordOutput("3DGamepieces/Coral", m_robotContainer.updateCoralPose());
+
     }
 
     /** This function is called once each time the robot enters Disabled mode. */

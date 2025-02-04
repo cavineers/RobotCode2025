@@ -37,7 +37,7 @@ public class ElevatorConstants {
     public static final double kTolerance = 0.1;
 
 
-    public static final double kProportionalGainSim = 1.5;
+    public static final double kProportionalGainSim = 1;
     public static final double kIntegralTermSim = 0;
     public static final double kDerivativeTermSim = 1;
     public static final double kStaticFrictionTermSim = 0.0;

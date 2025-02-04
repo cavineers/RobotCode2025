@@ -29,6 +29,7 @@ public class Elevator extends SubsystemBase {
         Logger.processInputs("Elevator", inputs);
 
         Logger.recordOutput("3DMechanisms/Elevator", this.getElevatorStagePoses(inputs.rightPositionRotations));
+        Logger.recordOutput("3DGamepiece/Coral", this.getElevatorStagePoses(inputs.rightPositionRotations)[2].plus(new Transform3d(Units.inchesToMeters(3), 0.0, Units.inchesToMeters(10.5), new Rotation3d(0.0, Units.degreesToRadians(35), 0.0)))); // winging it from cad
     }
 
     public Command setVoltageCommand(double volts) {

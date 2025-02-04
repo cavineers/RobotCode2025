@@ -21,10 +21,10 @@ public class ElevatorConstants {
     public static final Transform3d kStage3Position = kStage2Position;//.plus(new Transform3d(0.0,0.0,0.0254, new Rotation3d()));
 
 
-    public static final double kL1RotationsRotations = 0;
-    public static final double kL2RotationsRotations = 0;
-    public static final double kL3RotationsRotations = 0;
-    public static final double kL4RotationsRotations = 58;
+    public static final double kL1RotationsRotations = 14;
+    public static final double kL2RotationsRotations = 20;
+    public static final double kL3RotationsRotations = 31;
+    public static final double kL4RotationsRotations = 48;
 
     public static final double kMinRotations = 0;
     public static final double kMaxRotations = 58;
@@ -37,7 +37,7 @@ public class ElevatorConstants {
     public static final double kTolerance = 0.1;
 
 
-    public static final double kProportionalGainSim = 1;
+    public static final double kProportionalGainSim = 1.5;
     public static final double kIntegralTermSim = 0;
     public static final double kDerivativeTermSim = 1;
     public static final double kStaticFrictionTermSim = 0.0;

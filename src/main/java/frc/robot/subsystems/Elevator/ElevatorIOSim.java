@@ -16,10 +16,6 @@ public class ElevatorIOSim implements ElevatorIO {
     private DCMotorSim rightMotor = new DCMotorSim(
             LinearSystemId.createDCMotorSystem(DCMotor.getNeoVortex(2), 0.004, kGearRatio),
             DCMotor.getNeoVortex(2));
-    
-    // private DCMotorSim leftMotor = new DCMotorSim(
-    //         LinearSystemId.createDCMotorSystem(DCMotor.getNeoVortex(1), 0.004, kGearRatio),
-    //         DCMotor.getNeoVortex(1));
 
     private DIOSim limitSwitch = new DIOSim(ElevatorConstants.kLimitSwitchID);
 
@@ -46,6 +42,18 @@ public class ElevatorIOSim implements ElevatorIO {
         inputs.rightCurrentAmps = rightMotor.getCurrentDrawAmps();
 
         inputs.limitSwitch = getLimitSwitch();
+
+        // Janky way to simulate the hard stop
+        if (inputs.leftPositionRotations > ElevatorConstants.kMaxRotations) {
+            rightMotor.setAngle(ElevatorConstants.kMaxRotations * 2 * Math.PI);
+            rightMotor.setAngularVelocity(0);
+        } else if (inputs.leftPositionRotations < ElevatorConstants.kMinRotations) {
+            rightMotor.setAngle(0);
+            rightMotor.setAngularVelocity(0);
+            limitSwitch.setValue(true); // Set the limit switch at lower hardstop
+        } else {
+            limitSwitch.setValue(false); // Reset the limit switch
+        }
     }
 
 

@@ -93,7 +93,7 @@ public class Robot extends LoggedRobot {
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
 
-        Logger.recordOutput("3DGamepieces/Coral", m_robotContainer.updateCoralPose());
+        // Logger.recordOutput("3DGamepieces/Coral", m_robotContainer.updateCoralPose());
 
     }
 

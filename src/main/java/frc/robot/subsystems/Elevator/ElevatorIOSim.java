@@ -5,32 +5,63 @@ import static frc.robot.subsystems.Elevator.ElevatorConstants.*;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
+import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N2;
+import edu.wpi.first.math.system.NumericalIntegration;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.simulation.DIOSim;
 
 public class ElevatorIOSim implements ElevatorIO {
-    
-    private DCMotorSim rightMotor = new DCMotorSim(
-            LinearSystemId.createDCMotorSystem(DCMotor.getNeoVortex(2), 0.004, kGearRatio),
-            DCMotor.getNeoVortex(2));
 
-    private DIOSim limitSwitch = new DIOSim(ElevatorConstants.kLimitSwitchID);
+    private static DCMotor motors = DCMotor.getNeoVortex(2).withReduction(1.0 / ElevatorConstants.kGearRatio);
 
-    PIDController elevPid = new PIDController(ElevatorConstants.kProportionalGainSim, ElevatorConstants.kIntegralTermSim, ElevatorConstants.kDerivativeTermSim);
+    private static DIOSim limitSwitch = new DIOSim(ElevatorConstants.kLimitSwitchID);
+
+    PIDController elevPid = new PIDController(ElevatorConstants.kProportionalGainSim,
+            ElevatorConstants.kIntegralTermSim, ElevatorConstants.kDerivativeTermSim);
 
     LoggedNetworkNumber tuningP = new LoggedNetworkNumber("/Tuning/P", ElevatorConstants.kProportionalGainSim);
     LoggedNetworkNumber tuningD = new LoggedNetworkNumber("/Tuning/D", ElevatorConstants.kDerivativeTermSim);
 
+    // xdot = Ax + Bu for state-space systems
+    // where the first row represents velocity and the second row represents
+    // acceleration
+    // influenced by motor torque, resistance, sprocket diameter,
+    // and the combined mass of the elevator and its load.
+    private static final Matrix<N2, N2> A = MatBuilder.fill(Nat.N2(), Nat.N2(), // A 2x2 system dynamics matrix,
+                                                                                // defining how the system evolves
+                                                                                // without external inputs.
+            0, 1,
+            0,
+            -motors.KtNMPerAmp
+                    / (motors.rOhms
+                            * Math.pow(Units.inchesToMeters(ElevatorConstants.kSprocketDiameter), 2)
+                            * (ElevatorConstants.kElevatorMassKg + ElevatorConstants.kLoadMassKg)
+                            * motors.KvRadPerSecPerVolt));
+
+    private static final Vector<N2> B = // B 2x1 matrix, defining how the system reacts to voltage inputs.
+            VecBuilder.fill(
+                    0.0, motors.KtNMPerAmp / (Units.inchesToMeters(ElevatorConstants.kSprocketDiameter)
+                            * (ElevatorConstants.kElevatorMassKg + ElevatorConstants.kLoadMassKg)));
+
+    private static Vector<N2> X = VecBuilder.fill(0.0, 0.0); // Initial state
 
     @AutoLogOutput(key = "Elevator/Setpoint")
     private double motorSetpoint = 0;
-    private double appliedVolts = 0.0; 
+    private double appliedVolts = 0.0;
+    private double inputTorqueCurrent = 0.0;
 
-    public void updateInputs(ElevatorIOInputs inputs) { 
+    public void updateInputs(ElevatorIOInputs inputs) {
         if (this.tuningP.get() != elevPid.getP()) {
             elevPid.setP(this.tuningP.get());
         }
@@ -38,36 +69,55 @@ public class ElevatorIOSim implements ElevatorIO {
             elevPid.setD(this.tuningD.get());
         }
 
-        // Apply voltages updates to motors
-        appliedVolts = elevPid.calculate(rightMotor.getAngularPositionRotations()) + kGravityTermSim;
-        rightMotor.setInputVoltage(appliedVolts);
-        rightMotor.update(0.02);
-
-        inputs.leftPositionRotations = rightMotor.getAngularPositionRotations();
-        inputs.leftVelocityRPM = rightMotor.getAngularVelocityRPM();
-        inputs.leftAppliedVolts = rightMotor.getInputVoltage();
-        inputs.leftCurrentAmps = rightMotor.getCurrentDrawAmps();
-
-        inputs.rightPositionRotations = rightMotor.getAngularPositionRotations();
-        inputs.rightVelocityRPM = rightMotor.getAngularVelocityRPM();
-        inputs.rightAppliedVolts = rightMotor.getInputVoltage();
-        inputs.rightCurrentAmps = rightMotor.getCurrentDrawAmps();
-
-        inputs.limitSwitch = getLimitSwitch();
-
-        // Janky way to simulate the hard stop
-        if (inputs.leftPositionRotations > ElevatorConstants.kMaxRotations) {
-            rightMotor.setAngle(ElevatorConstants.kMaxRotations * 2 * Math.PI);
-            rightMotor.setAngularVelocity(0);
-        } else if (inputs.leftPositionRotations < ElevatorConstants.kMinRotations) {
-            rightMotor.setAngle(0);
-            rightMotor.setAngularVelocity(0);
-            limitSwitch.setValue(true); // Set the limit switch at lower hardstop
-        } else {
-            limitSwitch.setValue(false); // Reset the limit switch
+        for (int i = 0; i < 0.02 / (1.0 / 1000.0); i++) {
+            setInputTorqueCurrent(
+                    elevPid.calculate(X.get(0) / (Units.inchesToMeters(ElevatorConstants.kSprocketDiameter) * Math.PI))); // expects rotations --> given radians from state vector
+            update(1.0 / 1000.0);
         }
+
+        inputs.leftPositionRotations = X.get(0) / (Units.inchesToMeters(ElevatorConstants.kSprocketDiameter) * Math.PI);
+        inputs.leftVelocityRPM = X.get(1) * 60 / (2 * Math.PI * Units.inchesToMeters(ElevatorConstants.kSprocketDiameter));
+        inputs.leftAppliedVolts = appliedVolts;
+        inputs.leftCurrentAmps = inputTorqueCurrent / motors.KtNMPerAmp;
+
+        inputs.rightPositionRotations = X.get(0) / (Units.inchesToMeters(ElevatorConstants.kSprocketDiameter) * Math.PI);
+        inputs.rightVelocityRPM = X.get(1) * 60 / (2 * Math.PI * Units.inchesToMeters(ElevatorConstants.kSprocketDiameter));
+        inputs.rightAppliedVolts = appliedVolts;
+        inputs.rightCurrentAmps = inputTorqueCurrent / motors.KtNMPerAmp;
+
     }
 
+    @AutoLogOutput(key = "Elevator/Error")
+    private double getError(){
+        return elevPid.getPositionError();
+    }
+
+    private void update(double dt) {
+        // Clamp the input voltage to the motor
+        inputTorqueCurrent = MathUtil.clamp(inputTorqueCurrent, -motors.stallCurrentAmps / 2.0,
+                motors.stallCurrentAmps / 2.0);
+
+        // Do some physics calculations to update the state
+        Matrix<N2, N1> updatedState = NumericalIntegration.rkdp(
+                (Matrix<N2, N1> x, Matrix<N1, N1> u) -> A.times(x)
+                        .plus(B.times(u))
+                        .plus(VecBuilder.fill(
+                                0.0,
+                                -9.81)), // gravity term
+                ElevatorIOSim.X,
+                MatBuilder.fill(Nat.N1(), Nat.N1(), inputTorqueCurrent),
+                dt);
+
+        // Update the state
+        ElevatorIOSim.X = VecBuilder.fill(updatedState.get(0, 0), updatedState.get(1, 0));
+    }
+
+    private void setInputTorqueCurrent(double torqueCurrent) {
+        inputTorqueCurrent = torqueCurrent;
+        appliedVolts = motors.getVoltage(
+                motors.getTorque(inputTorqueCurrent), X.get(1, 0) / ElevatorConstants.kSprocketDiameter);
+        appliedVolts = MathUtil.clamp(appliedVolts, -12.0, 12.0);
+    }
 
     public boolean getLimitSwitch() {
         return limitSwitch.getValue();
@@ -75,7 +125,7 @@ public class ElevatorIOSim implements ElevatorIO {
 
     @Deprecated
     public void setVoltage(double volts) {
-        appliedVolts = MathUtil.clamp(volts, -12.0, 12.0); 
+        appliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
     }
 
     public void updateSetpoint(double motorSetpoint) {
@@ -84,9 +134,9 @@ public class ElevatorIOSim implements ElevatorIO {
     }
 
     public double clipSetpoint(double setpoint) {
-        if(motorSetpoint > ElevatorConstants.kMaxRotations) {
+        if (motorSetpoint > ElevatorConstants.kMaxRotations) {
             return ElevatorConstants.kMaxRotations;
-        } else if(motorSetpoint < ElevatorConstants.kMinRotations) {
+        } else if (motorSetpoint < ElevatorConstants.kMinRotations) {
             return ElevatorConstants.kMinRotations;
         }
         return setpoint;

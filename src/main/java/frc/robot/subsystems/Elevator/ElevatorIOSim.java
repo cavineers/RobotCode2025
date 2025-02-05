@@ -3,6 +3,7 @@ package frc.robot.subsystems.Elevator;
 import static frc.robot.subsystems.Elevator.ElevatorConstants.*;
 
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -21,11 +22,22 @@ public class ElevatorIOSim implements ElevatorIO {
 
     PIDController elevPid = new PIDController(ElevatorConstants.kProportionalGainSim, ElevatorConstants.kIntegralTermSim, ElevatorConstants.kDerivativeTermSim);
 
+    LoggedNetworkNumber tuningP = new LoggedNetworkNumber("/Tuning/P", ElevatorConstants.kProportionalGainSim);
+    LoggedNetworkNumber tuningD = new LoggedNetworkNumber("/Tuning/D", ElevatorConstants.kDerivativeTermSim);
+
+
     @AutoLogOutput(key = "Elevator/Setpoint")
     private double motorSetpoint = 0;
     private double appliedVolts = 0.0; 
 
     public void updateInputs(ElevatorIOInputs inputs) { 
+        if (this.tuningP.get() != elevPid.getP()) {
+            elevPid.setP(this.tuningP.get());
+        }
+        if (this.tuningD.get() != elevPid.getD()) {
+            elevPid.setD(this.tuningD.get());
+        }
+
         // Apply voltages updates to motors
         appliedVolts = elevPid.calculate(rightMotor.getAngularPositionRotations()) + kGravityTermSim;
         rightMotor.setInputVoltage(appliedVolts);

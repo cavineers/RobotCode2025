@@ -3,6 +3,7 @@ package frc.robot.subsystems.Elevator;
 import static frc.robot.subsystems.Elevator.ElevatorConstants.*;
 
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 import edu.wpi.first.math.MatBuilder;
@@ -69,19 +70,21 @@ public class ElevatorIOSim implements ElevatorIO {
             elevPid.setD(this.tuningD.get());
         }
 
+
         for (int i = 0; i < 0.02 / (1.0 / 1000.0); i++) {
             setInputTorqueCurrent(
-                    elevPid.calculate(X.get(0) / (Units.inchesToMeters(ElevatorConstants.kSprocketDiameter) * Math.PI))); // expects rotations --> given radians from state vector
+                    elevPid.calculate(Units.metersToInches(X.get(0)) / kRotationToInches)); // expects rotations --> given meters from state vector
             update(1.0 / 1000.0);
         }
+        Logger.recordOutput("Elevator/XPositionM", X.get(0));
 
-        inputs.leftPositionRotations = X.get(0) / (Units.inchesToMeters(ElevatorConstants.kSprocketDiameter) * Math.PI);
-        inputs.leftVelocityRPM = X.get(1) * 60 / (2 * Math.PI * Units.inchesToMeters(ElevatorConstants.kSprocketDiameter));
+        inputs.leftPositionRotations = Units.metersToInches(X.get(0)) / kRotationToInches;
+        inputs.leftVelocityRPM = 0;
         inputs.leftAppliedVolts = appliedVolts;
         inputs.leftCurrentAmps = inputTorqueCurrent / motors.KtNMPerAmp;
 
-        inputs.rightPositionRotations = X.get(0) / (Units.inchesToMeters(ElevatorConstants.kSprocketDiameter) * Math.PI);
-        inputs.rightVelocityRPM = X.get(1) * 60 / (2 * Math.PI * Units.inchesToMeters(ElevatorConstants.kSprocketDiameter));
+        inputs.rightPositionRotations = Units.metersToInches(X.get(0)) / kRotationToInches;
+        inputs.rightVelocityRPM = 0;
         inputs.rightAppliedVolts = appliedVolts;
         inputs.rightCurrentAmps = inputTorqueCurrent / motors.KtNMPerAmp;
 
@@ -110,6 +113,14 @@ public class ElevatorIOSim implements ElevatorIO {
 
         // Update the state
         ElevatorIOSim.X = VecBuilder.fill(updatedState.get(0, 0), updatedState.get(1, 0));
+
+        // Apply the limits (bounds max and min values)
+        ElevatorIOSim.X.set(0, 0, MathUtil.clamp(ElevatorIOSim.X.get(0), ElevatorConstants.kMinRotations,
+                ElevatorConstants.kMaxRotations));
+        
+        if (ElevatorIOSim.X.get(0) == ElevatorConstants.kMinRotations || ElevatorIOSim.X.get(0) == ElevatorConstants.kMaxRotations) {
+            ElevatorIOSim.X.set(1,0, 0.0); // stop the elevator (velocity) if it hits the top or bottom
+        }
     }
 
     private void setInputTorqueCurrent(double torqueCurrent) {

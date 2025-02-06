@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
 public class ElevatorConstants {
+    public static final boolean kTuningMode = true; // allows for tuning the feedforward gains
     public static final int kLeftMotorCanID = 1;
     public static final int kRightMotorCanID = 2;
 

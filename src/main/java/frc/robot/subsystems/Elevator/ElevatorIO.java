@@ -31,6 +31,12 @@ public interface ElevatorIO {
     }
     
     /**
+     * Sets the input torque current
+     * @param torqueCurrent Requested torque currentx
+     */
+    public default void setInputTorqueCurrent(double torqueCurrent) {
+    }
+    /**
      * Set the setpoint for the elevator
      * @param setpoint
      * @implNote This method must clip setpoint to the maximum and minimum values

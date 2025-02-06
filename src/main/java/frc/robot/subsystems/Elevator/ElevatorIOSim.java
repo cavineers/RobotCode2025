@@ -31,9 +31,9 @@ public class ElevatorIOSim implements ElevatorIO {
     PIDController elevPid = new PIDController(ElevatorConstants.kProportionalGainSim,
             ElevatorConstants.kIntegralTermSim, ElevatorConstants.kDerivativeTermSim);
 
-    LoggedNetworkNumber tuningP = new LoggedNetworkNumber("/Tuning/P", ElevatorConstants.kProportionalGainSim);
-    LoggedNetworkNumber tuningD = new LoggedNetworkNumber("/Tuning/D", ElevatorConstants.kDerivativeTermSim);
-
+    LoggedNetworkNumber tuningP = new LoggedNetworkNumber("/Tuning/Elevator/P", ElevatorConstants.kProportionalGainSim);
+    LoggedNetworkNumber tuningD = new LoggedNetworkNumber("/Tuning/Elevator/D", ElevatorConstants.kDerivativeTermSim);
+    LoggedNetworkNumber tuningG = new LoggedNetworkNumber("/Tuning/Elevator/G", ElevatorConstants.kGravityTermSim);
     // xdot = Ax + Bu for state-space systems
     // where the first row represents velocity and the second row represents
     // acceleration
@@ -73,18 +73,17 @@ public class ElevatorIOSim implements ElevatorIO {
 
         for (int i = 0; i < 0.02 / (1.0 / 1000.0); i++) {
             setInputTorqueCurrent(
-                    elevPid.calculate(Units.metersToInches(X.get(0)) / kRotationToInches)); // expects rotations --> given meters from state vector
+                    elevPid.calculate(Units.metersToInches(X.get(0)) / kRotationToInches) + this.tuningG.get()); // expects rotations --> given meters from state vector
             update(1.0 / 1000.0);
         }
-        Logger.recordOutput("Elevator/XPositionM", X.get(0));
 
         inputs.leftPositionRotations = Units.metersToInches(X.get(0)) / kRotationToInches;
-        inputs.leftVelocityRPM = 0;
+        inputs.leftVelocityRPM = Units.metersToInches(X.get(1)) / kRotationToInches * 60.0; // convert to RPM
         inputs.leftAppliedVolts = appliedVolts;
         inputs.leftCurrentAmps = inputTorqueCurrent / motors.KtNMPerAmp;
 
         inputs.rightPositionRotations = Units.metersToInches(X.get(0)) / kRotationToInches;
-        inputs.rightVelocityRPM = 0;
+        inputs.rightVelocityRPM = Units.metersToInches(X.get(1)) / kRotationToInches * 60.0;
         inputs.rightAppliedVolts = appliedVolts;
         inputs.rightCurrentAmps = inputTorqueCurrent / motors.KtNMPerAmp;
 
@@ -123,10 +122,11 @@ public class ElevatorIOSim implements ElevatorIO {
         }
     }
 
-    private void setInputTorqueCurrent(double torqueCurrent) {
+    @Override
+    public void setInputTorqueCurrent(double torqueCurrent) {
         inputTorqueCurrent = torqueCurrent;
         appliedVolts = motors.getVoltage(
-                motors.getTorque(inputTorqueCurrent), X.get(1, 0) / ElevatorConstants.kSprocketDiameter);
+                motors.getTorque(inputTorqueCurrent), Units.metersToInches(X.get(1)) / ElevatorConstants.kSprocketDiameter * 2 * Math.PI);
         appliedVolts = MathUtil.clamp(appliedVolts, -12.0, 12.0);
     }
 

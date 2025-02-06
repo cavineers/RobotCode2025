@@ -14,15 +14,17 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+
 public class AlgaeBarIOSpark implements AlgaeBarIO {
-    private final SparkMax rotateMotor = new SparkMax(kAlgaeBarRotateCanID, MotorType.kBrushless); //change CanID names as appropriate
+    private final SparkMax rotateMotor = new SparkMax(kAlgaeBarRotateCanID, MotorType.kBrushless); 
     private final RelativeEncoder rotateEncoder = rotateMotor.getEncoder();
 
     private final SparkMax coralMotor = new SparkMax(kAlgaeBarCoralCanID, MotorType.kBrushless);
     private final RelativeEncoder coralEncoder = coralMotor.getEncoder();
 
-    //public DigitalInput firstSensor = new DigitalInput(AlgaeBarConstants.algaeBarSensorOne); //change sensor names as appropriate
-    //public DigitalInput secondSensor = new DigitalInput(AlgaeBarConstants.algaeBarSensorTwo);
+    public DigitalInput firstSensor = new DigitalInput(AlgaeBarConstants.algaeBarSensorOne); 
+    public DigitalInput secondSensor = new DigitalInput(AlgaeBarConstants.algaeBarSensorTwo);
 
     public AlgaeBarIOSpark(){
         //could do motor configuration here
@@ -30,7 +32,7 @@ public class AlgaeBarIOSpark implements AlgaeBarIO {
 
     @Override
     public void updateInputs(AlgaeBarIOInputs inputs) {
-        ifOk(rotateMotor, rotateEncoder::getPosition, (value) -> inputs.rotateMotorPositionRad = value);   //only 
+        ifOk(rotateMotor, rotateEncoder::getPosition, (value) -> inputs.rotateMotorPositionRad = value);  
         ifOk(rotateMotor, rotateEncoder::getVelocity, (value) -> inputs.rotateMotorVelocityRadPerSec = value);
         ifOk(
             rotateMotor,
@@ -50,7 +52,6 @@ public class AlgaeBarIOSpark implements AlgaeBarIO {
     @Override
     public void setVoltage(double volts) {
             rotateMotor.setVoltage(volts);
-
             coralMotor.setVoltage(volts);
         }
  }

@@ -23,8 +23,8 @@ public class SwerveDriveConstants {
 
         public static final double kOdometryFrequency = 100.0;
 
-        public static final double kPhysicalMaxSpeedMetersPerSecond = 3.63; // Free speed of NEO *
-                                                                            // kDriveEncoderRot2Meter
+        public static final double kPhysicalMaxSpeedMetersPerSecond = 3.63; 
+        public static final double kMaxModuleSpeedMetersPerSecond = 4.94;
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = Units.degreesToRadians(500);
         public static final double kWheelRadiusMeters = Units.inchesToMeters(1.963);
 
@@ -32,7 +32,7 @@ public class SwerveDriveConstants {
         public static final int kFrontRightDriveCanID = 3;
         public static final int kBackRightDriveCanID = 5;
         public static final int kBackLeftDriveCanID = 7;
-
+        
         public static final int kFrontLeftTurningCanID = 2;
         public static final int kFrontRightTurningCanID = 4;
         public static final int kBackRightTurningCanID = 6;

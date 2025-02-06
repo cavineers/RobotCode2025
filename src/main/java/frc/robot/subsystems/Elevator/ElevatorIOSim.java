@@ -72,20 +72,23 @@ public class ElevatorIOSim implements ElevatorIO {
 
 
         for (int i = 0; i < 0.02 / (1.0 / 1000.0); i++) {
+            inputTorqueCurrent = elevPid.calculate(Units.metersToInches(X.get(0)) / kRotationToInches) + this.tuningG.get();
+            inputTorqueCurrent = MathUtil.clamp(inputTorqueCurrent, -motors.stallCurrentAmps / 2.0,
+                motors.stallCurrentAmps / 2.0);
             setInputTorqueCurrent(
-                    elevPid.calculate(Units.metersToInches(X.get(0)) / kRotationToInches) + this.tuningG.get()); // expects rotations --> given meters from state vector
+                    inputTorqueCurrent); // expects rotations --> given meters from state vector
             update(1.0 / 1000.0);
         }
 
         inputs.leftPositionRotations = Units.metersToInches(X.get(0)) / kRotationToInches;
         inputs.leftVelocityRPM = Units.metersToInches(X.get(1)) / kRotationToInches * 60.0; // convert to RPM
         inputs.leftAppliedVolts = appliedVolts;
-        inputs.leftCurrentAmps = inputTorqueCurrent / motors.KtNMPerAmp;
+        inputs.leftCurrentAmps = 0;
 
         inputs.rightPositionRotations = Units.metersToInches(X.get(0)) / kRotationToInches;
         inputs.rightVelocityRPM = Units.metersToInches(X.get(1)) / kRotationToInches * 60.0;
         inputs.rightAppliedVolts = appliedVolts;
-        inputs.rightCurrentAmps = inputTorqueCurrent / motors.KtNMPerAmp;
+        inputs.rightCurrentAmps = 0;
 
     }
 
@@ -96,8 +99,8 @@ public class ElevatorIOSim implements ElevatorIO {
 
     private void update(double dt) {
         // Clamp the input voltage to the motor
-        inputTorqueCurrent = MathUtil.clamp(inputTorqueCurrent, -motors.stallCurrentAmps / 2.0,
-                motors.stallCurrentAmps / 2.0);
+        // inputTorqueCurrent = MathUtil.clamp(inputTorqueCurrent, -motors.stallCurrentAmps / 2.0,
+        //         motors.stallCurrentAmps / 2.0);
 
         // Do some physics calculations to update the state
         Matrix<N2, N1> updatedState = NumericalIntegration.rkdp(

@@ -1,52 +1,42 @@
 package frc.robot.subsystems.EndEffector;
+    
+import static frc.lib.SparkUtil.*;    
+import static frc.robot.subsystems.EndEffector.EndEffectorConstants.kEndEffectorCanID;    
 
-import static frc.lib.SparkUtil.*;
-import static frc.robot.subsystems.EndEffector.EndEffectorConstants.kLeftEndEffectorCanID;
-import static frc.robot.subsystems.EndEffector.EndEffectorConstants.kRightEndEffectorCanID;
-
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import edu.wpi.first.wpilibj.DigitalInput;
+import java.util.function.DoubleSupplier;    
+    
+import com.revrobotics.RelativeEncoder;    
+import com.revrobotics.spark.SparkLowLevel.MotorType;    
+import edu.wpi.first.wpilibj.DigitalInput;    
 import com.revrobotics.spark.SparkMax;
-    
-    
-    
-    
-    public class EndEffectorIOSpark implements EndEffectorIO {
-        private final SparkMax leftMotor = new SparkMax(kLeftEndEffectorCanID, MotorType.kBrushless);
-        private final SparkMax rightMotor = new SparkMax(kRightEndEffectorCanID, MotorType.kBrushless);
-        private final RelativeEncoder leftEncoder = leftMotor.getEncoder();
-        private final RelativeEncoder rightEncoder = rightMotor.getEncoder();
-        public DigitalInput leftSensor = new DigitalInput(EndEffectorConstants.kCoralSensorLeft);
-        public DigitalInput rightSensor = new DigitalInput(EndEffectorConstants.kCoralSensorRight);
-
-    
-        public EndEffectorIOSpark(){
-            //motor config 
-        }
-    
-   
         
+    public class EndEffectorIOSpark implements EndEffectorIO {    
+        private final SparkMax motor = new SparkMax(kEndEffectorCanID, MotorType.kBrushless);    
+    
+        private final RelativeEncoder encoder = motor.getEncoder();    
+            
+        public DigitalInput leftSensor = new DigitalInput(EndEffectorConstants.kCoralSensorLeft);    
+        public DigitalInput rightSensor = new DigitalInput(EndEffectorConstants.kCoralSensorRight);    
         
-        @Override
-        public void setVoltage(double volts) {
-            leftMotor.setVoltage(volts);
-            rightMotor.setVoltage(volts);
-        }
-
-    public void updateInputs(EndEffectorIOInputs inputs) {
-        ifOk(leftMotor, leftEncoder::getPosition, value -> inputs.leftPositionRad = value);
-        ifOk(rightMotor, rightEncoder::getPosition, value -> inputs.rightPositionRad = value); 
-        ifOk(leftMotor, leftEncoder::getPosition, value -> inputs.leftAppliedVolts = value);
-        ifOk(rightMotor, rightEncoder::getPosition, value -> inputs.rightAppliedVolts = value);
-        ifOk(leftMotor, leftEncoder::getPosition, value -> inputs.leftCurrentAmps = value);
-        ifOk(rightMotor, rightEncoder::getPosition, value -> inputs.rightCurrentAmps = value);
-        ifOk(leftMotor, leftEncoder::getPosition, value -> inputs.leftVelocityRadPerSec = value);
-        ifOk(rightMotor, rightEncoder::getPosition, value -> inputs.rightVelocityRadPerSec = value);
-        inputs.leftSensor = leftSensor.get();
-        inputs.rightSensor = rightSensor.get();
+        public EndEffectorIOSpark(){    
+        }    
+        
+        @Override    
+        public void setVoltage(double volts) {    
+            motor.setVoltage(volts);    
+        }    
+    
+        public void updateInputs(EndEffectorIOInputs inputs) {    
+            ifOk(motor, encoder::getPosition, (value) -> inputs.positionRad = value);     
+            ifOk(motor, encoder::getVelocity, (value) -> inputs.velocityRadPerSec = value);    
+            ifOk(    
+                motor,    
+                    new DoubleSupplier[] {motor::getAppliedOutput, motor::getBusVoltage},    
+                    (values) -> inputs.appliedVolts = values[0] * values[1]);    
+            ifOk(motor, motor::getOutputCurrent, (value) -> inputs.currentAmps = value);    
+    
+            inputs.leftSensor = leftSensor.get();    
+            inputs.rightSensor = rightSensor.get();    
+        }    
     }
-
-    
-}
      

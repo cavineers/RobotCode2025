@@ -13,15 +13,12 @@ public class EndEffectorIOSim implements EndEffectorIO {
         LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 0.004, 1), 
         DCMotor.getNEO(1));
 
-
     private double appliedVolts = 0.0; 
-
 
     @Override
     public void updateInputs(EndEffectorIOInputs inputs) {
         motor.setInputVoltage(appliedVolts);
         motor.update(0.02);
-
 
         inputs.positionRad = motor.getAngularPositionRad();
         inputs.velocityRadPerSec = motor.getAngularVelocityRadPerSec();

@@ -100,8 +100,7 @@ public class RobotContainer {
                 driverController::getLeftX,
                 driverController::getRightX));
 
-        driverController.x().whileTrue(endEffector.setVoltageCommand(12.0));
-        driverController.y().whileTrue(endEffector.setVoltageCommand(-12.0));
+        driverController.x().whileTrue(endEffector.intakeCommand());
     }
 
     public Command getAutonomousCommand() {

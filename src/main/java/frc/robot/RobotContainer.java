@@ -49,8 +49,10 @@ public class RobotContainer {
 
                 vision = new Vision(
                     drivetrain::addVisionMeasurement,
-                    new VisionIOPhoton(frontCameraName, robotToFrontCam),
-                    new VisionIOPhoton(backCameraName, robotToBackCam));
+                    new VisionIOPhoton(frontCameraName, robotToFrontCam));
+                    // new VisionIOPhoton(backCameraName, robotToBackCam));
+
+                drivetrain.resetOdometry(new Pose2d(3.5,3.5, new Rotation2d()));
                 break;
             case SIM:
                 drivetrain = new SwerveDriveSubsystem(

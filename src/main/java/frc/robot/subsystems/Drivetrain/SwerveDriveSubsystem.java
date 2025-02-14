@@ -168,34 +168,35 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Calculate the module positions
         int sampleCount = odometryTimestamps.length;
 
-        for (int i = 0; i < sampleCount; i++) {
-            SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
-            SwerveModulePosition[] moduleDeltas = new SwerveModulePosition[4];
+        // for (int i = 0; i < sampleCount; i++) {
+        //     SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
+        //     SwerveModulePosition[] moduleDeltas = new SwerveModulePosition[4];
 
-            for (int modIndex = 0; modIndex < 4; modIndex++) {
-                modulePositions[modIndex] = modules[modIndex].getOdometryPositions()[i];
-                moduleDeltas[modIndex] = new SwerveModulePosition(
-                        modulePositions[modIndex].distanceMeters - previousModulePositions[modIndex].distanceMeters,
-                        modulePositions[modIndex].angle);
-                previousModulePositions[modIndex] = modulePositions[modIndex];
-            }
+        //     for (int modIndex = 0; modIndex < 4; modIndex++) {
+        //         modulePositions[modIndex] = modules[modIndex].getOdometryPositions()[i];
+        //         moduleDeltas[modIndex] = new SwerveModulePosition(
+        //                 modulePositions[modIndex].distanceMeters - previousModulePositions[modIndex].distanceMeters,
+        //                 modulePositions[modIndex].angle);
+        //         previousModulePositions[modIndex] = modulePositions[modIndex];
+        //     }
 
-            // Update the current gyro rotation
-            if (gyroInputs.connected) {
-                gyroRotation = gyroInputs.odometryYawPositions[i];
-            } 
-            else {
-                // Use the delta from kinematics and mods
-                Twist2d delta = kinematics.toTwist2d(moduleDeltas);
-                gyroRotation = gyroRotation.plus(new Rotation2d(delta.dtheta));
-            }
+        //     // Update the current gyro rotation
+        //     if (gyroInputs.connected) {
+        //         gyroRotation = gyroInputs.odometryYawPositions[i];
+        //     } 
+        //     else {
+        //         // Use the delta from kinematics and mods
+        //         Twist2d delta = kinematics.toTwist2d(moduleDeltas);
+        //         gyroRotation = gyroRotation.plus(new Rotation2d(delta.dtheta));
+        //     }
 
-            poseEstimator.updateWithTime(odometryTimestamps[i], gyroRotation, modulePositions);
+            poseEstimator.update(gyroRotation, this.getModulePositions());
+
+            // poseEstimator.updateWithTime(odometryTimestamps[i], gyroRotation, modulePositions);
 
             Logger.recordOutput("Vision/ClosestTag", getClosestReefPose());
         }
 
-    }
 
     /**
      * Runs the drivetrain given a velocity

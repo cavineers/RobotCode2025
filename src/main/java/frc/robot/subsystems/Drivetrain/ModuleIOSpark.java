@@ -44,11 +44,6 @@ public class ModuleIOSpark implements ModuleIO {
     private final SparkClosedLoopController driveController;
     private final SparkClosedLoopController turnController;
 
-    // Queue inputs from odometry thread
-    private final Queue<Double> timestampQueue;
-    private final Queue<Double> drivePositionQueue;
-    private final Queue<Double> turnPositionQueue;
-
     // Spark Configurations
     private SparkMaxConfig turnConfig;
 
@@ -166,12 +161,6 @@ public class ModuleIOSpark implements ModuleIO {
         tryUntilOk(turnSpark,
                 5,
                 () -> turnEncoder.setPosition(turnAbsoluteEncoder.getAbsolutePosition().getValueAsDouble() * 2 * Math.PI)); // Rotations of out to radians of input (AV*Out/InGearRatio*2pi)
-        
-        // Logger.recordOutput("ModuleAngles/Module" + module, turnAbsoluteEncoder.getPosition().getValueAsDouble()); // This can be done using the phoenix live source
-        // Create odometry queues
-        timestampQueue = SparkOdometryThread.getInstance().makeTimestampQueue();
-        drivePositionQueue = SparkOdometryThread.getInstance().registerSignal(driveSpark, driveEncoder::getPosition);
-        turnPositionQueue = SparkOdometryThread.getInstance().registerSignal(turnSpark, turnEncoder::getPosition);
     }
 
     @Override
@@ -200,16 +189,6 @@ public class ModuleIOSpark implements ModuleIO {
                 (values) -> inputs.turnAppliedVolts = values[0] * values[1]);
         ifOk(turnSpark, turnSpark::getOutputCurrent, (value) -> inputs.turnCurrentAmps = value);
         inputs.turnConnected = turnConnectedDebounce.calculate(!sparkStickyFault);
-
-        // Update odometry inputs
-        inputs.odometryTimestamps = timestampQueue.stream().mapToDouble((Double value) -> value).toArray();
-        inputs.odometryDrivePositionsRad = drivePositionQueue.stream().mapToDouble((Double value) -> value).toArray();
-        inputs.odometryTurnPositions = turnPositionQueue.stream()
-                .map((Double value) -> new Rotation2d(value))
-                .toArray(Rotation2d[]::new);
-        timestampQueue.clear();
-        drivePositionQueue.clear();
-        turnPositionQueue.clear();
     }
 
     @Override

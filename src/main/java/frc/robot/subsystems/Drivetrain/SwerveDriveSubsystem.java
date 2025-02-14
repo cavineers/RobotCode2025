@@ -44,7 +44,6 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class SwerveDriveSubsystem extends SubsystemBase {
-    static final Lock odometryLock = new ReentrantLock();
     public AutoBuilder autoBuilder;
 
     private SysIdRoutine sysId;
@@ -96,9 +95,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
         HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);
 
-        // Start the odometry thread
-        SparkOdometryThread.getInstance().start();
-
         // Configure the System Identification routine
         this.sysId = new SysIdRoutine(new SysIdRoutine.Config( null, null, null,
                 (state) -> Logger.recordOutput("Drivetrain/SysIdState", state.toString())),
@@ -138,8 +134,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        odometryLock.lock(); // Lock the odometry updates while reading
-
         // Gyro
         gyroIO.updateInputs(gyroInputs); // Update gyro values
         Logger.processInputs("Drivetrain/Gyro", gyroInputs);
@@ -149,7 +143,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         for (Module module : modules) {
             module.periodic();
         }
-        odometryLock.unlock(); // Unlock the odometry updates
 
         if (DriverStation.isDisabled()) {
             for (Module module : modules) {
@@ -161,41 +154,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
         }
 
-        // Odometry updates
-        double[] odometryTimestamps = modules[0].getOdometryTimestamps(); // Get the timestamps from the first module
-                                                                          // (all should be in sync)
-
         // Calculate the module positions
-        int sampleCount = odometryTimestamps.length;
-
-        // for (int i = 0; i < sampleCount; i++) {
-        //     SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
-        //     SwerveModulePosition[] moduleDeltas = new SwerveModulePosition[4];
-
-        //     for (int modIndex = 0; modIndex < 4; modIndex++) {
-        //         modulePositions[modIndex] = modules[modIndex].getOdometryPositions()[i];
-        //         moduleDeltas[modIndex] = new SwerveModulePosition(
-        //                 modulePositions[modIndex].distanceMeters - previousModulePositions[modIndex].distanceMeters,
-        //                 modulePositions[modIndex].angle);
-        //         previousModulePositions[modIndex] = modulePositions[modIndex];
-        //     }
-
-        //     // Update the current gyro rotation
-        //     if (gyroInputs.connected) {
-        //         gyroRotation = gyroInputs.odometryYawPositions[i];
-        //     } 
-        //     else {
-        //         // Use the delta from kinematics and mods
-        //         Twist2d delta = kinematics.toTwist2d(moduleDeltas);
-        //         gyroRotation = gyroRotation.plus(new Rotation2d(delta.dtheta));
-        //     }
-
-            poseEstimator.update(gyroRotation, this.getModulePositions());
-
-            // poseEstimator.updateWithTime(odometryTimestamps[i], gyroRotation, modulePositions);
-
-            Logger.recordOutput("Vision/ClosestTag", getClosestReefPose());
-        }
+        poseEstimator.update(gyroRotation, this.getModulePositions());
+        Logger.recordOutput("Vision/ClosestTag", getClosestReefPose());
+    }
 
 
     /**

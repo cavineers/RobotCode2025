@@ -154,7 +154,26 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
         }
 
-        // Calculate the module positions
+        SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
+        SwerveModulePosition[] moduleDeltas = new SwerveModulePosition[4];
+        // Calculate the rotation
+        for (int modIndex = 0; modIndex < 4; modIndex++) {
+            modulePositions[modIndex] = modules[modIndex].getPosition();
+            moduleDeltas[modIndex] = new SwerveModulePosition(
+                    modulePositions[modIndex].distanceMeters - previousModulePositions[modIndex].distanceMeters,
+                    modulePositions[modIndex].angle);
+            previousModulePositions[modIndex] = modulePositions[modIndex];
+        }
+
+        // Update the current gyro rotation
+        if (gyroInputs.connected) {
+            gyroRotation = gyroInputs.yawPosition;
+        } 
+        else {
+            // Use the delta from kinematics and mods
+            Twist2d delta = kinematics.toTwist2d(moduleDeltas);
+            gyroRotation = gyroRotation.plus(new Rotation2d(delta.dtheta));
+        }
         poseEstimator.update(gyroRotation, this.getModulePositions());
         Logger.recordOutput("Vision/ClosestTag", getClosestReefPose());
     }

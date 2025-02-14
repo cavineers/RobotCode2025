@@ -1,6 +1,7 @@
 package frc.robot.subsystems.Vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import java.util.function.Supplier;
 import org.photonvision.simulation.PhotonCameraSim;
@@ -31,6 +32,7 @@ public class VisionIOPhotonSim extends VisionIOPhoton {
         }
 
         var cameraProperties = new SimCameraProperties();
+        cameraProperties.setCalibration(800, 600, Rotation2d.fromDegrees(78));
         cameraSim = new PhotonCameraSim(camera, cameraProperties);
         visionSim.addCamera(cameraSim, robotToCamera);
     }

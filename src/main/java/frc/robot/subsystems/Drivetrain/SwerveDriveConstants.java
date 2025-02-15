@@ -23,9 +23,9 @@ public class SwerveDriveConstants {
 
         public static final double kOdometryFrequency = 100.0;
 
-        public static final double kPhysicalMaxSpeedMetersPerSecond = 3.63; 
-        public static final double kMaxModuleSpeedMetersPerSecond = 3.63;
-        public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = Units.degreesToRadians(525.5);
+        public static final double kPhysicalMaxSpeedMetersPerSecond = 3.63; // Free speed of NEO *
+                                                                            // kDriveEncoderRot2Meter
+        public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = Units.degreesToRadians(500);
         public static final double kWheelRadiusMeters = Units.inchesToMeters(1.963);
 
         public static final int kFrontLeftTurningCanID = 3;
@@ -56,9 +56,10 @@ public class SwerveDriveConstants {
         public static final boolean kBackRightDriveEncoderReversed = false;
 
         public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond;
-        public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
-        public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3.6;
-        public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = Units.degreesToRadians(525.5);
+        public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond
+                / 4;
+        public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3.5;
+        public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 2.5;
 
         public static final double kFrontLeftAbsoluteEncoderOffset = 0; // In rotations (read straight from the encoder)
         public static final double kBackLeftAbsoluteEncoderOffset = 0; // This is done by zeroing in cancoder
@@ -87,10 +88,11 @@ public class SwerveDriveConstants {
         public static final DCMotor kDriveGearbox = DCMotor.getNEO(1);
 
         // Drive PID configuration
-        public static final double kDriveKp = 0.01;
+        public static final double kDriveKp = 0.0;
         public static final double kDriveKd = 0.0;
-        public static final double kDriveKs = 0.15947;
-        public static final double kDriveKv = 0.11909;
+        public static final double kDriveKs = 0.10431;
+        public static final double kDriveKv = 0.115;
+        
         public static final double kDriveSimP = 1;
         public static final double kDriveSimD = 0.0;
         public static final double kDriveSimKs = 0.01370;

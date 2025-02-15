@@ -116,19 +116,4 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         return autoChooser.get();
     }
-
-    public Pose3d updateCoralPose() {
-        // Placeholder until we make a coral visualizer class
-        Pose3d relativeCoral = elevator.getRelativeCoralPose();
-        Pose2d robotPose = drivetrain.getPose();
-        
-        Pose3d coralPose = new Pose3d( // this is absolutely gross and I'm sorry -- just temporary
-            robotPose.getTranslation().getX() + relativeCoral.getTranslation().getX(),
-            robotPose.getTranslation().getY() + relativeCoral.getTranslation().getY(),
-            relativeCoral.getTranslation().getZ(),
-            new Rotation3d(robotPose.getRotation().plus(relativeCoral.getRotation().toRotation2d())).rotateBy(new Rotation3d(0,Units.degreesToRadians(35),0))
-        );
-
-        return coralPose;
-    }
 }

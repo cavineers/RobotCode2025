@@ -39,6 +39,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -175,7 +176,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             gyroRotation = gyroRotation.plus(new Rotation2d(delta.dtheta));
         }
         poseEstimator.update(gyroRotation, this.getModulePositions());
-        Logger.recordOutput("Vision/ClosestTag", getClosestReefPose());
     }
 
 
@@ -346,7 +346,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * Returns the closest reef april tag Pose2D to the robot
      *     Respective to the FMS alliance color
      */
-    public Pose2d getClosestReefPose() {
+    private Pose2d getClosestReefPose(boolean isLeft) {
         boolean isRedAlliance = this.shouldFlipPose();
 
         Pose2d closest = null;
@@ -374,8 +374,24 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
         Translation2d projectedTranslation = closest.getTranslation().plus(direction.times(DriveConstants.kSideLength / 2.0));
         // Create the new pose
-        closest = new Pose2d(projectedTranslation, closest.getRotation());      
+        Pose2d centerPose = new Pose2d(projectedTranslation, closest.getRotation());      
         
-        return closest;
+        // Create a vector perpendicular to the tag's direction
+        Translation2d perpendicular;
+        if (isLeft) {
+            // Rotate 90 degrees counterclockwise
+            perpendicular = new Translation2d(-centerPose.getRotation().getSin(), centerPose.getRotation().getCos());
+        } else {
+            // Rotate 90 degrees clockwise
+            perpendicular = new Translation2d(centerPose.getRotation().getSin(), -centerPose.getRotation().getCos());
+        }
+        // Project out by half the robot width and create new pose
+        Translation2d sideTranslation = centerPose.getTranslation().plus(perpendicular.times(0.16)); // distance from center to the reef peg
+        return new Pose2d(sideTranslation, centerPose.getRotation().plus(new Rotation2d(Math.PI)));
+    }
+
+    public Supplier<Pose2d> getClosestReefPoseSide(boolean isLeft) {
+        
+        return () -> getClosestReefPose(isLeft);
     }
 }

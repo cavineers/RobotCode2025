@@ -25,7 +25,7 @@ public class SwerveDriveConstants {
 
         public static final double kPhysicalMaxSpeedMetersPerSecond = 3.63; 
         public static final double kMaxModuleSpeedMetersPerSecond = 4.94;
-        public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = Units.degreesToRadians(500);
+        public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = Units.degreesToRadians(525.5);
         public static final double kWheelRadiusMeters = Units.inchesToMeters(1.963);
 
         public static final int kFrontLeftDriveCanID = 1;
@@ -56,8 +56,7 @@ public class SwerveDriveConstants {
         public static final boolean kBackRightDriveEncoderReversed = false;
 
         public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond;
-        public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond
-                / 4;
+        public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
         public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3.5;
         public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 2.5;
 

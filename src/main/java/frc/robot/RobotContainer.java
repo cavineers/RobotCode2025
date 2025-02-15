@@ -112,8 +112,8 @@ public class RobotContainer {
                 driverController::getLeftX,
                 driverController::getRightX));
 
-        // Bind the A button to the new PointToTarget command
-        driverController.a().whileTrue(new DriveToPose(drivetrain, new Pose2d(2, 2, new Rotation2d()))); // Dummy value
+        driverController.x().whileTrue(new DriveToPose(drivetrain, drivetrain.getClosestReefPoseSide(true)));
+        driverController.b().whileTrue(new DriveToPose(drivetrain, drivetrain.getClosestReefPoseSide(false)));
     }
 
     public Command getAutonomousCommand() {

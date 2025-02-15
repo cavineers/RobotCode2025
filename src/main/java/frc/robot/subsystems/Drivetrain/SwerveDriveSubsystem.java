@@ -188,7 +188,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Calculate module setpoints
         ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(discreteSpeeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DriveConstants.kMaxModuleSpeedMetersPerSecond);
+        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
 
         // Log unoptimized setpoints
         Logger.recordOutput("SwerveStates/Setpoints", moduleStates);

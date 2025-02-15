@@ -26,6 +26,7 @@ public class DriveToPose extends Command {
             DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond, DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
         this.drivetrain = drivetrain;
         this.targetPoseSupplier = targetPoseSupplier;
+        addRequirements(drivetrain);
     }
 
     public DriveToPose(SwerveDriveSubsystem drivetrain, Pose2d targetPose){
@@ -38,6 +39,7 @@ public class DriveToPose extends Command {
         this.targetPose = targetPose;
 
         this.targetPoseSupplier = () -> {return targetPose;};
+        addRequirements(drivetrain);
     }
 
     @Override
@@ -65,9 +67,7 @@ public class DriveToPose extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        if (this.pathfindingCommand.isScheduled()) {
-            this.pathfindingCommand.cancel();
-        }
+        this.pathfindingCommand.cancel();
         if (interrupted) {
             System.out.println("driveToPose was interrupted");
         }

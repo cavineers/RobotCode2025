@@ -79,6 +79,8 @@ public class RobotContainer {
                 vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
                 break;
         }
+        // Create commands
+       
         configureButtonBindings();
 
 
@@ -112,8 +114,8 @@ public class RobotContainer {
                 driverController::getLeftX,
                 driverController::getRightX));
 
-        driverController.x().whileTrue(new DriveToPose(drivetrain, drivetrain.getClosestReefPoseSide(true)));
-        driverController.b().whileTrue(new AlignToClosestTag(drivetrain, drivetrain.getClosestReefPoseSide(true)));
+        driverController.x().whileTrue(new DriveToPose(drivetrain, this.drivetrain.getClosestReefPoseSide(true)));
+        driverController.b().whileTrue(new DriveToPose(drivetrain, this.drivetrain.getClosestReefPoseSide(false)));
     }
 
     public Command getAutonomousCommand() {

@@ -26,8 +26,8 @@ public class AlignToClosestTag extends Command {
     private int tagId;
 
     // PIDs for movement
-    private PIDController translationXController = new PIDController(DriveConstants.PathPlannerDriveP, 0, 0);
-    private PIDController translationYController = new PIDController(DriveConstants.PathPlannerDriveP, 0, 0);
+    private PIDController translationXController = new PIDController(2.0, 0, 1);
+    private PIDController translationYController = new PIDController(2.0, 0, 1);
     private PIDController rotationController = new PIDController(DriveConstants.PathPlannerTurnP, 0, 0);
 
     private Supplier<Pose2d> targetPoseSupplier;
@@ -38,13 +38,14 @@ public class AlignToClosestTag extends Command {
         this.translationXController.setTolerance(0.01);
         this.translationYController.setTolerance(0.01);
         this.targetPoseSupplier = targetPoseSupplier;
+        addRequirements(drivetrain);
     }
 
     @Override
     public void initialize(){
         // feeding in the distance away from setpoints to PID
-        this.translationXController.setSetpoint(this.targetPoseSupplier.get().getX()); // zero difference between the current and goal translation
-        this.translationYController.setSetpoint(this.targetPoseSupplier.get().getY()); 
+        this.translationXController.setSetpoint(0); // zero difference between the current and goal translation
+        this.translationYController.setSetpoint(0); 
         this.rotationController.setSetpoint(this.targetPoseSupplier.get().getRotation().getRadians()); // set the rotation setpoint to the goal rotation
         this.rotationController.enableContinuousInput(-Math.PI, Math.PI);
     }
@@ -54,15 +55,20 @@ public class AlignToClosestTag extends Command {
         Logger.recordOutput("Commands/alignToTag", true);
 
         Pose2d drivePose = this.drivetrain.getPose();
+
+        Translation2d currentTranslation = new Translation2d(this.targetPoseSupplier.get().getX() - drivePose.getX(), this.targetPoseSupplier.get().getY() - drivePose.getY());
         // Calculate chassis speeds from PID 
-        double xSpeed = this.translationXController.calculate(drivePose.getX());
-        double ySpeed = this.translationYController.calculate(drivePose.getY());
+        double xSpeed = -this.translationXController.calculate(currentTranslation.getX());
+        double ySpeed = -this.translationYController.calculate(currentTranslation.getY());
         double turnSpeed = this.rotationController.calculate(drivePose.getRotation().getRadians()); // ambiguity can cause rotation to be off --> use gyro!!
 
         ChassisSpeeds speeds = new ChassisSpeeds(xSpeed, ySpeed, turnSpeed);
         Logger.recordOutput("AlignToTarget/Speeds", speeds);
+        Logger.recordOutput("Translation2D", currentTranslation);
 
         this.drivetrain.driveVelocity(speeds);
+        System.out.println("Aligning to tag");
+
     }
 
     @Override

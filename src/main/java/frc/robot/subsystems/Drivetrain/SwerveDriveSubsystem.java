@@ -346,7 +346,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * Returns the closest reef april tag Pose2D to the robot
      *     Respective to the FMS alliance color
      */
-    private Pose2d getClosestReefPose(boolean isLeft) {
+    private Pose2d getClosestReefPose(boolean flip) {
         boolean isRedAlliance = this.shouldFlipPose();
 
         Pose2d closest = null;
@@ -378,11 +378,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         
         // Create a vector perpendicular to the tag's direction
         Translation2d perpendicular;
-        if (isLeft) {
-            // Rotate 90 degrees counterclockwise
+        if (!flip) {
             perpendicular = new Translation2d(-centerPose.getRotation().getSin(), centerPose.getRotation().getCos());
         } else {
-            // Rotate 90 degrees clockwise
             perpendicular = new Translation2d(centerPose.getRotation().getSin(), -centerPose.getRotation().getCos());
         }
         // Project out by half the robot width and create new pose
@@ -390,8 +388,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         return new Pose2d(sideTranslation, centerPose.getRotation().plus(new Rotation2d(Math.PI)));
     }
 
-    public Supplier<Pose2d> getClosestReefPoseSide(boolean isLeft) {
+    public Supplier<Pose2d> getClosestReefPoseSide(boolean flip) {
         
-        return () -> getClosestReefPose(isLeft);
+        return () -> getClosestReefPose(flip);
     }
 }

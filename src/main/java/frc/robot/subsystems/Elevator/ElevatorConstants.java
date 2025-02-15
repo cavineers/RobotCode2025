@@ -7,12 +7,12 @@ import edu.wpi.first.math.util.Units;
 
 public class ElevatorConstants {
     public static final boolean kTuningMode = true; // allows for tuning the feedforward gains
-    public static final int kLeftMotorCanID = 1;
-    public static final int kRightMotorCanID = 2;
+    public static final int kLeftMotorCanID = 40;
+    public static final int kRightMotorCanID = 41;
 
     public static final int kLimitSwitchID = 0;
 
-    public static final double kGearRatio = 1.0 / 8.57; // output to input
+    public static final double kGearRatio = 1.0 / 6.0; // output to input
 
     public static final double kSprocketDiameter = 1.638; // in inches
     public static final double kRotationToInches = kGearRatio * kSprocketDiameter * Math.PI; // 1.638 is the diameter of the sprocket in inches
@@ -27,13 +27,13 @@ public class ElevatorConstants {
     public static final double kElevatorMassKg = Units.lbsToKilograms(25); // represents the weight of the elevator
 
 
-    public static final double kL1RotationsRotations = 14 * (8.57/10.0);
-    public static final double kL2RotationsRotations = 20 * (8.57/10.0);
-    public static final double kL3RotationsRotations = 31 * (8.57/10.0);
-    public static final double kL4RotationsRotations = 48 * (8.57/10.0);
+    public static final double kL1RotationsRotations = -5;
+    public static final double kL2RotationsRotations = -10;
+    public static final double kL3RotationsRotations = 0;
+    public static final double kL4RotationsRotations = 0;
 
     public static final double kMinRotations = 0;
-    public static final double kMaxRotations = 58 * (8.57/10.0);
+    public static final double kMaxRotations = -23;
 
     public static final double kProportionalGainSpark = 0.03;
     public static final double kIntegralTermSpark = 0;

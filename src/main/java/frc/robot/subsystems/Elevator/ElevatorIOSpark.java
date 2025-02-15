@@ -9,6 +9,7 @@ import static frc.robot.subsystems.Elevator.ElevatorConstants.kTolerance;
 import java.util.function.DoubleSupplier;
 
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -36,12 +37,21 @@ public class ElevatorIOSpark implements ElevatorIO {
 
     private final DigitalInput limitSwitch = new DigitalInput(ElevatorConstants.kLimitSwitchID);
 
+    private LoggedNetworkNumber tuningP = new LoggedNetworkNumber("/Tuning/Elevator/P", ElevatorConstants.kProportionalGainSpark);
+    private LoggedNetworkNumber tuningD = new LoggedNetworkNumber("/Tuning/Elevator/D", ElevatorConstants.kDerivativeTermSpark);
+    private LoggedNetworkNumber tuningG = new LoggedNetworkNumber("/Tuning/Elevator/G", ElevatorConstants.kGravityTermSpark); 
+    
+    private double currentP; // Proportional gain
+    private double currentD; // Derivative gain
+
     @AutoLogOutput(key = "Elevator/Setpoint")
     private double motorSetpoint = 0;
 
+    private SparkFlexConfig config;
+
     public ElevatorIOSpark() {
         // Set up the PID controller on Spark Max
-        SparkFlexConfig config = new SparkFlexConfig();
+        config = new SparkFlexConfig();
         config
             .idleMode(IdleMode.kBrake)
             .voltageCompensation(12)
@@ -56,14 +66,17 @@ public class ElevatorIOSpark implements ElevatorIO {
         config.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             .pidf(ElevatorConstants.kProportionalGainSpark, ElevatorConstants.kIntegralTermSpark, ElevatorConstants.kDerivativeTermSpark, 0);
-        
+
         tryUntilOk(
             rightMotor,
             5,
             () -> rightMotor.configure(config, ResetMode.kResetSafeParameters,
                     PersistMode.kPersistParameters));
 
-        config.follow(rightMotor); // Set the left motor to follow the right motor (might want to lower telemetry refresh rates in the future)
+        var leftMotorConfig = new SparkFlexConfig().apply(config);
+        leftMotorConfig.follow(rightMotor);
+
+        config.follow(rightMotor); // Change to true if needs to be reversed Set the left motor to follow the right motor (might want to lower telemetry refresh rates in the future)
         tryUntilOk(
             leftMotor,
             5,
@@ -73,16 +86,7 @@ public class ElevatorIOSpark implements ElevatorIO {
 
     @Override
     public void updateInputs(ElevatorIOInputs inputs) {
-        // Update motor inputs
-        ifOk(leftMotor, leftEncoder::getPosition, (value) -> inputs.leftPositionRotations = value); 
-        ifOk(leftMotor, leftEncoder::getVelocity, (value) -> inputs.leftVelocityRPM = value);
-        ifOk(
-            leftMotor,
-            new DoubleSupplier[] {leftMotor::getAppliedOutput, leftMotor::getBusVoltage},
-            (values) -> inputs.leftAppliedVolts = values[0] * values[1]);
-        ifOk(leftMotor, leftMotor::getOutputCurrent, (value) -> inputs.leftCurrentAmps = value);
-
-        // Same thing for right motor
+        // Update for right motor
         ifOk(rightMotor, rightEncoder::getPosition, (value) -> inputs.rightPositionRotations = value);
         ifOk(rightMotor, rightEncoder::getVelocity, (value) -> inputs.rightVelocityRPM = value);
         ifOk(
@@ -92,12 +96,25 @@ public class ElevatorIOSpark implements ElevatorIO {
         ifOk(rightMotor, rightMotor::getOutputCurrent, (value) -> inputs.rightCurrentAmps = value);
 
         // Update limit switch
-        inputs.limitSwitch = getLimitSwitch();  
+        inputs.limitSwitch = getLimitSwitch(); 
+
+        if (tuningP.get() != this.currentP || tuningD.get() != this.currentD) {
+            config.closedLoop.pidf(tuningP.get(), 0, tuningD.get(), 0);
+            tryUntilOk(
+                rightMotor,
+                5,
+                () -> rightMotor.configure(config, ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters));
+            
+            this.currentD = tuningD.get();
+            this.currentP = tuningP.get();
+        }
+
     }
 
     private double calculateFeedforward(int errorDirection) {
         return //ElevatorConstants.kStaticFrictionTermSpark * errorDirection + (This might not work as the friction term could be negative and then not be able to change)
-        ElevatorConstants.kGravityTermSpark;
+        this.tuningG.get();
     }
 
     public double getElevMotorPosition() {

@@ -113,7 +113,7 @@ public class RobotContainer {
                 driverController::getRightX));
 
         driverController.x().whileTrue(new DriveToPose(drivetrain, drivetrain.getClosestReefPoseSide(true)));
-        driverController.b().whileTrue(new DriveToPose(drivetrain, drivetrain.getClosestReefPoseSide(false)));
+        driverController.b().whileTrue(new AlignToClosestTag(drivetrain, drivetrain.getClosestReefPoseSide(true)));
     }
 
     public Command getAutonomousCommand() {

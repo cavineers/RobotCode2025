@@ -57,7 +57,7 @@ public class SwerveDriveConstants {
 
         public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond;
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
-        public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3.5;
+        public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 2.0;
         public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 2.5;
 
         public static final double kFrontLeftAbsoluteEncoderOffset = 0; // In rotations (read straight from the encoder)
@@ -68,9 +68,9 @@ public class SwerveDriveConstants {
         // Distance between right and left wheels
         public static final double kTrackWidth = Units.inchesToMeters(24.5);
         // Distance between front and back wheels
-        public static final double kWheelBase = Units.inchesToMeters(24.5);
+        public static final double kWheelBase = Units.inchesToMeters(24.0);
         public static final double kDriveBaseRadius = Math.hypot(kTrackWidth / 2.0, kWheelBase / 2.0);
-        public static final double kSideLength = Units.inchesToMeters(32.5); // 2.5 inches bumper: Represents full width
+        public static final double kSideLength = Units.inchesToMeters(37.5); // 2.5 inches bumper: Represents full width
                                                                              // of the robot
 
         public static final Translation2d[] moduleTranslations = new Translation2d[] {

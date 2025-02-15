@@ -1,18 +1,27 @@
 package frc.robot.subsystems.EndEffector;
 
 import static frc.lib.SparkUtil.*;
-
+import static frc.robot.subsystems.EndEffector.EndEffectorConstants.kCoralPresentIR;
 import static frc.robot.subsystems.EndEffector.EndEffectorConstants.kEndEffectorCanID;
 
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.simulation.DIOSim;
+
 public class EndEffectorIOSpark implements EndEffectorIO {
-    private final SparkMax motor = new SparkMax(kEndEffectorCanID, MotorType.kBrushless);
+    private final SparkFlex motor = new SparkFlex(kEndEffectorCanID, MotorType.kBrushless);
+
     private final RelativeEncoder encoder = motor.getEncoder();
+
+    private final DigitalInput coralPresentIR = new DigitalInput(EndEffectorConstants.kCoralPresentIR);
+    private final DigitalInput coralLoadedLimit = new DigitalInput(EndEffectorConstants.kCoralLoadedLimit);
+
 
     public EndEffectorIOSpark() {
 
@@ -29,8 +38,24 @@ public class EndEffectorIOSpark implements EndEffectorIO {
         ifOk(motor, motor::getOutputCurrent, (value) -> inputs.currentAmps = value);
     }
 
+    public boolean getSensor(DigitalInput sensor) {
+        return sensor.get();
+    }
+
     @Override
     public void setVoltage(double volts) {
         motor.setVoltage(volts);
+    }
+
+    public void intake() {
+        if(getSensor(coralLoadedLimit) == false) {
+            setVoltage(EndEffectorConstants.kEndEffectorIntakeSpeed);
+        }
+    }
+
+    public void shoot() {
+        if(getSensor(coralLoadedLimit) == false) {
+            setVoltage(EndEffectorConstants.kEndEffectorShootSpeed);
+        }
     }
 }

@@ -21,6 +21,8 @@ public interface EndEffectorIO {
     }
 
     public default void intake() {
-        
+    }
+
+    public default void shoot() {
     }
 }

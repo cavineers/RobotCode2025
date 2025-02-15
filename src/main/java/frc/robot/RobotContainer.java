@@ -101,6 +101,8 @@ public class RobotContainer {
                 driverController::getRightX));
 
         driverController.x().whileTrue(endEffector.intakeCommand());
+        driverController.y().whileTrue(endEffector.shootCommand());
+
     }
 
     public Command getAutonomousCommand() {

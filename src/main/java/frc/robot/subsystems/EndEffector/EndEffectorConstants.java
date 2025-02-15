@@ -6,6 +6,6 @@ public class EndEffectorConstants {
     public static final int kCoralPresentIR = 0;
     public static final int kCoralLoadedLimit = 1;
 
-    public static final double kEndEffectorForwardSpeed = 0.5;
-    public static final double kEndEffectorReverseSpeed = 0.5;
+    public static final double kEndEffectorShootSpeed = 0.5;
+    public static final double kEndEffectorIntakeSpeed = -0.5;
 }

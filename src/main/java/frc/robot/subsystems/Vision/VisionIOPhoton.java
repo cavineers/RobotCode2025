@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -39,7 +40,7 @@ public class VisionIOPhoton implements VisionIO {
 
         // read unread results
         Set<Short> tagIds = new HashSet<>(); // Set of all tag IDs HashSet is used to avoid duplicates
-        List<PoseObservation> poseObservations = new LinkedList<>(); // List of all pose observations
+        List<PoseObservation> poseObservations = new ArrayList<>(); // List of all pose observations
         for (var result : camera.getAllUnreadResults()) {
             // Add pose observation
             if (result.multitagResult.isPresent()) { // Multitag result

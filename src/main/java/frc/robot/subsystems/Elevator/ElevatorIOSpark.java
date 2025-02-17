@@ -9,6 +9,7 @@ import static frc.robot.subsystems.Elevator.ElevatorConstants.kTolerance;
 import java.util.function.DoubleSupplier;
 
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 import com.revrobotics.RelativeEncoder;
@@ -40,9 +41,6 @@ public class ElevatorIOSpark implements ElevatorIO {
     private LoggedNetworkNumber tuningP = new LoggedNetworkNumber("/Tuning/Elevator/P", ElevatorConstants.kProportionalGainSpark);
     private LoggedNetworkNumber tuningD = new LoggedNetworkNumber("/Tuning/Elevator/D", ElevatorConstants.kDerivativeTermSpark);
     private LoggedNetworkNumber tuningG = new LoggedNetworkNumber("/Tuning/Elevator/G", ElevatorConstants.kGravityTermSpark); 
-    
-    private double currentP; // Proportional gain
-    private double currentD; // Derivative gain
 
     @AutoLogOutput(key = "Elevator/Setpoint")
     private double motorSetpoint = 0;
@@ -53,6 +51,7 @@ public class ElevatorIOSpark implements ElevatorIO {
         // Set up the PID controller on Spark Max
         config = new SparkFlexConfig();
         config
+            .inverted(true)
             .idleMode(IdleMode.kBrake)
             .voltageCompensation(12)
             .smartCurrentLimit(ElevatorConstants.kCurrentLimit);        
@@ -74,13 +73,11 @@ public class ElevatorIOSpark implements ElevatorIO {
                     PersistMode.kPersistParameters));
 
         var leftMotorConfig = new SparkFlexConfig().apply(config);
-        leftMotorConfig.follow(rightMotor);
-
-        config.follow(rightMotor); // Change to true if needs to be reversed Set the left motor to follow the right motor (might want to lower telemetry refresh rates in the future)
+        leftMotorConfig.follow(rightMotor, true); // Follow the right motor and also invert !!! This may cause them to clash need to see
         tryUntilOk(
             leftMotor,
             5,
-            () -> leftMotor.configure(config, ResetMode.kResetSafeParameters,
+            () -> leftMotor.configure(leftMotorConfig, ResetMode.kResetSafeParameters,
                     PersistMode.kPersistParameters));
     }
 
@@ -98,18 +95,11 @@ public class ElevatorIOSpark implements ElevatorIO {
         // Update limit switch
         inputs.limitSwitch = getLimitSwitch(); 
 
-        if (tuningP.get() != this.currentP || tuningD.get() != this.currentD) {
-            config.closedLoop.pidf(tuningP.get(), 0, tuningD.get(), 0);
-            tryUntilOk(
-                rightMotor,
-                5,
-                () -> rightMotor.configure(config, ResetMode.kResetSafeParameters,
-                        PersistMode.kPersistParameters));
-            
-            this.currentD = tuningD.get();
-            this.currentP = tuningP.get();
+        // Update PID Loop if necessary
+        if (ElevatorConstants.kTuningMode) {
+            updatePID();
         }
-
+        
     }
 
     private double calculateFeedforward(int errorDirection) {
@@ -142,5 +132,19 @@ public class ElevatorIOSpark implements ElevatorIO {
             return ElevatorConstants.kMinRotations;
         }
         return setpoint;
+    }
+
+    private void updatePID(){
+        double currentP = rightMotor.configAccessor.closedLoop.getP();
+        double currentD = rightMotor.configAccessor.closedLoop.getD();
+
+        if (tuningP.get() != currentP || tuningD.get() != currentD) {
+            config.closedLoop.pidf(tuningP.get(), 0, tuningD.get(), 0);
+            tryUntilOk(
+                rightMotor,
+                5,
+                () -> rightMotor.configure(config, ResetMode.kNoResetSafeParameters,
+                        PersistMode.kPersistParameters));
+        }
     }
 }

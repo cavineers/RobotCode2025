@@ -1,6 +1,8 @@
 package frc.robot.subsystems.Vision;
 
 import static frc.robot.subsystems.Vision.VisionConstants.*;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
@@ -47,18 +49,18 @@ public class Vision extends SubsystemBase {
         }
 
         // Initialize the pose values
-        List<Pose3d> totalTagPoses = new LinkedList<>();
-        List<Pose3d> totalRobotPoses = new LinkedList<>();
-        List<Pose3d> totalAcceptedRobotPoses = new LinkedList<>();
+        List<Pose3d> totalTagPoses = new ArrayList<Pose3d>();
+        List<Pose3d> totalRobotPoses = new ArrayList<Pose3d>();
+        List<Pose3d> totalAcceptedRobotPoses = new ArrayList<Pose3d>();
 
         // loop through all cams
         for (int i = 0; i < ios.length; i++) {
             disconnectedAlerts[i].set(!inputs[i].connected);
 
             // Initialize the pose values
-            List<Pose3d> tagPoses = new LinkedList<>();
-            List<Pose3d> robotPoses = new LinkedList<>();
-            List<Pose3d> acceptedRobotPoses = new LinkedList<>();
+            List<Pose3d> tagPoses = new ArrayList<>();
+            List<Pose3d> robotPoses = new ArrayList<>();
+            List<Pose3d> acceptedRobotPoses = new ArrayList<>();
 
             // Add tag poses
             for (int tagId : inputs[i].tagIds) {

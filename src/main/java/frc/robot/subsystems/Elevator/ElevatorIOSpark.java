@@ -1,6 +1,6 @@
 package frc.robot.subsystems.Elevator;
 
-import static frc.lib.SparkUtil.*; // has a bunch of utility functions for SparkMax
+import static frc.lib.SparkUtil.*;
 
 import static frc.robot.subsystems.Elevator.ElevatorConstants.kLeftMotorCanID;
 import static frc.robot.subsystems.Elevator.ElevatorConstants.kRightMotorCanID;
@@ -17,21 +17,18 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
-import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.SparkMax;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 public class ElevatorIOSpark implements ElevatorIO {
     
-    private final SparkFlex rightMotor = new SparkFlex(kLeftMotorCanID, MotorType.kBrushless);
-    private final SparkFlex leftMotor = new SparkFlex(kRightMotorCanID, MotorType.kBrushless);
+    private final SparkMax rightMotor = new SparkMax(kLeftMotorCanID, MotorType.kBrushless);
+    private final SparkMax leftMotor = new SparkMax(kRightMotorCanID, MotorType.kBrushless);
 
     private final RelativeEncoder rightEncoder = rightMotor.getEncoder();
     private final RelativeEncoder leftEncoder = leftMotor.getEncoder();
@@ -45,11 +42,11 @@ public class ElevatorIOSpark implements ElevatorIO {
     @AutoLogOutput(key = "Elevator/Setpoint")
     private double motorSetpoint = 0;
 
-    private SparkFlexConfig config;
+    private SparkMaxConfig config;
 
     public ElevatorIOSpark() {
         // Set up the PID controller on Spark Max
-        config = new SparkFlexConfig();
+        config = new SparkMaxConfig();
         config
             .inverted(true)
             .idleMode(IdleMode.kBrake)
@@ -72,8 +69,8 @@ public class ElevatorIOSpark implements ElevatorIO {
             () -> rightMotor.configure(config, ResetMode.kResetSafeParameters,
                     PersistMode.kPersistParameters));
 
-        var leftMotorConfig = new SparkFlexConfig().apply(config);
-        leftMotorConfig.follow(rightMotor, true); // Follow the right motor and also invert !!! This may cause them to clash need to see
+        var leftMotorConfig = new SparkMaxConfig().apply(config);
+        leftMotorConfig.follow(rightMotor, true);
         tryUntilOk(
             leftMotor,
             5,
@@ -103,8 +100,7 @@ public class ElevatorIOSpark implements ElevatorIO {
     }
 
     private double calculateFeedforward(int errorDirection) {
-        return //ElevatorConstants.kStaticFrictionTermSpark * errorDirection + (This might not work as the friction term could be negative and then not be able to change)
-        this.tuningG.get();
+        return this.tuningG.get();
     }
 
     public double getElevMotorPosition() {
@@ -116,7 +112,7 @@ public class ElevatorIOSpark implements ElevatorIO {
     }
 
     @Deprecated
-    public void setVoltage(double volts, SparkFlex motor) {
+    public void setVoltage(double volts, SparkMax motor) {
         motor.setVoltage(volts);
     }
 

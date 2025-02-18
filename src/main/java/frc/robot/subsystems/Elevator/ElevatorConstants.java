@@ -7,14 +7,15 @@ import edu.wpi.first.math.util.Units;
 
 public class ElevatorConstants {
     public static final boolean kTuningMode = true; // allows for tuning the feedforward gains
-    public static final int kLeftMotorCanID = 40;
-    public static final int kRightMotorCanID = 41;
+    public static final int kLeftMotorCanID = 42;
+    public static final int kRightMotorCanID = 40;
+    public static final boolean kInverted = true;
 
     public static final int kLimitSwitchID = 0;
 
     public static final double kGearRatio = 1.0 / 6.0; // output to input
 
-    public static final double kSprocketDiameter = 1.638; // in inches
+    public static final double kSprocketDiameter = 1.742; // in inches
     public static final double kRotationToInches = kGearRatio * kSprocketDiameter * Math.PI; // 1.638 is the diameter of the sprocket in inches
     public static final double kStage3HeightProportion = 22.0 / 30.0; // given by cad
 
@@ -35,11 +36,11 @@ public class ElevatorConstants {
     public static final double kMinRotations = 0;
     public static final double kMaxRotations = 23;
 
-    public static final double kProportionalGainSpark = 0.0;
+    public static final double kProportionalGainSpark = 0.00;
     public static final double kIntegralTermSpark = 0;
     public static final double kDerivativeTermSpark = 0;
     public static final double kStaticFrictionTermSpark = 0.0;
-    public static final double kGravityTermSpark = 0.0;
+    public static final double kGravityTermSpark = 0.5;
     public static final double kTolerance = 0.1;
 
 

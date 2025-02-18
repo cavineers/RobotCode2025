@@ -30,7 +30,7 @@ import frc.robot.commands.SystemIdCommands;
 public class RobotContainer {
 
     // Subsystems
-    private final SwerveDriveSubsystem drivetrain;
+    // private final SwerveDriveSubsystem drivetrain;
     private final Elevator elevator;
 
     // Controllers
@@ -43,33 +43,33 @@ public class RobotContainer {
         switch (Constants.currentMode) {
             // Instantiate input/output for their respective modes
             case REAL:
-                drivetrain = new SwerveDriveSubsystem(
-                        new GyroPigeonIO(),
-                        new ModuleIOSpark(0),
-                        new ModuleIOSpark(1),
-                        new ModuleIOSpark(2),
-                        new ModuleIOSpark(3));
+                // drivetrain = new SwerveDriveSubsystem(
+                //         new GyroPigeonIO(),
+                //         new ModuleIOSpark(0),
+                //         new ModuleIOSpark(1),
+                //         new ModuleIOSpark(2),
+                //         new ModuleIOSpark(3));
 
                 elevator = new Elevator(new ElevatorIOSpark());
                 break;
             case SIM:
-                drivetrain = new SwerveDriveSubsystem(
-                        new GyroIO() {},
-                        new ModuleIOSim(),
-                        new ModuleIOSim(),
-                        new ModuleIOSim(),
-                        new ModuleIOSim());
+                // drivetrain = new SwerveDriveSubsystem(
+                //         new GyroIO() {},
+                //         new ModuleIOSim(),
+                //         new ModuleIOSim(),
+                //         new ModuleIOSim(),
+                //         new ModuleIOSim());
 
                 elevator = new Elevator(new ElevatorIOSim());
                 break;
             default:
                 // Replay
-                drivetrain = new SwerveDriveSubsystem(
-                        new GyroIO() {},
-                        new ModuleIO() {},
-                        new ModuleIO() {},
-                        new ModuleIO() {},
-                        new ModuleIO() {});
+                // drivetrain = new SwerveDriveSubsystem(
+                //         new GyroIO() {},
+                //         new ModuleIO() {},
+                //         new ModuleIO() {},
+                //         new ModuleIO() {},
+                //         new ModuleIO() {});
 
                 elevator = new Elevator(new ElevatorIO(){});
                 break;
@@ -77,23 +77,23 @@ public class RobotContainer {
         configureButtonBindings();
 
 
-        // Set up auto routines for SysIds
-        autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-        // Set up SysId routines
-        autoChooser.addOption(
-            "Drive Wheel Radius Characterization", SystemIdCommands.wheelRadiusCharacterization(drivetrain));
-        autoChooser.addOption(
-            "Drive Simple FF Characterization", SystemIdCommands.feedforwardCharacterization(drivetrain));
-        autoChooser.addOption(
-            "Drive SysId (Quasistatic Forward)",
-            drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-        autoChooser.addOption(
-            "Drive SysId (Quasistatic Reverse)",
-            drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-        autoChooser.addOption(
-            "Drive SysId (Dynamic Forward)", drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
-        autoChooser.addOption(
-            "Drive SysId (Dynamic Reverse)", drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        // // Set up auto routines for SysIds
+        autoChooser = new LoggedDashboardChooser<>("Auto Choices");
+        // // Set up SysId routines
+        // autoChooser.addOption(
+        //     "Drive Wheel Radius Characterization", SystemIdCommands.wheelRadiusCharacterization(drivetrain));
+        // autoChooser.addOption(
+        //     "Drive Simple FF Characterization", SystemIdCommands.feedforwardCharacterization(drivetrain));
+        // autoChooser.addOption(
+        //     "Drive SysId (Quasistatic Forward)",
+        //     drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        // autoChooser.addOption(
+        //     "Drive SysId (Quasistatic Reverse)",
+        //     drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        // autoChooser.addOption(
+        //     "Drive SysId (Dynamic Forward)", drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
+        // autoChooser.addOption(
+        //     "Drive SysId (Dynamic Reverse)", drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
         
         // Configure the button bindings
         configureButtonBindings();
@@ -101,11 +101,11 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         // Set the drivetrain default command
-        drivetrain.setDefaultCommand(new SwerveCommand(
-                drivetrain,
-                driverController::getLeftY,
-                driverController::getLeftX,
-                driverController::getRightX));
+        // drivetrain.setDefaultCommand(new SwerveCommand(
+        //         drivetrain,
+        //         driverController::getLeftY,
+        //         driverController::getLeftX,
+        //         driverController::getRightX));
 
         driverController.a().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL1RotationsRotations));
         driverController.b().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL2RotationsRotations));

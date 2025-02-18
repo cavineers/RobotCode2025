@@ -24,9 +24,7 @@ public interface ElevatorIO {
 
     /**
      * Sets the voltage applied to the motor.
-     * @deprecated Use {@link #updateSetpoint(double)} instead
      */
-    @Deprecated
     public default void setVoltage(double volts) {
     }
     

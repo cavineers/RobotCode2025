@@ -14,12 +14,16 @@ public interface DealgaefierIO {
         public double spinMotorVelocityRadPerSec = 0.0;
         public double spinMotorAppliedVolts = 0.0;
         public double spinMotorCurrentAmps = 0.0;
+
+        public boolean dealgaefierLimit = false;
     }
     
-    public default void updateInputs(DealgaefierIOInputs inputs) {
+    default void updateInputs(DealgaefierIOInputs inputs) {
         }
 
     public default void setVoltage(double volts) {
         }
 
+    public default void pivot(){
+    }
 }

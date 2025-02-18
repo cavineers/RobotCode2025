@@ -20,6 +20,7 @@ public class DealgaefierIOSpark implements DealgaefierIO {
     final SparkMax spinMotor = new SparkMax(kDealgaefierSpinCanID, MotorType.kBrushless);
     final RelativeEncoder spinEncoder = spinMotor.getEncoder();
 
+    private final DigitalInput dealgaefierLimit = new DigitalInput(DealgaefierConstants.kDealgaefierLimit);
     public DealgaefierIOSpark(){
         //motor config potentially
     }
@@ -43,10 +44,21 @@ public class DealgaefierIOSpark implements DealgaefierIO {
             (values -> inputs.spinMotorAppliedVolts = values[0] * values[1]));
         ifOk(pivotMotor, pivotMotor::getOutputCurrent, (value) -> inputs.spinMotorCurrentAmps = value);
     }
+
+    public boolean getSensor(DigitalInput sensor) {
+        return sensor.get();
+    }
     
     @Override
     public void setVoltage(double volts) {
         pivotMotor.setVoltage(volts);
         spinMotor.setVoltage(volts);
     }
+
+    public void pivot() {
+        if(getSensor(dealgaefierLimit) == false) {
+            setVoltage(DealgaefierConstants.kDealgaefierPivotSpeed);
+        }
+    }
+
 }

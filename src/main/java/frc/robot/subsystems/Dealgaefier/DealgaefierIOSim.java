@@ -1,7 +1,5 @@
 package frc.robot.subsystems.Dealgaefier;
 
-import static frc.robot.subsystems.Dealgaefier.DealgaefierConstants.*;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -13,6 +11,8 @@ public class DealgaefierIOSim implements DealgaefierIO {
     private DCMotorSim motor = new DCMotorSim(
         LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 0.004, 1),
         DCMotor.getNEO(1));
+
+    private static DIOSim dealgaefierLimit = new DIOSim(DealgaefierConstants.kDealgaefierLimit);
 
     private double appliedVolts = 0.0;
 
@@ -30,10 +30,22 @@ public class DealgaefierIOSim implements DealgaefierIO {
         inputs.spinMotorVelocityRadPerSec = motor.getAngularVelocityRadPerSec();
         inputs.spinMotorAppliedVolts = appliedVolts;
         inputs.spinMotorCurrentAmps = motor.getCurrentDrawAmps();
+
+        inputs.dealgaefierLimit = getSensor(dealgaefierLimit);
+    }
+
+    public boolean getSensor(DIOSim sensor) {
+        return sensor.getValue();
     }
 
     @Override
     public void setVoltage(double volts) {
         appliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+    }
+
+        public void pivot() {
+        if(getSensor(dealgaefierLimit) == false) {
+            setVoltage(DealgaefierConstants.kDealgaefierPivotSpeed);
+        }
     }
 }

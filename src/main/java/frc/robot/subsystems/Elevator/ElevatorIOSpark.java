@@ -53,13 +53,8 @@ public class ElevatorIOSpark implements ElevatorIO {
         config
             .inverted(kInverted)
             .idleMode(IdleMode.kBrake)
-            .smartCurrentLimit(ElevatorConstants.kCurrentLimit);     
-            config
-            .inverted(true)
-            .inverted(kInverted)
-            .idleMode(IdleMode.kBrake)
-            .voltageCompensation(12)
-            .smartCurrentLimit(ElevatorConstants.kCurrentLimit);        
+            .smartCurrentLimit(ElevatorConstants.kCurrentLimit)    
+            .voltageCompensation(12);
         config.signals
             .primaryEncoderPositionAlwaysOn(true)
             .primaryEncoderVelocityAlwaysOn(true)
@@ -81,14 +76,12 @@ public class ElevatorIOSpark implements ElevatorIO {
             5,
             () -> leftMotor.configure(leftMotorConfig, ResetMode.kResetSafeParameters,
                     PersistMode.kPersistParameters));
-        this.rightMotor.set(0.1);
     }
 
     @Override
     public void updateInputs(ElevatorIOInputs inputs) {
         // Update for right motor
         ifOk(rightMotor, rightEncoder::getPosition, (value) -> inputs.rightPositionRotations = value);
-        inputs.rightPositionRotations = rightEncoder.getPosition();
         ifOk(rightMotor, rightEncoder::getVelocity, (value) -> inputs.rightVelocityRPM = value);
         ifOk(
             rightMotor,
@@ -102,7 +95,7 @@ public class ElevatorIOSpark implements ElevatorIO {
         
         double desiredVoltage = this.controller.calculate(inputs.rightPositionRotations) + this.tuningG.get();
         Logger.recordOutput("Elevator/RequestedVoltage", desiredVoltage);
-        // this.setVoltage(desiredVoltage);
+        this.setVoltage(desiredVoltage);
 
         if (kTuningMode){
             this.updatePID();
@@ -122,7 +115,6 @@ public class ElevatorIOSpark implements ElevatorIO {
     }
 
     public void setVoltage(double volts) {
-        System.out.println("SET VOLTAGE");
         rightMotor.setVoltage(volts);
     }
 

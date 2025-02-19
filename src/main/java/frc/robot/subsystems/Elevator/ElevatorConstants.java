@@ -28,19 +28,19 @@ public class ElevatorConstants {
     public static final double kElevatorMassKg = Units.lbsToKilograms(25); // represents the weight of the elevator
 
 
-    public static final double kL1RotationsRotations = 0;
-    public static final double kL2RotationsRotations = 10;
-    public static final double kL3RotationsRotations = 23;
+    public static final double kL1RotationsRotations = 2;
+    public static final double kL2RotationsRotations = 5;
+    public static final double kL3RotationsRotations = 13;
     public static final double kL4RotationsRotations = 0;
 
     public static final double kMinRotations = 0;
     public static final double kMaxRotations = 23;
 
-    public static final double kProportionalGainSpark = 0.00;
+    public static final double kProportionalGainSpark = 1.0d;
     public static final double kIntegralTermSpark = 0;
     public static final double kDerivativeTermSpark = 0;
     public static final double kStaticFrictionTermSpark = 0.0;
-    public static final double kGravityTermSpark = 0.5;
+    public static final double kGravityTermSpark = 0.3;
     public static final double kTolerance = 0.1;
 
 

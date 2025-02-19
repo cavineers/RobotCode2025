@@ -25,7 +25,7 @@ public class SwerveDriveConstants {
 
         public static final double kPhysicalMaxSpeedMetersPerSecond = 3.63; // Free speed of NEO *
                                                                             // kDriveEncoderRot2Meter
-        public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = Units.degreesToRadians(500);
+        public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = Units.degreesToRadians(720);
         public static final double kWheelRadiusMeters = Units.inchesToMeters(1.963);
 
         public static final int kFrontLeftTurningCanID = 3;
@@ -59,7 +59,7 @@ public class SwerveDriveConstants {
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond
                 / 4;
         public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3.5;
-        public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 2.5;
+        public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 5;
 
         public static final double kFrontLeftAbsoluteEncoderOffset = 0; // In rotations (read straight from the encoder)
         public static final double kBackLeftAbsoluteEncoderOffset = 0; // This is done by zeroing in cancoder

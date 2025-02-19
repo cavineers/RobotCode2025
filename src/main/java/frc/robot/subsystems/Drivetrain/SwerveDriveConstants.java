@@ -57,9 +57,9 @@ public class SwerveDriveConstants {
 
         public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond;
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond
-                / 4;
+                / 2;
         public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3.5;
-        public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 5;
+        public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 2.5;
 
         public static final double kFrontLeftAbsoluteEncoderOffset = 0; // In rotations (read straight from the encoder)
         public static final double kBackLeftAbsoluteEncoderOffset = 0; // This is done by zeroing in cancoder

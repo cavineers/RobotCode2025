@@ -36,7 +36,7 @@ public class ElevatorConstants {
     public static final double kMinRotations = 0;
     public static final double kMaxRotations = 23;
 
-    public static final double kProportionalGainSpark = 1.0d;
+    public static final double kProportionalGainSpark = 1.0;
     public static final double kIntegralTermSpark = 0;
     public static final double kDerivativeTermSpark = 0;
     public static final double kStaticFrictionTermSpark = 0.0;

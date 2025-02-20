@@ -11,8 +11,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-
 public class DealgaefierIOSpark implements DealgaefierIO {
     final SparkMax pivotMotor = new SparkMax(kDealgaefierPivotCanID, MotorType.kBrushless);
     final RelativeEncoder pivotEncoder = pivotMotor.getEncoder();

@@ -1,12 +1,9 @@
 package frc.robot.subsystems.Dealgaefier;
 
-import static frc.robot.subsystems.Dealgaefier.DealgaefierConstants.*;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import edu.wpi.first.wpilibj.simulation.DIOSim;
 
 public class DealgaefierIOSim implements DealgaefierIO {
     

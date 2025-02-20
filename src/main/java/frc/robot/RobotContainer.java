@@ -13,11 +13,14 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.SwerveCommand;
+import frc.robot.subsystems.CanRangeArray.CanRangeArray;
 import frc.robot.subsystems.Drivetrain.GyroIO;
 import frc.robot.subsystems.Drivetrain.GyroPigeonIO;
 import frc.robot.subsystems.Drivetrain.ModuleIO;
 import frc.robot.subsystems.Drivetrain.ModuleIOSim;
 import frc.robot.subsystems.Drivetrain.ModuleIOSpark;
+import frc.robot.subsystems.CanRangeArray.CanRangeIOReal;
+import frc.robot.subsystems.CanRangeArray.CanRangeIO;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
 import frc.robot.commands.SystemIdCommands;
 import frc.robot.commands.auto.*;
@@ -28,6 +31,7 @@ public class RobotContainer {
     // Subsystems
     private final SwerveDriveSubsystem drivetrain;
     private final Vision vision;
+    private final CanRangeArray canRangeArray;
 
     // Controllers
     private final CommandXboxController driverController = new CommandXboxController(0);
@@ -53,6 +57,14 @@ public class RobotContainer {
                     new VisionIOPhoton(frontCameraName, robotToFrontCam));
                     // new VisionIOPhoton(backCameraName, robotToBackCam));
 
+                canRangeArray = new CanRangeArray(
+                    new CanRangeIOReal(0),
+                    new CanRangeIOReal(1),
+                    new CanRangeIOReal(2),
+                    new CanRangeIOReal(3)
+                );
+                
+
                 break;
             case SIM:
                 drivetrain = new SwerveDriveSubsystem(
@@ -66,6 +78,9 @@ public class RobotContainer {
                     drivetrain::addVisionMeasurement,
                     new VisionIOPhotonSim(frontCameraName, robotToFrontCam, () -> drivetrain.getPose()));
                     // new VisionIOPhotonSim(backCameraName, robotToBackCam, () -> drivetrain.getPose()));
+
+                canRangeArray = new CanRangeArray(new CanRangeIO() {}, new CanRangeIO() {}, new CanRangeIO() {}, new CanRangeIO() {});
+
                 break;
             default:
                 // Replay
@@ -77,6 +92,8 @@ public class RobotContainer {
                         new ModuleIO() {});
 
                 vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
+                canRangeArray = new CanRangeArray(new CanRangeIO() {}, new CanRangeIO() {}, new CanRangeIO() {}, new CanRangeIO() {});
+
                 break;
         }
         // Create commands
@@ -114,8 +131,8 @@ public class RobotContainer {
                 driverController::getLeftX,
                 driverController::getRightX));
 
-        driverController.x().whileTrue(new DriveToPose(drivetrain, this.drivetrain.getClosestReefPoseSide(true)));
-        driverController.b().whileTrue(new DriveToPose(drivetrain, this.drivetrain.getClosestReefPoseSide(false)));
+        driverController.x().whileTrue(new DriveToPose(drivetrain, this.drivetrain.getClosestReefPoseSide(true, true)));
+        driverController.b().whileTrue(new DriveToPose(drivetrain, this.drivetrain.getClosestReefPoseSide(false, true)));
     }
 
     public Command getAutonomousCommand() {

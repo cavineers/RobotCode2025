@@ -343,10 +343,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
     
     /**
+     * @param Flip whether to make the pose left or right of the center
+     * @param applyOffset whether to apply the offset to the front bumper and side
      * Returns the closest reef april tag Pose2D to the robot
-     *     Respective to the FMS alliance color
+     * Respective to the FMS alliance color
      */
-    private Pose2d getClosestReefPose(boolean flip) {
+    private Pose2d getClosestReefPose(boolean flip, boolean applyOffset) {
         boolean isRedAlliance = this.shouldFlipPose();
 
         Pose2d closest = null;
@@ -364,6 +366,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             }
         }
 
+        if (!applyOffset) {
+            return closest;
+        }
         // Now add the offset from the robot to the front bumper
         // Get the rotation of the tag
         Rotation2d tagRotation = closest.getRotation();
@@ -388,8 +393,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         return new Pose2d(sideTranslation, centerPose.getRotation().plus(new Rotation2d(Math.PI)));
     }
 
-    public Supplier<Pose2d> getClosestReefPoseSide(boolean flip) {
+    public Supplier<Pose2d> getClosestReefPoseSide(boolean flip, boolean applyOffset) {
         
-        return () -> getClosestReefPose(flip);
+        return () -> getClosestReefPose(flip, applyOffset);
     }
 }

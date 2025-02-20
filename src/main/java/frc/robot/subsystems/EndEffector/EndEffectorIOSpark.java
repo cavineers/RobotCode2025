@@ -47,15 +47,17 @@ public class EndEffectorIOSpark implements EndEffectorIO {
         motor.setVoltage(volts);
     }
 
+    @Override
     public void intake() {
         if(getSensor(coralLoadedLimit) == false) {
-            setVoltage(EndEffectorConstants.kEndEffectorIntakeSpeed);
+            motor.setVoltage(EndEffectorConstants.kEndEffectorIntakeSpeed);
         }
     }
 
+    @Override
     public void shoot() {
         if(getSensor(coralLoadedLimit) == false) {
-            setVoltage(EndEffectorConstants.kEndEffectorShootSpeed);
+            motor.setVoltage(EndEffectorConstants.kEndEffectorShootSpeed);
         }
     }
 }

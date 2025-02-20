@@ -103,8 +103,6 @@ public class RobotContainer {
         driverController.x().whileTrue(endEffector.intakeCommand());
         driverController.y().whileTrue(endEffector.shootCommand());
         driverController.a().whileTrue(endEffector.setVoltageCommand(5.0));
-
-
     }
 
     public Command getAutonomousCommand() {

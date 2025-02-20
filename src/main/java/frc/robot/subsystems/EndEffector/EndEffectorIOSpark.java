@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.DIOSim;
 
 public class EndEffectorIOSpark implements EndEffectorIO {
-    private final SparkFlex motor = new SparkFlex(kEndEffectorCanID, MotorType.kBrushless);
+    private final SparkMax motor = new SparkMax(kEndEffectorCanID, MotorType.kBrushless);
 
     private final RelativeEncoder encoder = motor.getEncoder();
 
@@ -50,14 +50,18 @@ public class EndEffectorIOSpark implements EndEffectorIO {
     @Override
     public void intake() {
         if(getSensor(coralLoadedLimit) == false) {
-            motor.setVoltage(EndEffectorConstants.kEndEffectorIntakeSpeed);
+            motor.setVoltage(EndEffectorConstants.kEndEffectorIntakeSpeed * 12);
+        } else {
+            motor.setVoltage(0.0);
         }
     }
 
     @Override
     public void shoot() {
         if(getSensor(coralLoadedLimit) == false) {
-            motor.setVoltage(EndEffectorConstants.kEndEffectorShootSpeed);
+            motor.setVoltage(EndEffectorConstants.kEndEffectorShootSpeed * 12);
+        } else {
+            motor.setVoltage(0.0);
         }
     }
 }

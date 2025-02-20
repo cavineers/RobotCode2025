@@ -45,14 +45,14 @@ public class Elevator extends SubsystemBase {
 
     private Pose3d[] getElevatorStagePoses(double rotations){
         // Calculate how far the chain has rotated
-        double pulleyInches = rotations * ElevatorConstants.kRotationToInches; // This is the change in stage height (S1 and S2 ONLY!!!)
+        double inchesMoved = rotations * ElevatorConstants.kRotationToInches; // This is the change in stage height (S1 and S2 ONLY!!!)
     
         // Apply the proportional constant to stage 3 to find the change for S3
-        double deltaStage3 = Units.inchesToMeters(pulleyInches * ElevatorConstants.kStage3HeightProportion);
+        double deltaStage3 = Units.inchesToMeters(inchesMoved * ElevatorConstants.kStage3HeightProportion);
 
 
         // Calculate the height of the elevator
-        double stage1Height = Units.inchesToMeters(pulleyInches);
+        double stage1Height = Units.inchesToMeters(inchesMoved);
         double stage2Height =  2 * stage1Height; // S2 is twice the height of S1
         double stage3Height = stage2Height + deltaStage3;
         Logger.recordOutput("3DMechanisms/Elevator/Stage1", stage1Height);

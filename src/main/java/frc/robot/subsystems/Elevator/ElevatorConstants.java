@@ -15,7 +15,7 @@ public class ElevatorConstants {
 
     public static final double kGearRatio = 1.0 / 6.0; // output to input
 
-    public static final double kSprocketDiameter = 1.742; // in inches
+    public static final double kSprocketDiameter = 1.775; // in inches
     public static final double kRotationToInches = kGearRatio * kSprocketDiameter * Math.PI; // 1.638 is the diameter of the sprocket in inches
     public static final double kStage3HeightProportion = 22.0 / 30.0; // given by cad
 
@@ -31,7 +31,7 @@ public class ElevatorConstants {
     public static final double kL1RotationsRotations = 2;
     public static final double kL2RotationsRotations = 5;
     public static final double kL3RotationsRotations = 13;
-    public static final double kL4RotationsRotations = 0;
+    public static final double kL4RotationsRotations = 23;
 
     public static final double kMinRotations = 0;
     public static final double kMaxRotations = 23;

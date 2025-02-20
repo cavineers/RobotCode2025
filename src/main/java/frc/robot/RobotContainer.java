@@ -30,7 +30,7 @@ import frc.robot.commands.SystemIdCommands;
 public class RobotContainer {
 
     // Subsystems
-    // private final SwerveDriveSubsystem drivetrain;
+    private final SwerveDriveSubsystem drivetrain;
     private final Elevator elevator;
 
     // Controllers
@@ -43,33 +43,33 @@ public class RobotContainer {
         switch (Constants.currentMode) {
             // Instantiate input/output for their respective modes
             case REAL:
-                // drivetrain = new SwerveDriveSubsystem(
-                //         new GyroPigeonIO(),
-                //         new ModuleIOSpark(0),
-                //         new ModuleIOSpark(1),
-                //         new ModuleIOSpark(2),
-                //         new ModuleIOSpark(3));
+                drivetrain = new SwerveDriveSubsystem(
+                        new GyroPigeonIO(),
+                        new ModuleIOSpark(0),
+                        new ModuleIOSpark(1),
+                        new ModuleIOSpark(2),
+                        new ModuleIOSpark(3));
 
                 elevator = new Elevator(new ElevatorIOSpark());
                 break;
             case SIM:
-                // drivetrain = new SwerveDriveSubsystem(
-                //         new GyroIO() {},
-                //         new ModuleIOSim(),
-                //         new ModuleIOSim(),
-                //         new ModuleIOSim(),
-                //         new ModuleIOSim());
+                drivetrain = new SwerveDriveSubsystem(
+                        new GyroIO() {},
+                        new ModuleIOSim(),
+                        new ModuleIOSim(),
+                        new ModuleIOSim(),
+                        new ModuleIOSim());
 
                 elevator = new Elevator(new ElevatorIOSim());
                 break;
             default:
                 // Replay
-                // drivetrain = new SwerveDriveSubsystem(
-                //         new GyroIO() {},
-                //         new ModuleIO() {},
-                //         new ModuleIO() {},
-                //         new ModuleIO() {},
-                //         new ModuleIO() {});
+                drivetrain = new SwerveDriveSubsystem(
+                        new GyroIO() {},
+                        new ModuleIO() {},
+                        new ModuleIO() {},
+                        new ModuleIO() {},
+                        new ModuleIO() {});
 
                 elevator = new Elevator(new ElevatorIO(){});
                 break;
@@ -101,16 +101,16 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         // Set the drivetrain default command
-        // drivetrain.setDefaultCommand(new SwerveCommand(
-        //         drivetrain,
-        //         driverController::getLeftY,
-        //         driverController::getLeftX,
-        //         driverController::getRightX));
+        drivetrain.setDefaultCommand(new SwerveCommand(
+                drivetrain,
+                driverController::getLeftY,
+                driverController::getLeftX,
+                driverController::getRightX));
 
         driverController.a().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL1RotationsRotations));
         driverController.b().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL2RotationsRotations));
         driverController.x().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL3RotationsRotations));
-        // driverController.y().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL4RotationsRotations));
+        driverController.y().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL4RotationsRotations));
     }
 
     public Command getAutonomousCommand() {

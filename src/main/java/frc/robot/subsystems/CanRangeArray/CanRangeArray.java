@@ -54,11 +54,23 @@ public class CanRangeArray extends SubsystemBase {
 
     /** 
      * Determine if the sensors are aligned
-     * Checks if the difference between either the right sensors or the left sensors is greater than the difference tolerance
+     * @param side true aligning to left side, false if to right side
      * @return true if the sensors are aligned, false if they are not
      */
-    public boolean isAligned(){
-        double[] distances = this.getDistances();
+    public boolean isAligned(boolean side){
+        double baselineDistance = side ? inputs[1].distance : inputs[3].distance;
+
+        // Checks the left side sensors, (One too far and one close)
+        if (side){
+            if (getDifference(inputs[0].distance, baselineDistance) > kDifferenceTolerance && getDifference(inputs[1].distance, baselineDistance) < kDifferenceTolerance){
+                return true;
+            }
+        }else{
+            // Checks the right side sensors, (One too far and one close)
+            if (getDifference(inputs[2].distance, baselineDistance) > kDifferenceTolerance && getDifference(inputs[3].distance, baselineDistance) < kDifferenceTolerance){
+                return true;
+            }
+        }
         return false;
     }
 

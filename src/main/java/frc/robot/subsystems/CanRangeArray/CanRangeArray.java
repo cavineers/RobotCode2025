@@ -88,27 +88,27 @@ public class CanRangeArray extends SubsystemBase {
         // Check to see which side the baseline is on
         double baselineDistance = side ? inputs[1].distance : inputs[3].distance;
 
-        if (this.isAligned()) return 0;
+        if (this.isAligned(side)) return 0;
         // Compare the distance of the opposing side to the baseline and run the motors in the corresponding direction
         if (side){
             // Left side
             if (getDifference(inputs[1].distance, baselineDistance) > kDifferenceTolerance && getDifference(inputs[0].distance, baselineDistance) > kDifferenceTolerance){
                 // If the dist of both sensors is greater than the baseline sensor move to the right
-                return kAlignmentSpeed;
+                return -kAlignmentSpeed;
             }
             if (getDifference(inputs[1].distance, baselineDistance) < kDifferenceTolerance && getDifference(inputs[0].distance, baselineDistance) < kDifferenceTolerance){
                 // If the dist of both sensors is less than the baseline sensor move to the left
-                return -kAlignmentSpeed;
+                return kAlignmentSpeed;
             }
         }else{
             // Right side
             if (getDifference(inputs[3].distance, baselineDistance) > kDifferenceTolerance && getDifference(inputs[2].distance, baselineDistance) > kDifferenceTolerance){
                 // If the dist of both sensors is greater than the baseline sensor move to the left
-                return -kAlignmentSpeed;
+                return kAlignmentSpeed;
             }
             if (getDifference(inputs[3].distance, baselineDistance) < kDifferenceTolerance && getDifference(inputs[2].distance, baselineDistance) < kDifferenceTolerance){
                 // If the dist of both sensors is less than the baseline sensor move to the right
-                return kAlignmentSpeed;
+                return -kAlignmentSpeed;
             }
         }
         

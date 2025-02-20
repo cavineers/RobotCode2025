@@ -20,6 +20,7 @@ import frc.robot.subsystems.Drivetrain.ModuleIO;
 import frc.robot.subsystems.Drivetrain.ModuleIOSim;
 import frc.robot.subsystems.Drivetrain.ModuleIOSpark;
 import frc.robot.subsystems.CanRangeArray.CanRangeIOReal;
+import frc.robot.subsystems.CanRangeArray.CanRangeIOSim;
 import frc.robot.subsystems.CanRangeArray.CanRangeIO;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
 import frc.robot.commands.SystemIdCommands;
@@ -79,7 +80,7 @@ public class RobotContainer {
                     new VisionIOPhotonSim(frontCameraName, robotToFrontCam, () -> drivetrain.getPose()));
                     // new VisionIOPhotonSim(backCameraName, robotToBackCam, () -> drivetrain.getPose()));
 
-                canRangeArray = new CanRangeArray(new CanRangeIO() {}, new CanRangeIO() {}, new CanRangeIO() {}, new CanRangeIO() {});
+                canRangeArray = new CanRangeArray(new CanRangeIOSim(0), new CanRangeIOSim(1), new CanRangeIOSim(2), new CanRangeIOSim(3));
 
                 break;
             default:
@@ -133,6 +134,7 @@ public class RobotContainer {
 
         driverController.x().whileTrue(new DriveToPose(drivetrain, this.drivetrain.getClosestReefPoseSide(true, true)));
         driverController.b().whileTrue(new DriveToPose(drivetrain, this.drivetrain.getClosestReefPoseSide(false, true)));
+        driverController.y().whileTrue(new AlignToPeg(drivetrain, canRangeArray, false));
     }
 
     public Command getAutonomousCommand() {

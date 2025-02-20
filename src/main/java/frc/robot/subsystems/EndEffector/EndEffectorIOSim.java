@@ -44,13 +44,13 @@ public class EndEffectorIOSim implements EndEffectorIO {
 
     public void intake() {
         if(getSensor(coralLoadedLimit) == false) {
-            setVoltage(EndEffectorConstants.kEndEffectorIntakeSpeed);
+            setVoltage(EndEffectorConstants.kEndEffectorIntakeSpeed * 12.0);
         }
     }
 
     public void shoot() {
         if(getSensor(coralLoadedLimit) == false) {
-            setVoltage(EndEffectorConstants.kEndEffectorShootSpeed);
+            setVoltage(EndEffectorConstants.kEndEffectorShootSpeed * 12.0);
         }
     }
 }

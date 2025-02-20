@@ -50,7 +50,7 @@ public class EndEffectorIOSpark implements EndEffectorIO {
     @Override
     public void intake() {
         if(getSensor(coralLoadedLimit) == false) {
-            motor.setVoltage(EndEffectorConstants.kEndEffectorIntakeSpeed * 12);
+            motor.setVoltage(EndEffectorConstants.kEndEffectorIntakeSpeed * 12.0);
         } else {
             motor.setVoltage(0.0);
         }
@@ -59,7 +59,7 @@ public class EndEffectorIOSpark implements EndEffectorIO {
     @Override
     public void shoot() {
         if(getSensor(coralLoadedLimit) == false) {
-            motor.setVoltage(EndEffectorConstants.kEndEffectorShootSpeed * 12);
+            motor.setVoltage(EndEffectorConstants.kEndEffectorShootSpeed * 12.0);
         } else {
             motor.setVoltage(0.0);
         }

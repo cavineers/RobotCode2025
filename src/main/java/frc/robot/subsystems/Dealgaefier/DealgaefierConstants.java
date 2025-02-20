@@ -7,7 +7,8 @@ public class DealgaefierConstants {
     public static final double minRotation = 0;
     public static final double maxRotation = 0;
 
-    public static final int forwardDrive = 1;
+    public static final double kDealgaefierPivotSpeed = 0; //0's are temp speeds until further notice
+    public static final double kDealgaefierSpinSpeed = 0;
 
-    public static final int reverseDrive = 1;
+    public static final int kDealgaefierLimit = 0;
 }

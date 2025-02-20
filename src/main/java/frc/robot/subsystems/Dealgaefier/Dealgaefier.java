@@ -33,4 +33,9 @@ public class Dealgaefier extends SubsystemBase {
     public void setPercentage(double percentage) {
         io.setVoltage(percentage * 12.0);
     }
+
+    public Command pivotCommand() {
+        return Commands.run(() -> io.pivot(), this).finallyDo(interrupted -> io.setVoltage(0));
+    }
+
 }

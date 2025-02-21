@@ -308,9 +308,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * Accepts a vision measurement and updates the pose estimator.
     */
     public void addVisionMeasurement(Pose2d poseMeters, double timestamp, Matrix<N3, N1> visionMeasurementStdDevs) {
-        Pose2d withoutGyroOnly = new Pose2d(poseMeters.getTranslation(), gyroRotation);
+        // Pose2d withoutGyroOnly = new Pose2d(poseMeters.getTranslation(), gyroRotation);
         poseEstimator.addVisionMeasurement(
-            withoutGyroOnly, timestamp, visionMeasurementStdDevs);
+            poseMeters, timestamp, visionMeasurementStdDevs);
     }
 
     /**

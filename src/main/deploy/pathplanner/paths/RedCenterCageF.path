@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.579262943591101,
-        "y": 1.8916226661811448
+        "x": 7.579,
+        "y": 1.892
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.317050900791548,
-        "y": 0.8966110277385451
+        "x": 6.316787957200447,
+        "y": 0.8969883615573999
       },
       "isLocked": false,
       "linkedName": "RedMiddleCage"

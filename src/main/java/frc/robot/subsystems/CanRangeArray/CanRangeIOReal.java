@@ -24,6 +24,7 @@ public class CanRangeIOReal implements CanRangeIO {
         this.sensor = new CANrange(kCanIDs[ident]);
         CANrangeConfiguration config = new CANrangeConfiguration();
         config.FovParams.FOVCenterX = 10;
+        config.FovParams.FOVCenterY = 10;
         this.sensor.getConfigurator().apply(config, 2);
         this.distanceSignal = this.sensor.getDistance();
         this.id = ident;

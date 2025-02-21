@@ -20,6 +20,7 @@ public class AlignToPeg extends Command {
         this.drivetrain = drivetrain;
         this.canRangeArray = canRangeArray;
         this.turnController = new PIDController(DriveConstants.PathPlannerTurnP, 0, 0);
+        this.turnController.setTolerance(0.035); // 2 degrees in radians
         this.turnController.enableContinuousInput(-Math.PI, Math.PI);
         this.isLeftSide = isLeftSide;
         addRequirements(drivetrain);
@@ -36,7 +37,13 @@ public class AlignToPeg extends Command {
         double currentRotation = drivetrain.getPose().getRotation().getRadians();
         double turnSpeed = turnController.calculate(currentRotation, goalRotation);
 
-        ChassisSpeeds speeds = new ChassisSpeeds(0, this.canRangeArray.calculateAlignmentSpeed(this.isLeftSide), turnSpeed);
+        // Rotate the robot first 
+        ChassisSpeeds speeds;
+        if (!turnController.atSetpoint()){
+            speeds = new ChassisSpeeds(0, 0, turnSpeed);
+        }else{
+            speeds = new ChassisSpeeds(0, this.canRangeArray.calculateAlignmentSpeed(this.isLeftSide), 0);
+        }
         drivetrain.driveVelocity(speeds);
     }
 

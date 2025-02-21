@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.DIOSim;
 
 public class EndEffectorIOSpark implements EndEffectorIO {
-    private final SparkMax motor = new SparkMax(kEndEffectorCanID, MotorType.kBrushless);
+    private final SparkFlex motor = new SparkFlex(kEndEffectorCanID, MotorType.kBrushless);
 
     private final RelativeEncoder encoder = motor.getEncoder();
 

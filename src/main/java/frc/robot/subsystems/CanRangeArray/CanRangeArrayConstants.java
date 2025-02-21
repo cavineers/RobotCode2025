@@ -8,10 +8,10 @@ import edu.wpi.first.math.util.Units;
 public class CanRangeArrayConstants {
 
     public static double kDifferenceTolerance = 0.1; // Meters -> difference between two sensors to be considered the same
-    public static double kMaxDistance = 1.0; // Meters
+    public static double kMaxDistance = 0.5; // Meters
 
-    public static double kAlignmentSpeed = 0.05; // Percent input to swerves
-    public static int[] kCanIDs = {70, 71, 73, 72}; // CAN IDs for the sensors (LeftOuter, LeftInner, RightOuter, RightInner)
+    public static double kAlignmentSpeed = 0.5; // Percent input to swerves
+    public static int[] kCanIDs = {50, 51, 53, 52}; // CAN IDs for the sensors (LeftOuter, LeftInner, RightOuter, RightInner)
 
 
     // SIMULATION CONSTANTS

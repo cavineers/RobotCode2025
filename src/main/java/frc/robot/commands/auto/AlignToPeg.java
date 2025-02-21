@@ -43,7 +43,7 @@ public class AlignToPeg extends Command {
     @Override
     public void end(boolean interrupted) {
         Logger.recordOutput("Commands/AlignToPeg", false);
-        this.drivetrain.stop();
+        this.drivetrain.driveVelocity(new ChassisSpeeds());
     }
 
     @Override

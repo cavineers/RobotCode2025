@@ -132,9 +132,10 @@ public class RobotContainer {
                 driverController::getLeftX,
                 driverController::getRightX));
 
-        driverController.x().whileTrue(new DriveToPose(drivetrain, this.drivetrain.getClosestReefPoseSide(true, true)));
-        driverController.b().whileTrue(new DriveToPose(drivetrain, this.drivetrain.getClosestReefPoseSide(false, true)));
-        driverController.y().whileTrue(new AlignToPeg(drivetrain, canRangeArray, false));
+        // driverController.x().whileTrue(new DriveToPose(drivetrain, this.drivetrain.getClosestReefPoseSide(true, true)));
+        // driverController.b().whileTrue(new DriveToPose(drivetrain, this.drivetrain.getClosestReefPoseSide(false, true)));
+        driverController.b().whileTrue(new AlignToPeg(drivetrain, canRangeArray, false));
+        driverController.x().whileTrue(new AlignToPeg(drivetrain, canRangeArray, true));
     }
 
     public Command getAutonomousCommand() {

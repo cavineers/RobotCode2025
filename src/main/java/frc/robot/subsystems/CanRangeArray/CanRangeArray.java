@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.subsystems.CanRangeArray.CanRangeArrayConstants.*;
 
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 
 public class CanRangeArray extends SubsystemBase {
@@ -30,10 +31,13 @@ public class CanRangeArray extends SubsystemBase {
 
     @Override
     public void periodic() {
-        for (CanRangeIO io : ios) {
-            CanRangeIO.CanRangeIOInputs inputs = new CanRangeIO.CanRangeIOInputs();
-            io.updateInputs(inputs);
+        for (int i = 0; i < ios.length; i++) {
+            ios[i].updateInputs(inputs[i]);
+            Logger.processInputs("CanRangeArray/Sensor" + i, inputs[i]); // log the inputs
+
         }
+
+        Logger.recordOutput("CanRangeArray/IsFinished", this.isAligned(true));
 
         for (int i = 0; i < ios.length; i++) { // Loop through all cameras
             disconnectedAlerts[i].set(!inputs[i].connected);
@@ -58,7 +62,7 @@ public class CanRangeArray extends SubsystemBase {
      * @return true if the sensors are aligned, false if they are not
      */
     public boolean isAligned(boolean side){
-        double baselineDistance = side ? inputs[1].distance : inputs[3].distance;
+        double baselineDistance = side ? inputs[3].distance : inputs[1].distance;
 
         // Checks the left side sensors, (One too far and one close)
         if (side){
@@ -86,28 +90,42 @@ public class CanRangeArray extends SubsystemBase {
     @AutoLogOutput(key = "CanRangeArray/CalculatedSpeed")
     public double calculateAlignmentSpeed(boolean side){
         // Check to see which side the baseline is on
-        double baselineDistance = side ? inputs[1].distance : inputs[3].distance;
-
+        double baselineDistance = side ?  inputs[3].distance: inputs[1].distance;
         if (this.isAligned(side)) return 0;
+        if (baselineDistance > kMaxDistance){
+            if (side) 
+                return kAlignmentSpeed;
+            return -kAlignmentSpeed;
+        }
         // Compare the distance of the opposing side to the baseline and run the motors in the corresponding direction
         if (side){
+            Logger.recordOutput("CanRangeArray/Side", "Left");
+            Logger.recordOutput("CanRangeArray/InnerSensorDist", getDifference(inputs[1].distance, baselineDistance));
+            Logger.recordOutput("CanRangeArray/OuterSensorDist", getDifference(inputs[0].distance, baselineDistance));
             // Left side
             if (getDifference(inputs[1].distance, baselineDistance) > kDifferenceTolerance && getDifference(inputs[0].distance, baselineDistance) > kDifferenceTolerance){
-                // If the dist of both sensors is greater than the baseline sensor move to the right
+                // If the dist of both sensors is greater than the baseline sensor move to the RIGHT
+                System.out.println("MOVING RIGHT");
                 return -kAlignmentSpeed;
             }
             if (getDifference(inputs[1].distance, baselineDistance) < kDifferenceTolerance && getDifference(inputs[0].distance, baselineDistance) < kDifferenceTolerance){
-                // If the dist of both sensors is less than the baseline sensor move to the left
+                // If the dist of both sensors is less than the baseline sensor move to the LEFT
+                System.out.println("MOVING LEFT");
                 return kAlignmentSpeed;
             }
         }else{
             // Right side
+            Logger.recordOutput("CanRangeArray/Side", "Right");
+            Logger.recordOutput("CanRangeArray/InnerSensorDist", getDifference(inputs[2].distance, baselineDistance));
+            Logger.recordOutput("CanRangeArray/OuterSensorDist", getDifference(inputs[3].distance, baselineDistance));
             if (getDifference(inputs[3].distance, baselineDistance) > kDifferenceTolerance && getDifference(inputs[2].distance, baselineDistance) > kDifferenceTolerance){
                 // If the dist of both sensors is greater than the baseline sensor move to the left
+                System.out.println("MOVING LEFT");
                 return kAlignmentSpeed;
             }
             if (getDifference(inputs[3].distance, baselineDistance) < kDifferenceTolerance && getDifference(inputs[2].distance, baselineDistance) < kDifferenceTolerance){
                 // If the dist of both sensors is less than the baseline sensor move to the right
+                System.out.println("MOVING Right");
                 return -kAlignmentSpeed;
             }
         }

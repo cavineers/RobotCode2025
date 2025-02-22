@@ -11,6 +11,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
 public class DealgaefierIOSpark implements DealgaefierIO {
     final SparkMax deployMotor = new SparkMax(kDeployCanID, MotorType.kBrushless);
@@ -18,6 +19,10 @@ public class DealgaefierIOSpark implements DealgaefierIO {
 
     final SparkMax intakeMotor = new SparkMax(kIntakeCanID, MotorType.kBrushless);
     final RelativeEncoder intakeEncoder = intakeMotor.getEncoder();
+
+    public DutyCycleEncoder deployAbsEncoder = new DutyCycleEncoder(DealgaefierConstants.kDeployAbsEncoder);
+
+    private double motorSetpoint;
 
     public DealgaefierIOSpark(){
 
@@ -40,6 +45,10 @@ public class DealgaefierIOSpark implements DealgaefierIO {
             new DoubleSupplier[] {intakeMotor::getAppliedOutput, intakeMotor::getBusVoltage},
             (values -> inputs.intakeMotorAppliedVolts = values[0] * values[1]));
         ifOk(intakeMotor, intakeMotor::getOutputCurrent, (value) -> inputs.intakeMotorCurrentAmps = value);
+    }
+
+    public void initializeDutyEncoder(){
+        this.motorSetpoint = deployAbsEncoder.get();
     }
 
     public boolean getSensor(DigitalInput sensor) {

@@ -11,6 +11,7 @@ public class Dealgaefier extends SubsystemBase {
 
     public Dealgaefier(DealgaefierIO io) {
         this.io = io;
+        io.initializeDutyEncoder();
     }
 
     @Override

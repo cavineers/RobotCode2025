@@ -1,5 +1,6 @@
 package frc.robot;
 
+import static frc.robot.subsystems.Vision.VisionConstants.*;
 import static frc.robot.subsystems.Elevator.ElevatorConstants.kL1Rotations;
 
 import org.littletonrobotics.junction.AutoLog;
@@ -9,18 +10,24 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.SwerveCommand;
+import frc.robot.subsystems.CanRangeArray.CanRangeArray;
 import frc.robot.subsystems.Drivetrain.GyroIO;
 import frc.robot.subsystems.Drivetrain.GyroPigeonIO;
 import frc.robot.subsystems.Drivetrain.ModuleIO;
 import frc.robot.subsystems.Drivetrain.ModuleIOSim;
 import frc.robot.subsystems.Drivetrain.ModuleIOSpark;
+import frc.robot.subsystems.CanRangeArray.CanRangeIOReal;
+import frc.robot.subsystems.CanRangeArray.CanRangeIOSim;
+import frc.robot.subsystems.CanRangeArray.CanRangeIO;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
 import frc.robot.subsystems.EndEffector.EndEffector;
 import frc.robot.subsystems.EndEffector.EndEffectorIO;
@@ -32,17 +39,23 @@ import frc.robot.subsystems.Elevator.ElevatorIO;
 import frc.robot.subsystems.Elevator.ElevatorIOSim;
 import frc.robot.subsystems.Elevator.ElevatorIOSpark;
 import frc.robot.commands.SystemIdCommands;
+import frc.robot.commands.auto.*;
+import frc.robot.subsystems.Vision.*;
 
 public class RobotContainer {
 
     // Subsystems
     private final SwerveDriveSubsystem drivetrain;
+    private final Vision vision;
+    private final CanRangeArray canRangeArray;
 
     private final EndEffector endEffector;
     private final Elevator elevator;
 
     // Controllers
     private final CommandXboxController driverController = new CommandXboxController(0);
+    
+    // Commands
 
     // Auto chooser
     private final LoggedDashboardChooser<Command> autoChooser;
@@ -58,6 +71,18 @@ public class RobotContainer {
                         new ModuleIOSpark(2),
                         new ModuleIOSpark(3));
 
+                vision = new Vision(
+                    drivetrain::addVisionMeasurement,
+                    new VisionIOPhoton(frontCameraName, robotToFrontCam));
+                    // new VisionIOPhoton(backCameraName, robotToBackCam));
+
+                canRangeArray = new CanRangeArray(
+                    new CanRangeIOReal(0),
+                    new CanRangeIOReal(1),
+                    new CanRangeIOReal(2),
+                    new CanRangeIOReal(3)
+                );
+                
                 endEffector = new EndEffector(new EndEffectorIOSpark());
                 elevator = new Elevator(new ElevatorIOSpark());
 
@@ -69,6 +94,13 @@ public class RobotContainer {
                         new ModuleIOSim(),
                         new ModuleIOSim(),
                         new ModuleIOSim());
+
+                vision = new Vision(
+                    drivetrain::addVisionMeasurement,
+                    new VisionIOPhotonSim(frontCameraName, robotToFrontCam, () -> drivetrain.getPose()));
+                    // new VisionIOPhotonSim(backCameraName, robotToBackCam, () -> drivetrain.getPose()));
+
+                canRangeArray = new CanRangeArray(new CanRangeIOSim(0), new CanRangeIOSim(1), new CanRangeIOSim(2), new CanRangeIOSim(3));
 
                 endEffector = new EndEffector(new EndEffectorIOSim());
                 elevator = new Elevator(new ElevatorIOSim());
@@ -83,11 +115,15 @@ public class RobotContainer {
                         new ModuleIO() {},
                         new ModuleIO() {});
 
+                vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
+                canRangeArray = new CanRangeArray(new CanRangeIO() {}, new CanRangeIO() {}, new CanRangeIO() {}, new CanRangeIO() {});
                 endEffector = new EndEffector(new EndEffectorIO(){});
                 elevator = new Elevator(new ElevatorIO(){});
 
                 break;
         }
+        // Create commands
+       
         configureButtonBindings();
 
 

@@ -12,14 +12,10 @@ import edu.wpi.first.units.measure.AngularVelocity;
 
 import static frc.robot.subsystems.Drivetrain.SwerveDriveConstants.DriveConstants.*;
 
-import java.util.Queue;
-
 /** IO implementation for Pigeon 2. */
 public class GyroPigeonIO implements GyroIO {
     private final Pigeon2 pigeon = new Pigeon2(kPigeonID);
     private final StatusSignal<Angle> yaw = pigeon.getYaw();
-    private final Queue<Double> yawPositionQueue;
-    private final Queue<Double> yawTimestampQueue;
     private final StatusSignal<AngularVelocity> yawVelocity = pigeon.getAngularVelocityZWorld();
 
     public GyroPigeonIO() {
@@ -28,8 +24,6 @@ public class GyroPigeonIO implements GyroIO {
         yaw.setUpdateFrequency(kOdometryFrequency);
         yawVelocity.setUpdateFrequency(50.0);
         pigeon.optimizeBusUtilization();
-        yawTimestampQueue = SparkOdometryThread.getInstance().makeTimestampQueue();
-        yawPositionQueue = SparkOdometryThread.getInstance().registerSignal(yaw::getValueAsDouble);
     }
 
     @Override
@@ -37,12 +31,5 @@ public class GyroPigeonIO implements GyroIO {
         inputs.connected = BaseStatusSignal.refreshAll(yaw, yawVelocity).equals(StatusCode.OK);
         inputs.yawPosition = Rotation2d.fromDegrees(yaw.getValueAsDouble());
         inputs.yawVelocityRadPerSec = Units.degreesToRadians(yawVelocity.getValueAsDouble());
-
-        inputs.odometryYawTimestamps = yawTimestampQueue.stream().mapToDouble((Double value) -> value).toArray();
-        inputs.odometryYawPositions = yawPositionQueue.stream()
-                .map((Double value) -> Rotation2d.fromDegrees(value))
-                .toArray(Rotation2d[]::new);
-        yawTimestampQueue.clear();
-        yawPositionQueue.clear();
     }
 }

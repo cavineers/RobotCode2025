@@ -6,18 +6,25 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.lib.LocalADStarAK;
 import frc.robot.subsystems.Drivetrain.SwerveDriveConstants.DriveConstants;
-import frc.robot.subsystems.Drivetrain.SwerveDriveConstants.PathPlanConstants;
-import frc.robot.subsystems.Drivetrain.SwerveDriveConstants.TranslationConstants;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+
+import java.util.ArrayList;
 import java.util.Optional;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
@@ -32,17 +39,21 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class SwerveDriveSubsystem extends SubsystemBase {
-    static final Lock odometryLock = new ReentrantLock();
     public AutoBuilder autoBuilder;
 
     private SysIdRoutine sysId;
 
-    Optional<Alliance> ally = DriverStation.getAlliance();
+    private Optional<Alliance> ally = DriverStation.getAlliance();
+
+    // April Tag layout
+    public static AprilTagFieldLayout aprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+
 
     // Gyro Interface
     private final GyroIO gyroIO;
@@ -53,7 +64,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     private final Alert gyroDisconnectedAlert = new Alert("Disconnected gyro.", AlertType.kError);
 
-    private final SwerveDriveKinematics kinematics = TranslationConstants.SwerveKinematics;
+    private final SwerveDriveKinematics kinematics = DriveConstants.kSwerveKinematics;
 
     private Rotation2d gyroRotation = new Rotation2d();
 
@@ -85,9 +96,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
         HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);
 
-        // Start the odometry thread
-        SparkOdometryThread.getInstance().start();
-
         // Configure the System Identification routine
         this.sysId = new SysIdRoutine(new SysIdRoutine.Config( null, null, null,
                 (state) -> Logger.recordOutput("Drivetrain/SysIdState", state.toString())),
@@ -103,22 +111,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                                                                  // RELATIVE ChassisSpeeds
                 new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your
                                                 // Constants class
-                        new PIDConstants(5, 0.0, 0.0), // Translation PID constants
-                        new PIDConstants(5, 0.0, 0.0) // Rotation PID constants idk why the default is 5
+                        new PIDConstants(DriveConstants.PathPlannerDriveP, 0.0, 0.0), // Translation PID constants
+                        new PIDConstants(DriveConstants.PathPlannerTurnP, 0.0, 0.0) // Rotation PID constants idk why the default is 5
                 ),
-                PathPlanConstants.robotConfig, // ROBOT CONFIGURATION
-                () -> {
-                    // Boolean supplier that controls when the path will be mirrored for the red
-                    // alliance
-                    // This will flip the path being followed to the red side of the field.
-                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-                    var alliance = DriverStation.getAlliance();
-                    if (alliance.isPresent()) {
-                        return alliance.get() == DriverStation.Alliance.Red;
-                    }
-                    return false;
-                }, // Whether to flip the path
+                DriveConstants.robotConfig, // ROBOT CONFIGURATION
+                this::shouldFlipPose, // Method to determine if the path should be flipped
                 this // Reference to this subsystem to set requirements
         );
 
@@ -138,8 +135,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        odometryLock.lock(); // Lock the odometry updates while reading
-
         // Gyro
         gyroIO.updateInputs(gyroInputs); // Update gyro values
         Logger.processInputs("Drivetrain/Gyro", gyroInputs);
@@ -149,7 +144,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         for (Module module : modules) {
             module.periodic();
         }
-        odometryLock.unlock(); // Unlock the odometry updates
 
         if (DriverStation.isDisabled()) {
             for (Module module : modules) {
@@ -161,39 +155,29 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
         }
 
-        // Odometry updates
-        double[] odometryTimestamps = modules[0].getOdometryTimestamps(); // Get the timestamps from the first module
-                                                                          // (all should be in sync)
-
-        // Calculate the module positions
-        int sampleCount = odometryTimestamps.length;
-
-        for (int i = 0; i < sampleCount; i++) {
-            SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
-            SwerveModulePosition[] moduleDeltas = new SwerveModulePosition[4];
-
-            for (int modIndex = 0; modIndex < 4; modIndex++) {
-                modulePositions[modIndex] = modules[modIndex].getOdometryPositions()[i];
-                moduleDeltas[modIndex] = new SwerveModulePosition(
-                        modulePositions[modIndex].distanceMeters - previousModulePositions[modIndex].distanceMeters,
-                        modulePositions[modIndex].angle);
-                previousModulePositions[modIndex] = modulePositions[modIndex];
-            }
-
-            // Update the current gyro rotation
-            if (gyroInputs.connected) {
-                gyroRotation = gyroInputs.odometryYawPositions[i];
-            } 
-            else {
-                // Use the delta from kinematics and mods
-                Twist2d delta = kinematics.toTwist2d(moduleDeltas);
-                gyroRotation = gyroRotation.plus(new Rotation2d(delta.dtheta));
-            }
-
-            poseEstimator.updateWithTime(odometryTimestamps[i], gyroRotation, modulePositions);
+        SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
+        SwerveModulePosition[] moduleDeltas = new SwerveModulePosition[4];
+        // Calculate the rotation
+        for (int modIndex = 0; modIndex < 4; modIndex++) {
+            modulePositions[modIndex] = modules[modIndex].getPosition();
+            moduleDeltas[modIndex] = new SwerveModulePosition(
+                    modulePositions[modIndex].distanceMeters - previousModulePositions[modIndex].distanceMeters,
+                    modulePositions[modIndex].angle);
+            previousModulePositions[modIndex] = modulePositions[modIndex];
         }
 
+        // Update the current gyro rotation
+        if (gyroInputs.connected) {
+            gyroRotation = gyroInputs.yawPosition;
+        } 
+        else {
+            // Use the delta from kinematics and mods
+            Twist2d delta = kinematics.toTwist2d(moduleDeltas);
+            gyroRotation = gyroRotation.plus(new Rotation2d(delta.dtheta));
+        }
+        poseEstimator.update(gyroRotation, this.getModulePositions());
     }
+
 
     /**
      * Runs the drivetrain given a velocity
@@ -228,6 +212,14 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         for (Module module : modules) {
             module.stop();
         }
+    }
+
+    /**
+     * Supplier to determine if the path should be flipped
+     * @return flipped if Red
+     */
+    public Boolean shouldFlipPose() {
+        return ally.isPresent() && ally.get() == Alliance.Red;
     }
 
     /**
@@ -312,6 +304,15 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         return poseEstimator.getEstimatedPosition();
     }
 
+    /** 
+     * Accepts a vision measurement and updates the pose estimator.
+    */
+    public void addVisionMeasurement(Pose2d poseMeters, double timestamp, Matrix<N3, N1> visionMeasurementStdDevs) {
+        // Pose2d withoutGyroOnly = new Pose2d(poseMeters.getTranslation(), gyroRotation);
+        poseEstimator.addVisionMeasurement(
+            poseMeters, timestamp, visionMeasurementStdDevs);
+    }
+
     /**
      * Gets the rotation of the robot
      * 
@@ -340,5 +341,65 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     /** Returns a command to run a dynamic test in the specified direction. */
     public Command sysIdDynamic(SysIdRoutine.Direction direction) {
         return run(() -> runCharacterization(0.0)).withTimeout(1.0).andThen(sysId.dynamic(direction));
+    }
+
+    public Pose2d getClosestTag(){
+        Pose2d closest = null;
+        boolean isRedAlliance = this.shouldFlipPose();
+        for (AprilTag tag : aprilTagLayout.getTags()) {
+            // Guard clause
+            if ((!isRedAlliance && (tag.ID < 17 || tag.ID > 22)) || (isRedAlliance && (tag.ID < 6 || tag.ID > 11))) {
+                continue; // Check to make sure the tag is in the correct range for each alliance from field drawing
+            }
+            Translation2d tagPose = tag.pose.toPose2d().getTranslation(); // Convert to translation
+            Translation2d robotPose = this.getPose().getTranslation(); // Convert to translation
+             
+            double distanceToTag = tagPose.getDistance(robotPose);
+            if (closest == null || distanceToTag < closest.getTranslation().getDistance(robotPose)) {
+                closest = tag.pose.toPose2d(); // closer tag or first tag
+            }
+        }
+        return closest;
+    }
+    
+    /**
+     * @param Flip whether to make the pose left or right of the center
+     * @param applyOffset whether to apply the offset to the front bumper and side
+     * Returns the closest reef april tag Pose2D to the robot
+     * Respective to the FMS alliance color
+     */
+    private Pose2d getClosestReefPose(boolean flip, boolean applyOffset) {
+        Pose2d closest = this.getClosestTag();
+
+        if (!applyOffset) {
+            return closest;
+        }
+        // Now add the offset from the robot to the front bumper
+        // Get the rotation of the tag
+        Rotation2d tagRotation = closest.getRotation();
+        // Convert the rotation to a direction vector
+        Translation2d direction = new Translation2d(tagRotation.getCos(), tagRotation.getSin());
+        // Normalize the direction vector to a magnitude of 1
+        direction = direction.div(direction.getNorm());
+
+        Translation2d projectedTranslation = closest.getTranslation().plus(direction.times(DriveConstants.kSideLength / 2.0));
+        // Create the new pose
+        Pose2d centerPose = new Pose2d(projectedTranslation, closest.getRotation());      
+        
+        // Create a vector perpendicular to the tag's direction
+        Translation2d perpendicular;
+        if (!flip) {
+            perpendicular = new Translation2d(-centerPose.getRotation().getSin(), centerPose.getRotation().getCos());
+        } else {
+            perpendicular = new Translation2d(centerPose.getRotation().getSin(), -centerPose.getRotation().getCos());
+        }
+        // Project out by half the robot width and create new pose
+        Translation2d sideTranslation = centerPose.getTranslation().plus(perpendicular.times(0.16)); // distance from center to the reef peg
+        return new Pose2d(sideTranslation, centerPose.getRotation().plus(new Rotation2d(Math.PI)));
+    }
+
+    public Supplier<Pose2d> getClosestReefPoseSide(boolean flip, boolean applyOffset) {
+        
+        return () -> getClosestReefPose(flip, applyOffset);
     }
 }

@@ -21,6 +21,8 @@ public class EndEffectorIOSim implements EndEffectorIO {
 
     @Override
     public void updateInputs(EndEffectorIOInputs inputs) { 
+        coralPresentIR.setValue(true);
+        coralLoadedLimit.setValue(true);
         motor.setInputVoltage(appliedVolts);
         motor.update(0.02);
 

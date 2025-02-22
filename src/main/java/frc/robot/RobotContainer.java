@@ -20,6 +20,10 @@ import frc.robot.subsystems.Drivetrain.ModuleIO;
 import frc.robot.subsystems.Drivetrain.ModuleIOSim;
 import frc.robot.subsystems.Drivetrain.ModuleIOSpark;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
+import frc.robot.subsystems.EndEffector.EndEffector;
+import frc.robot.subsystems.EndEffector.EndEffectorIO;
+import frc.robot.subsystems.EndEffector.EndEffectorIOSim;
+import frc.robot.subsystems.EndEffector.EndEffectorIOSpark;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorConstants;
 import frc.robot.subsystems.Elevator.ElevatorIO;
@@ -31,6 +35,8 @@ public class RobotContainer {
 
     // Subsystems
     private final SwerveDriveSubsystem drivetrain;
+
+    private final EndEffector endEffector;
     private final Elevator elevator;
 
     // Controllers
@@ -50,7 +56,9 @@ public class RobotContainer {
                         new ModuleIOSpark(2),
                         new ModuleIOSpark(3));
 
+                endEffector = new EndEffector(new EndEffectorIOSpark());
                 elevator = new Elevator(new ElevatorIOSpark());
+
                 break;
             case SIM:
                 drivetrain = new SwerveDriveSubsystem(
@@ -60,7 +68,9 @@ public class RobotContainer {
                         new ModuleIOSim(),
                         new ModuleIOSim());
 
+                endEffector = new EndEffector(new EndEffectorIOSim());
                 elevator = new Elevator(new ElevatorIOSim());
+            
                 break;
             default:
                 // Replay
@@ -71,7 +81,9 @@ public class RobotContainer {
                         new ModuleIO() {},
                         new ModuleIO() {});
 
+                endEffector = new EndEffector(new EndEffectorIO(){});
                 elevator = new Elevator(new ElevatorIO(){});
+
                 break;
         }
         configureButtonBindings();
@@ -107,10 +119,16 @@ public class RobotContainer {
                 driverController::getLeftX,
                 driverController::getRightX));
 
+
+        driverController.x().whileTrue(endEffector.intakeCommand());
+        driverController.y().whileTrue(endEffector.shootCommand());
+        driverController.a().whileTrue(endEffector.setVoltageCommand(5.0));
+      
         driverController.a().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL1RotationsRotations));
         driverController.b().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL2RotationsRotations));
         driverController.x().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL3RotationsRotations));
         driverController.y().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL4RotationsRotations));
+
     }
 
     public Command getAutonomousCommand() {

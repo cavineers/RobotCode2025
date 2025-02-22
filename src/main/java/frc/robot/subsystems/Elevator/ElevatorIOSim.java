@@ -96,7 +96,7 @@ public class ElevatorIOSim implements ElevatorIO {
             case (int) ElevatorConstants.kL1Rotations -> ElevatorState.L1;
             case (int) ElevatorConstants.kL2Rotations -> ElevatorState.L2;
             case (int) ElevatorConstants.kL3Rotations -> ElevatorState.L3;
-            case (int) ElevatorConstants.kL4Rotations -> ElevatorState.L4; // Removed duplicate case
+            case (int) ElevatorConstants.kL4Rotations -> ElevatorState.L4; 
             default -> ElevatorState.REST;
             };
         }

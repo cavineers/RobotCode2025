@@ -8,6 +8,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.SwerveCommand;
+import frc.robot.subsystems.Dealgaefier.Dealgaefier;
+import frc.robot.subsystems.Dealgaefier.DealgaefierIO;
+import frc.robot.subsystems.Dealgaefier.DealgaefierIOSim;
+import frc.robot.subsystems.Dealgaefier.DealgaefierIOSpark;
 import frc.robot.subsystems.Drivetrain.GyroIO;
 import frc.robot.subsystems.Drivetrain.GyroPigeonIO;
 import frc.robot.subsystems.Drivetrain.ModuleIO;
@@ -20,6 +24,7 @@ public class RobotContainer {
 
     // Subsystems
     private final SwerveDriveSubsystem drivetrain;
+    private final Dealgaefier dealgaefier;
 
     // Controllers
     private final CommandXboxController driverController = new CommandXboxController(0);
@@ -37,6 +42,8 @@ public class RobotContainer {
                         new ModuleIOSpark(1),
                         new ModuleIOSpark(2),
                         new ModuleIOSpark(3));
+
+                dealgaefier = new Dealgaefier(new DealgaefierIOSpark());
                 break;
             case SIM:
                 drivetrain = new SwerveDriveSubsystem(
@@ -45,6 +52,8 @@ public class RobotContainer {
                         new ModuleIOSim(),
                         new ModuleIOSim(),
                         new ModuleIOSim());
+
+                dealgaefier = new Dealgaefier(new DealgaefierIOSim());
                 break;
             default:
                 // Replay
@@ -54,6 +63,8 @@ public class RobotContainer {
                         new ModuleIO() {},
                         new ModuleIO() {},
                         new ModuleIO() {});
+
+                dealgaefier = new Dealgaefier(new DealgaefierIO(){});     
                 break;
         }
         configureButtonBindings();

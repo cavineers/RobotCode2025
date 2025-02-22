@@ -50,6 +50,6 @@ public class DealgaefierIOSim implements DealgaefierIO {
 
     @Override
     public void setIntakeVoltage(double volts) {
-        deployAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+        intakeAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
     }
 }

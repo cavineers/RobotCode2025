@@ -2,6 +2,9 @@ package frc.robot;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.SparkBase.*;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 
@@ -36,5 +39,13 @@ public class HealthCheck {
             Logger.recordOutput("Auto Chosen", auto);
         }
     }
+
+    public void motorFaults(){
+        // 
+        boolean hasfault = SparkBase.Faults.hasActiveFault();
+        if (hasfault) {
+            Logger.recordOutput("Auto Chosen", hasfault);
+        }
+    }    
 }
 

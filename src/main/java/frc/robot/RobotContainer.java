@@ -1,13 +1,19 @@
 package frc.robot;
 
 import static frc.robot.subsystems.Vision.VisionConstants.*;
+import static frc.robot.subsystems.Elevator.ElevatorConstants.kL1Rotations;
 
+import org.littletonrobotics.junction.AutoLog;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -23,6 +29,15 @@ import frc.robot.subsystems.CanRangeArray.CanRangeIOReal;
 import frc.robot.subsystems.CanRangeArray.CanRangeIOSim;
 import frc.robot.subsystems.CanRangeArray.CanRangeIO;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
+import frc.robot.subsystems.EndEffector.EndEffector;
+import frc.robot.subsystems.EndEffector.EndEffectorIO;
+import frc.robot.subsystems.EndEffector.EndEffectorIOSim;
+import frc.robot.subsystems.EndEffector.EndEffectorIOSpark;
+import frc.robot.subsystems.Elevator.Elevator;
+import frc.robot.subsystems.Elevator.ElevatorConstants;
+import frc.robot.subsystems.Elevator.ElevatorIO;
+import frc.robot.subsystems.Elevator.ElevatorIOSim;
+import frc.robot.subsystems.Elevator.ElevatorIOSpark;
 import frc.robot.commands.SystemIdCommands;
 import frc.robot.commands.auto.*;
 import frc.robot.subsystems.Vision.*;
@@ -33,6 +48,9 @@ public class RobotContainer {
     private final SwerveDriveSubsystem drivetrain;
     private final Vision vision;
     private final CanRangeArray canRangeArray;
+
+    private final EndEffector endEffector;
+    private final Elevator elevator;
 
     // Controllers
     private final CommandXboxController driverController = new CommandXboxController(0);
@@ -65,6 +83,8 @@ public class RobotContainer {
                     new CanRangeIOReal(3)
                 );
                 
+                endEffector = new EndEffector(new EndEffectorIOSpark());
+                elevator = new Elevator(new ElevatorIOSpark());
 
                 break;
             case SIM:
@@ -82,6 +102,9 @@ public class RobotContainer {
 
                 canRangeArray = new CanRangeArray(new CanRangeIOSim(0), new CanRangeIOSim(1), new CanRangeIOSim(2), new CanRangeIOSim(3));
 
+                endEffector = new EndEffector(new EndEffectorIOSim());
+                elevator = new Elevator(new ElevatorIOSim());
+            
                 break;
             default:
                 // Replay
@@ -94,6 +117,8 @@ public class RobotContainer {
 
                 vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
                 canRangeArray = new CanRangeArray(new CanRangeIO() {}, new CanRangeIO() {}, new CanRangeIO() {}, new CanRangeIO() {});
+                endEffector = new EndEffector(new EndEffectorIO(){});
+                elevator = new Elevator(new ElevatorIO(){});
 
                 break;
         }
@@ -102,23 +127,23 @@ public class RobotContainer {
         configureButtonBindings();
 
 
-        // Set up auto routines for SysIds
-        autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-        // Set up SysId routines
-        autoChooser.addOption(
-            "Drive Wheel Radius Characterization", SystemIdCommands.wheelRadiusCharacterization(drivetrain));
-        autoChooser.addOption(
-            "Drive Simple FF Characterization", SystemIdCommands.feedforwardCharacterization(drivetrain));
-        autoChooser.addOption(
-            "Drive SysId (Quasistatic Forward)",
-            drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-        autoChooser.addOption(
-            "Drive SysId (Quasistatic Reverse)",
-            drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-        autoChooser.addOption(
-            "Drive SysId (Dynamic Forward)", drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
-        autoChooser.addOption(
-            "Drive SysId (Dynamic Reverse)", drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        // // Set up auto routines for SysIds
+        autoChooser = new LoggedDashboardChooser<>("Auto Choices");
+        // // Set up SysId routines
+        // autoChooser.addOption(
+        //     "Drive Wheel Radius Characterization", SystemIdCommands.wheelRadiusCharacterization(drivetrain));
+        // autoChooser.addOption(
+        //     "Drive Simple FF Characterization", SystemIdCommands.feedforwardCharacterization(drivetrain));
+        // autoChooser.addOption(
+        //     "Drive SysId (Quasistatic Forward)",
+        //     drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        // autoChooser.addOption(
+        //     "Drive SysId (Quasistatic Reverse)",
+        //     drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        // autoChooser.addOption(
+        //     "Drive SysId (Dynamic Forward)", drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
+        // autoChooser.addOption(
+        //     "Drive SysId (Dynamic Reverse)", drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
         
         // Configure the button bindings
         configureButtonBindings();
@@ -132,13 +157,16 @@ public class RobotContainer {
                 driverController::getLeftX,
                 driverController::getRightX));
 
-        // driverController.x().whileTrue(new DriveToPose(drivetrain, this.drivetrain.getClosestReefPoseSide(true, true)));
-        // driverController.b().whileTrue(new DriveToPose(drivetrain, this.drivetrain.getClosestReefPoseSide(false, true)));
-        driverController.b().whileTrue(new AlignToPeg(drivetrain, canRangeArray, false));
-        driverController.x().whileTrue(new AlignToPeg(drivetrain, canRangeArray, true));
+
+        driverController.b().whileTrue(endEffector.shootCommand());
+
+        driverController.povLeft().onTrue(elevator.goToPresetCommand(ElevatorConstants.kRestRotations));
+        driverController.povUp().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL1Rotations));
+        driverController.povDown().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL2Rotations));
     }
 
     public Command getAutonomousCommand() {
+
         return autoChooser.get();
     }
 }

@@ -62,6 +62,10 @@ public class ElevatorIOSim implements ElevatorIO {
     private double appliedVolts = 0.0;
     private double inputTorqueCurrent = 0.0;
 
+    public ElevatorIOSim() {
+        elevPid.setTolerance(ElevatorConstants.kTolerance);
+    }
+
     public void updateInputs(ElevatorIOInputs inputs) {
         if (this.tuningP.get() != elevPid.getP()) {
             elevPid.setP(this.tuningP.get());

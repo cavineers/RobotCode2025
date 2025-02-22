@@ -1,5 +1,7 @@
 package frc.robot;
 
+import static frc.robot.subsystems.Elevator.ElevatorConstants.kL1Rotations;
+
 import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -120,18 +122,15 @@ public class RobotContainer {
                 driverController::getRightX));
 
 
-        driverController.x().whileTrue(endEffector.intakeCommand());
-        driverController.y().whileTrue(endEffector.shootCommand());
-        driverController.a().whileTrue(endEffector.setVoltageCommand(5.0));
-      
-        // driverController.a().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL1RotationsRotations));
-        // driverController.b().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL2RotationsRotations));
-        // driverController.x().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL3RotationsRotations));
-        // driverController.y().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL4RotationsRotations));
+        driverController.b().whileTrue(endEffector.shootCommand());
 
+        driverController.povLeft().onTrue(elevator.goToPresetCommand(ElevatorConstants.kRestRotations));
+        driverController.povUp().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL1Rotations));
+        driverController.povDown().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL2Rotations));
     }
 
     public Command getAutonomousCommand() {
+
         return autoChooser.get();
     }
 }

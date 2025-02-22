@@ -25,6 +25,7 @@ import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import frc.robot.subsystems.Elevator.ElevatorConstants.ElevatorState;
 
 public class ElevatorIOSpark implements ElevatorIO {
     
@@ -99,6 +100,17 @@ public class ElevatorIOSpark implements ElevatorIO {
 
         if (kTuningMode){
             this.updatePID();
+        }
+
+        if (controller.atSetpoint()) {
+            inputs.state = switch ((int) motorSetpoint) {
+            case (int) ElevatorConstants.kRestRotations -> ElevatorState.REST;
+            case (int) ElevatorConstants.kL1Rotations -> ElevatorState.L1;
+            case (int) ElevatorConstants.kL2Rotations -> ElevatorState.L2;
+            case (int) ElevatorConstants.kL3Rotations -> ElevatorState.L3;
+            case (int) ElevatorConstants.kL4Rotations -> ElevatorState.L4; // Removed duplicate case
+            default -> ElevatorState.REST;
+            };
         }
     }
 

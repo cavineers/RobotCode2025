@@ -1,6 +1,7 @@
 package frc.robot.subsystems.Elevator;
 
 import org.littletonrobotics.junction.AutoLog;
+import frc.robot.subsystems.Elevator.ElevatorConstants.ElevatorState;
 
 public interface ElevatorIO {
     
@@ -17,6 +18,8 @@ public interface ElevatorIO {
         public double rightCurrentAmps = 0.0;
 
         public boolean limitSwitch;
+
+        public ElevatorState state = ElevatorState.REST;
     }
 
     public default void updateInputs(ElevatorIOInputs inputs) {

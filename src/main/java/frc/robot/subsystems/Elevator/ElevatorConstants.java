@@ -27,11 +27,11 @@ public class ElevatorConstants {
     public static final double kLoadMassKg = Units.lbsToKilograms(10); // represents the weight shooter
     public static final double kElevatorMassKg = Units.lbsToKilograms(25); // represents the weight of the elevator
 
-
-    public static final double kL1RotationsRotations = 2;
-    public static final double kL2RotationsRotations = 5;
-    public static final double kL3RotationsRotations = 13;
-    public static final double kL4RotationsRotations = 23;
+    public static final double kRestRotations = 0;
+    public static final double kL1Rotations = 2;
+    public static final double kL2Rotations = 5;
+    public static final double kL3Rotations = 7;
+    public static final double kL4Rotations = 8;
 
     public static final double kMinRotations = 0;
     public static final double kMaxRotations = 23;
@@ -51,4 +51,12 @@ public class ElevatorConstants {
     public static final double kGravityTermSim = 0.55;
 
     public static final int kCurrentLimit = 40;
+
+    public enum ElevatorState {
+        REST,
+        L1,
+        L2,
+        L3,
+        L4
+    }
 }

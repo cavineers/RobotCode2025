@@ -77,6 +77,8 @@ public class ElevatorIOSpark implements ElevatorIO {
             5,
             () -> leftMotor.configure(leftMotorConfig, ResetMode.kResetSafeParameters,
                     PersistMode.kPersistParameters));
+
+        this.controller.setTolerance(kTolerance);
     }
 
     @Override
@@ -108,7 +110,7 @@ public class ElevatorIOSpark implements ElevatorIO {
             case (int) ElevatorConstants.kL1Rotations -> ElevatorState.L1;
             case (int) ElevatorConstants.kL2Rotations -> ElevatorState.L2;
             case (int) ElevatorConstants.kL3Rotations -> ElevatorState.L3;
-            case (int) ElevatorConstants.kL4Rotations -> ElevatorState.L4; // Removed duplicate case
+            case (int) ElevatorConstants.kL4Rotations -> ElevatorState.L4; 
             default -> ElevatorState.REST;
             };
         }

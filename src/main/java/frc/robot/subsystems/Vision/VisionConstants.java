@@ -8,7 +8,7 @@ import edu.wpi.first.math.util.Units;
 
 public class VisionConstants {
 
-    public static AprilTagFieldLayout aprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+    public static AprilTagFieldLayout aprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
 
     // Camera names FROM PHOTON
     public static String frontCameraName = "Camera1";

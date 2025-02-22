@@ -9,30 +9,34 @@ import static frc.robot.subsystems.Dealgaefier.DealgaefierConstants.kDealgaefier
 
 public class DealgaefierIOSim implements DealgaefierIO {
     
-    private DCMotorSim motor = new DCMotorSim(
+    private DCMotorSim deployMotor = new DCMotorSim(
         LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 0.004, 1),
         DCMotor.getNEO(1));
 
-    private static DIOSim dealgaefierLimit = new DIOSim(DealgaefierConstants.kDealgaefierLimit);
+    private DCMotorSim intakeMotor = new DCMotorSim(
+        LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 0.004, 1),
+        DCMotor.getNEO(1));
 
-    private double appliedVolts = 0.0;
+    private double deployAppliedVolts = 0.0;
+    private double intakeAppliedVolts = 0.0;
 
     @Override
     public void updateInputs(DealgaefierIOInputs inputs){
-        motor.setInputVoltage(appliedVolts);
-        motor.update(0.02);
+        deployMotor.setInputVoltage(deployAppliedVolts);
+        intakeMotor.setInputVoltage(intakeAppliedVolts);
+        
+        deployMotor.update(0.02);
+        intakeMotor.update(0.02);
 
-        inputs.pivotMotorPositionRad = motor.getAngularPositionRad();
-        inputs.pivotMotorVelocityRadPerSec = motor.getAngularVelocityRadPerSec();
-        inputs.pivotMotorAppliedVolts = appliedVolts;
-        inputs.pivotMotorCurrentAmps = motor.getCurrentDrawAmps();
+        inputs.deployMotorPositionRad = deployMotor.getAngularPositionRad();
+        inputs.deployMotorVelocityRadPerSec = deployMotor.getAngularVelocityRadPerSec();
+        inputs.deployMotorAppliedVolts = deployAppliedVolts;
+        inputs.deployMotorCurrentAmps = deployMotor.getCurrentDrawAmps();
 
-        inputs.spinMotorPositionRad = motor.getAngularPositionRad();
-        inputs.spinMotorVelocityRadPerSec = motor.getAngularVelocityRadPerSec();
-        inputs.spinMotorAppliedVolts = appliedVolts;
-        inputs.spinMotorCurrentAmps = motor.getCurrentDrawAmps();
-
-        inputs.dealgaefierLimit = getSensor(dealgaefierLimit);
+        inputs.intakeMotorPositionRad = intakeMotor.getAngularPositionRad();
+        inputs.intakeMotorVelocityRadPerSec = intakeMotor.getAngularVelocityRadPerSec();
+        inputs.intakeMotorAppliedVolts = intakeAppliedVolts;
+        inputs.intakeMotorCurrentAmps = intakeMotor.getCurrentDrawAmps();
     }
 
     public boolean getSensor(DIOSim sensor) {
@@ -40,13 +44,12 @@ public class DealgaefierIOSim implements DealgaefierIO {
     }
 
     @Override
-    public void setVoltage(double volts) {
-        appliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+    public void setDeployVoltage(double volts) {
+        deployAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
     }
 
-        public void pivot() {
-        if(getSensor(dealgaefierLimit) == false) {
-            setVoltage(DealgaefierConstants.kDealgaefierPivotSpeed);
-        }
+    @Override
+    public void setIntakeVoltage(double volts) {
+        deployAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
     }
 }

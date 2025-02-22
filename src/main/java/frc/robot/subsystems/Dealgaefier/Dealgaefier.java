@@ -17,25 +17,21 @@ public class Dealgaefier extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Dealgaefier", inputs);
-
-        // Set the voltage to something random every periodic for fun
-        io.setVoltage(Math.random() * 12.0);
     }
 
-    public Command setVoltageCommand(double volts) {
-        return Commands.run(() -> io.setVoltage(volts), this).finallyDo(interrupted -> io.setVoltage(0));
+    public Command setDeployVoltageCommand(double volts) {
+        return Commands.run(() -> io.setDeployVoltage(volts), this).finallyDo(interrupted -> io.setDeployVoltage(0));
     }
 
-    public void setVoltage(double volts) {
-        io.setVoltage(volts);
+    public Command setIntakeVoltageCommand(double volts) {
+        return Commands.run(() -> io.setIntakeVoltage(volts), this).finallyDo(interrupted -> io.setIntakeVoltage(0));
     }
 
-    public void setPercentage(double percentage) {
-        io.setVoltage(percentage * 12.0);
+    public void setDeployVoltage(double volts) {
+        io.setDeployVoltage(volts);
     }
 
-    public Command pivotCommand() {
-        return Commands.run(() -> io.pivot(), this).finallyDo(interrupted -> io.setVoltage(0));
+    public void setIntakeVoltage(double volts) {
+        io.setIntakeVoltage(volts);
     }
-
 }

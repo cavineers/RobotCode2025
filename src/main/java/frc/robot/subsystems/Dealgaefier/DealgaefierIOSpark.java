@@ -2,9 +2,8 @@ package frc.robot.subsystems.Dealgaefier;
 
 import static frc.lib.SparkUtil.*;
 
-import static frc.robot.subsystems.Dealgaefier.DealgaefierConstants.kDealgaefierSpinCanID;
-import static frc.robot.subsystems.Dealgaefier.DealgaefierConstants.kDealgaefierPivotCanID;
-
+import static frc.robot.subsystems.Dealgaefier.DealgaefierConstants.kDeployCanID;
+import static frc.robot.subsystems.Dealgaefier.DealgaefierConstants.kIntakeCanID;
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.RelativeEncoder;
@@ -14,35 +13,33 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 public class DealgaefierIOSpark implements DealgaefierIO {
-    final SparkMax pivotMotor = new SparkMax(kDealgaefierPivotCanID, MotorType.kBrushless);
-    final RelativeEncoder pivotEncoder = pivotMotor.getEncoder();
+    final SparkMax deployMotor = new SparkMax(kDeployCanID, MotorType.kBrushless);
+    final RelativeEncoder deployEncoder = deployMotor.getEncoder();
 
-    final SparkMax spinMotor = new SparkMax(kDealgaefierSpinCanID, MotorType.kBrushless);
-    final RelativeEncoder spinEncoder = spinMotor.getEncoder();
+    final SparkMax intakeMotor = new SparkMax(kIntakeCanID, MotorType.kBrushless);
+    final RelativeEncoder intakeEncoder = intakeMotor.getEncoder();
 
-    private final DigitalInput dealgaefierLimit = new DigitalInput(DealgaefierConstants.kDealgaefierLimit);
     public DealgaefierIOSpark(){
-        //motor config potentially
+
     }
 
-    
     @Override
     public void updateInputs(DealgaefierIOInputs inputs) {
-        ifOk(pivotMotor, pivotEncoder::getPosition, (value) -> inputs.pivotMotorPositionRad = value);
-        ifOk(pivotMotor, pivotEncoder::getVelocity, (value) -> inputs.pivotMotorVelocityRadPerSec = value);
+        ifOk(deployMotor, deployEncoder::getPosition, (value) -> inputs.deployMotorPositionRad = value);
+        ifOk(deployMotor, deployEncoder::getVelocity, (value) -> inputs.deployMotorVelocityRadPerSec = value);
         ifOk(
-            pivotMotor,
-            new DoubleSupplier[] {pivotMotor::getAppliedOutput, pivotMotor::getBusVoltage},
-            (values -> inputs.pivotMotorAppliedVolts = values[0] * values[1]));
-        ifOk(pivotMotor, pivotMotor::getOutputCurrent, (value) -> inputs.pivotMotorCurrentAmps = value);
+            deployMotor,
+            new DoubleSupplier[] {deployMotor::getAppliedOutput, deployMotor::getBusVoltage},
+            (values -> inputs.deployMotorAppliedVolts = values[0] * values[1]));
+        ifOk(deployMotor, deployMotor::getOutputCurrent, (value) -> inputs.deployMotorCurrentAmps = value);
         
-        ifOk(spinMotor, spinEncoder::getPosition, (value) -> inputs.spinMotorPositionRad = value);
-        ifOk(spinMotor, spinEncoder::getVelocity, (value) -> inputs.spinMotorVelocityRadPerSec = value);
+        ifOk(intakeMotor, intakeEncoder::getPosition, (value) -> inputs.intakeMotorPositionRad = value);
+        ifOk(intakeMotor, intakeEncoder::getVelocity, (value) -> inputs.intakeMotorVelocityRadPerSec = value);
         ifOk(
-            spinMotor,
-            new DoubleSupplier[] {spinMotor::getAppliedOutput, spinMotor::getBusVoltage},
-            (values -> inputs.spinMotorAppliedVolts = values[0] * values[1]));
-        ifOk(pivotMotor, pivotMotor::getOutputCurrent, (value) -> inputs.spinMotorCurrentAmps = value);
+            intakeMotor,
+            new DoubleSupplier[] {intakeMotor::getAppliedOutput, intakeMotor::getBusVoltage},
+            (values -> inputs.intakeMotorAppliedVolts = values[0] * values[1]));
+        ifOk(intakeMotor, intakeMotor::getOutputCurrent, (value) -> inputs.intakeMotorCurrentAmps = value);
     }
 
     public boolean getSensor(DigitalInput sensor) {
@@ -50,15 +47,12 @@ public class DealgaefierIOSpark implements DealgaefierIO {
     }
     
     @Override
-    public void setVoltage(double volts) {
-        pivotMotor.setVoltage(volts);
-        spinMotor.setVoltage(volts);
+    public void setDeployVoltage(double volts) {
+        deployMotor.setVoltage(volts);
     }
 
-    public void pivot() {
-        if(getSensor(dealgaefierLimit) == false) {
-            setVoltage(DealgaefierConstants.kDealgaefierPivotSpeed);
-        }
+    @Override
+    public void setIntakeVoltage(double volts) {
+        intakeMotor.setVoltage(volts);
     }
-
 }

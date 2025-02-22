@@ -5,25 +5,24 @@ import org.littletonrobotics.junction.AutoLog;
 public interface DealgaefierIO {
     @AutoLog
     public static class DealgaefierIOInputs{
-        public double pivotMotorPositionRad = 0.0;
-        public double pivotMotorVelocityRadPerSec = 0.0;
-        public double pivotMotorAppliedVolts = 0.0;
-        public double pivotMotorCurrentAmps = 0.0;
+        public double deployMotorPositionRad = 0.0;
+        public double deployMotorVelocityRadPerSec = 0.0;
+        public double deployMotorAppliedVolts = 0.0;
+        public double deployMotorCurrentAmps = 0.0;
 
-        public double spinMotorPositionRad = 0.0;
-        public double spinMotorVelocityRadPerSec = 0.0;
-        public double spinMotorAppliedVolts = 0.0;
-        public double spinMotorCurrentAmps = 0.0;
-
-        public boolean dealgaefierLimit = false;
+        public double intakeMotorPositionRad = 0.0;
+        public double intakeMotorVelocityRadPerSec = 0.0;
+        public double intakeMotorAppliedVolts = 0.0;
+        public double intakeMotorCurrentAmps = 0.0;
     }
     
     default void updateInputs(DealgaefierIOInputs inputs) {
-        }
+    }
 
-    public default void setVoltage(double volts) {
-        }
+    public default void setDeployVoltage(double volts) {
+    }
 
-    public default void pivot(){
+    public default void setIntakeVoltage(double volts) {
+
     }
 }

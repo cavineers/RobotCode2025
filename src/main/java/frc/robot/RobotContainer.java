@@ -53,7 +53,9 @@ public class RobotContainer {
     private final Elevator elevator;
 
     // Controllers
-    private final CommandXboxController driverController = new CommandXboxController(0);
+    private final CommandXboxController PrimaryDriverController = new CommandXboxController(0);
+    private final CommandXboxController secondaryDriverController = new CommandXboxController(1);
+
     
     // Commands
 
@@ -153,16 +155,18 @@ public class RobotContainer {
         // Set the drivetrain default command
         drivetrain.setDefaultCommand(new SwerveCommand(
                 drivetrain,
-                driverController::getLeftY,
-                driverController::getLeftX,
-                driverController::getRightX));
+                PrimaryDriverController::getLeftY,
+                PrimaryDriverController::getLeftX,
+                PrimaryDriverController::getRightX));
 
 
-        driverController.b().whileTrue(endEffector.shootCommand());
+        PrimaryDriverController.b().whileTrue(endEffector.shootCommand());
 
-        driverController.povLeft().onTrue(elevator.goToPresetCommand(ElevatorConstants.kRestRotations));
-        driverController.povUp().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL1Rotations));
-        driverController.povDown().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL2Rotations));
+        secondaryDriverController.povLeft().onTrue(elevator.goToPresetCommand(ElevatorConstants.kRestRotations));
+        secondaryDriverController.povUp().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL1Rotations));
+        secondaryDriverController.povRight().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL2Rotations));
+        secondaryDriverController.povDown().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL3Rotations));
+        secondaryDriverController.a().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL4Rotations));
     }
 
     public Command getAutonomousCommand() {

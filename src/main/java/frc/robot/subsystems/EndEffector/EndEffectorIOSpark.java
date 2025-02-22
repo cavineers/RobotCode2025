@@ -7,8 +7,11 @@ import static frc.robot.subsystems.EndEffector.EndEffectorConstants.kEndEffector
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -22,9 +25,28 @@ public class EndEffectorIOSpark implements EndEffectorIO {
     private final DigitalInput coralPresentIR = new DigitalInput(EndEffectorConstants.kCoralPresentIR);
     private final DigitalInput coralLoadedLimit = new DigitalInput(EndEffectorConstants.kCoralLoadedLimit);
 
+    private SparkFlexConfig config;
 
     public EndEffectorIOSpark() {
-
+        config = new SparkFlexConfig();
+        config
+            .inverted(EndEffectorConstants.kInverted)
+            .idleMode(EndEffectorConstants.kIdleMode)
+            .smartCurrentLimit(EndEffectorConstants.kCurrentLimit)
+            .voltageCompensation(12);
+        config.signals
+            .primaryEncoderPositionAlwaysOn(true)
+            .primaryEncoderVelocityAlwaysOn(true)
+            .primaryEncoderVelocityPeriodMs(20)
+            .appliedOutputPeriodMs(20)
+            .busVoltagePeriodMs(20)
+            .outputCurrentPeriodMs(20);        
+            
+        tryUntilOk(
+            motor,
+            5,
+            () -> motor.configure(config, ResetMode.kResetSafeParameters,
+                    PersistMode.kPersistParameters));
     }
 
     @Override

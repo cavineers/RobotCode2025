@@ -2,29 +2,27 @@ package frc.robot.subsystems.Algaebar;
 
 import static frc.lib.SparkUtil.*;
 
-import static frc.robot.subsystems.Algaebar.AlgaeBarConstants.kAlgaeBarRotateCanID;
-import static frc.robot.subsystems.Algaebar.AlgaeBarConstants.kAlgaeBarCoralCanID;
-
+import static frc.robot.subsystems.Algaebar.AlgaeBarConstants.*;
 
 import java.util.function.DoubleSupplier;
-
-//import edu.wpi.first.wpilibj.DigitalInput;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
-import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
 public class AlgaeBarIOSpark implements AlgaeBarIO {
-    private final SparkMax rotateMotor = new SparkMax(kAlgaeBarRotateCanID, MotorType.kBrushless); 
-    private final RelativeEncoder rotateEncoder = rotateMotor.getEncoder();
+    private final SparkMax pivotMotor = new SparkMax(kAlgaeBarPivotCanID, MotorType.kBrushless); 
+    private final RelativeEncoder pivotEncoder = pivotMotor.getEncoder();
 
-    private final SparkMax coralMotor = new SparkMax(kAlgaeBarCoralCanID, MotorType.kBrushless);
-    private final RelativeEncoder coralEncoder = coralMotor.getEncoder();
+    private final SparkMax algaeBarMotor = new SparkMax(kAlgaeBarCanID, MotorType.kBrushless);
+    private final RelativeEncoder algaeBarEncoder = algaeBarMotor.getEncoder(); 
 
-    public DigitalInput firstSensor = new DigitalInput(AlgaeBarConstants.algaeBarSensorOne); 
-    public DigitalInput secondSensor = new DigitalInput(AlgaeBarConstants.algaeBarSensorTwo);
+    public DutyCycleEncoder algaeBarAbsEncoder = new DutyCycleEncoder(AlgaeBarConstants.kAlgaeBarAbsEncoder);
+
+    public double motorSetpoint;
+
 
     public AlgaeBarIOSpark(){
         //could do motor configuration here
@@ -32,26 +30,34 @@ public class AlgaeBarIOSpark implements AlgaeBarIO {
 
     @Override
     public void updateInputs(AlgaeBarIOInputs inputs) {
-        ifOk(rotateMotor, rotateEncoder::getPosition, (value) -> inputs.rotateMotorPositionRad = value);  
-        ifOk(rotateMotor, rotateEncoder::getVelocity, (value) -> inputs.rotateMotorVelocityRadPerSec = value);
+        ifOk(pivotMotor, pivotEncoder::getPosition, (value) -> inputs.pivotMotorPositionRad = value);  
+        ifOk(pivotMotor, pivotEncoder::getVelocity, (value) -> inputs.pivotMotorVelocityRadPerSec = value);
         ifOk(
-            rotateMotor,
-                new DoubleSupplier[] {rotateMotor::getAppliedOutput, rotateMotor::getBusVoltage},
-                (values) -> inputs.rotateMotorAppliedVolts = values[0] * values[1]);
-        ifOk(rotateMotor, rotateMotor::getOutputCurrent, (value) -> inputs.rotateMotorCurrentAmps = value);   
+            pivotMotor,
+                new DoubleSupplier[] {pivotMotor::getAppliedOutput, pivotMotor::getBusVoltage},
+                (values) -> inputs.pivotMotorAppliedVolts = values[0] * values[1]);
+        ifOk(pivotMotor, pivotMotor::getOutputCurrent, (value) -> inputs.pivotMotorCurrentAmps = value);   
         
-        ifOk(coralMotor, coralEncoder::getPosition, (value) -> inputs.coralMotorPositionRad = value); 
-        ifOk(coralMotor, coralEncoder::getVelocity, (value) -> inputs.coralMotorVelocityRadPerSec = value);
+        ifOk(algaeBarMotor, algaeBarEncoder::getPosition, (value) -> inputs.algaeBarMotorPositionRad = value); 
+        ifOk(algaeBarMotor, algaeBarEncoder::getVelocity, (value) -> inputs.algaeBarMotorVelocityRadPerSec = value);
         ifOk(
-            coralMotor,
-                new DoubleSupplier[] {coralMotor::getAppliedOutput, coralMotor::getBusVoltage},
-                (values) -> inputs.coralMotorAppliedVolts = values[0] * values[1]);
-        ifOk(coralMotor, coralMotor::getOutputCurrent, (value) -> inputs.coralMotorCurrentAmps= value); 
+            algaeBarMotor,
+                new DoubleSupplier[] {algaeBarMotor::getAppliedOutput, algaeBarMotor::getBusVoltage},
+                (values) -> inputs.algaeBarMotorAppliedVolts = values[0] * values[1]);
+        ifOk(algaeBarMotor, algaeBarMotor::getOutputCurrent, (value) -> inputs.algaeBarMotorCurrentAmps= value); 
     } 
 
+    public void initizlizeDutyEncoder(){
+        this.motorSetpoint = algaeBarAbsEncoder.get();
+    }  
+
     @Override
-    public void setVoltage(double volts) {
-            rotateMotor.setVoltage(volts);
-            coralMotor.setVoltage(volts);
+    public void setPivotVoltage(double volts) {
+            pivotMotor.setVoltage(volts);
         }
+
+    @Override
+    public void setAlgaeBarVoltage(double volts) {
+        algaeBarMotor.setVoltage(volts);
+    }
  }

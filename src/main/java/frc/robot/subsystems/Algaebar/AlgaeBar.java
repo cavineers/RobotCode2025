@@ -11,6 +11,7 @@ public class AlgaeBar extends SubsystemBase {
 
     public AlgaeBar(AlgaeBarIO io) {
         this.io = io;
+        io.initializeDutyEncoder();
     }
 
     @Override
@@ -19,15 +20,27 @@ public class AlgaeBar extends SubsystemBase {
         Logger.processInputs("AlgaeBar", inputs); 
     }
 
-    public Command setVoltageCommand(double volts) {
-        return Commands.run(() -> io.setVoltage(volts), this).finallyDo(interrupted -> io.setVoltage(0));
+    public Command setPivotVoltageCommand(double volts) {
+        return Commands.run(() -> io.setPivotVoltage(volts), this).finallyDo(interrupted -> io.setPivotVoltage(0));
     }
 
-    public void setVoltage(double volts) {
-        io.setVoltage(volts);
+    public Command setAlgaeBarVoltageCommand(double volts) {
+        return Commands.run(() -> io.setAlgaeBarVoltage(volts), this).finallyDo(interrupted -> io.setAlgaeBarVoltage(0));
     }
 
-    public void setPercentage(double percentage) {
-        io.setVoltage(percentage * 12.0);
+    public void setPivotVoltage(double volts) {
+        io.setPivotVoltage(volts);
+    }
+
+    public void setAlgaeBarVoltage(double volts){
+        io.setAlgaeBarVoltage(volts);
+    }
+
+    public void setPivotPercentage(double percentage) {
+        io.setPivotVoltage(percentage * 12.0);
+    }
+    
+    public void setAlgaeBarPercentage(double percentage) {
+        io.setAlgaeBarVoltage(percentage * 12.0);
     }
 }

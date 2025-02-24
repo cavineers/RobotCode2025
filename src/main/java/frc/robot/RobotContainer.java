@@ -100,13 +100,13 @@ public class RobotContainer {
                 driverController::getLeftX,
                 driverController::getRightX));
 
-        driverController.a().whileTrue(algaeBar.setVoltageCommand(-12.0));
-        driverController.y().whileTrue(algaeBar.setVoltageCommand(12.0));
-
+        driverController.a().whileTrue(algaeBar.setPivotVoltageCommand(12.0));
+        driverController.b().whileTrue(algaeBar.setPivotVoltageCommand(-12.0));
+        driverController.y().whileTrue(algaeBar.setAlgaeBarVoltageCommand(12.0));
+        driverController.x().whileTrue(algaeBar.setAlgaeBarVoltageCommand(-12.0));
     }
 
     public Command getAutonomousCommand() {
         return autoChooser.get();
     }
 }
-//hello how are you

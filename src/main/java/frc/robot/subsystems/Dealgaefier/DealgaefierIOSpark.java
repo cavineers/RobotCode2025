@@ -2,12 +2,7 @@ package frc.robot.subsystems.Dealgaefier;
 
 import static frc.lib.SparkUtil.*;
 
-import static frc.robot.subsystems.Dealgaefier.DealgaefierConstants.kDeployCanID;
-import static frc.robot.subsystems.Dealgaefier.DealgaefierConstants.kIntakeCanID;
-import static frc.robot.subsystems.Dealgaefier.DealgaefierConstants.kProportionalGainSpark;
-import static frc.robot.subsystems.Dealgaefier.DealgaefierConstants.kIntegralTermSpark;
-import static frc.robot.subsystems.Dealgaefier.DealgaefierConstants.kDerivativeTermSpark;
-import static frc.robot.subsystems.Dealgaefier.DealgaefierConstants.kGravityTermSpark;
+import static frc.robot.subsystems.Dealgaefier.DealgaefierConstants.*;
 
 import java.util.function.DoubleSupplier;
 
@@ -16,6 +11,7 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import org.littletonrobotics.junction.AutoLogOutput;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -34,14 +30,19 @@ public class DealgaefierIOSpark implements DealgaefierIO {
     private LoggedNetworkNumber tuningD = new LoggedNetworkNumber("/Tuning/Dealgaefier/D", DealgaefierConstants.kDerivativeTermSpark);
     private LoggedNetworkNumber tuningG = new LoggedNetworkNumber("/Tuning/Dealgaefier/G", DealgaefierConstants.kGravityTermSpark); 
 
+    @AutoLogOutput(key="Dealgaefier/Setpoint")
     private double absSetpoint;
 
     private PIDController controller = new PIDController(kProportionalGainSpark, kIntegralTermSpark, kDerivativeTermSpark);
+
+    @AutoLogOutput(key="Dealgaefier/DesiredVoltage")
+    private double desiredVoltage = 0.0;
 
     public boolean absEncoderInitialized = false;
     
     public DealgaefierIOSpark(){
         this.controller.enableContinuousInput(0, 1);
+
     }
 
     @Override
@@ -67,9 +68,8 @@ public class DealgaefierIOSpark implements DealgaefierIO {
             initializeDutyEncoder();
         }
 
-        double desiredVoltage = this.controller.calculate(getAbsEncoder()) + this.tuningG.get();
-        this.setDeployVoltage(desiredVoltage);
-        System.out.println(desiredVoltage);
+        this.desiredVoltage = this.controller.calculate(getAbsEncoder()) + this.tuningG.get();
+        this.setDeployVoltage(this.desiredVoltage);
 
         if (DealgaefierConstants.kTuningMode){
             this.updatePID();
@@ -85,6 +85,7 @@ public class DealgaefierIOSpark implements DealgaefierIO {
         return sensor.get();
     }
 
+    @AutoLogOutput(key="Dealgaefier/AbsRotations")
     public double getAbsEncoder() {
         return this.deployAbsEncoder.get();
     }
@@ -105,7 +106,7 @@ public class DealgaefierIOSpark implements DealgaefierIO {
 
     public void updateSetpoint(double setpoint) {
         this.absSetpoint = this.clipSetpoint(setpoint);
-        this.controller.setSetpoint(setpoint);
+        this.controller.setSetpoint(absSetpoint);
     }
 
     public double clipSetpoint(double setpoint) {
@@ -117,7 +118,7 @@ public class DealgaefierIOSpark implements DealgaefierIO {
         return setpoint;
     }
 
-    private void updatePID(){
+    private void updatePID() {
         double currentP = this.controller.getP();
         double currentD = this.controller.getD();
 
@@ -125,4 +126,14 @@ public class DealgaefierIOSpark implements DealgaefierIO {
             this.controller.setPID(this.tuningP.get(), 0, this.tuningD.get());
         }
     }
-}
+
+    public void deploy() {
+        updateSetpoint(kDeployedAbsoluteRotations);
+        setIntakeVoltage(kIntakeSpeed * 12);
+    }
+
+    public void retract() {
+        updateSetpoint(kRestAbsoluteRotations);
+        setIntakeVoltage(0.0);
+    }
+ }

@@ -30,4 +30,10 @@ public interface DealgaefierIO {
 
     public default void updateSetpoint(double setpoint) {
     }
+
+    public default void deploy() {
+    }
+
+    public default void retract() {
+    }
 }

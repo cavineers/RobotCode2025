@@ -27,8 +27,12 @@ public class Dealgaefier extends SubsystemBase {
         return Commands.run(() -> io.setIntakeVoltage(volts), this).finallyDo(interrupted -> io.setIntakeVoltage(0));
     }
 
-    public Command updateSetpointCommand(double setpoint) {
-        return Commands.run(() -> io.updateSetpoint(setpoint), this).finallyDo(interrupted -> io.setIntakeVoltage(0));
+    public Command deployCommand() {
+        return Commands.run(() -> io.deploy(), this).finallyDo(interrupted -> io.setIntakeVoltage(0));
+    }
+
+    public Command intakeCommand() {
+        return Commands.run(() -> io.retract(), this).finallyDo(interrupted -> io.setIntakeVoltage(0));
     }
 
     public void setDeployVoltage(double volts) {

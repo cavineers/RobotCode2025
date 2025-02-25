@@ -100,9 +100,8 @@ public class RobotContainer {
                 driverController::getLeftX,
                 driverController::getRightX));
 
-        driverController.a().onTrue(dealgaefier.updateSetpointCommand(0.3));
-        driverController.b().onTrue(dealgaefier.updateSetpointCommand(0.6));
-
+        driverController.a().onTrue(dealgaefier.deployCommand());
+        driverController.a().onFalse(dealgaefier.intakeCommand());
     }
 
     public Command getAutonomousCommand() {

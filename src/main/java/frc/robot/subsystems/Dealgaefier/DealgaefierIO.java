@@ -27,4 +27,7 @@ public interface DealgaefierIO {
 
     public default void initializeDutyEncoder() {
     }
+
+    public default void updateSetpoint(double setpoint) {
+    }
 }

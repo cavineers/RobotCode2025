@@ -41,7 +41,7 @@ public class DealgaefierIOSpark implements DealgaefierIO {
     public boolean absEncoderInitialized = false;
     
     public DealgaefierIOSpark(){
-
+        this.controller.enableContinuousInput(0, 1);
     }
 
     @Override
@@ -65,7 +65,6 @@ public class DealgaefierIOSpark implements DealgaefierIO {
 
         if(absEncoderInitialized == false) {
             initializeDutyEncoder();
-            System.out.println("fort");
         }
 
         double desiredVoltage = this.controller.calculate(getAbsEncoder()) + this.tuningG.get();
@@ -88,6 +87,10 @@ public class DealgaefierIOSpark implements DealgaefierIO {
 
     public double getAbsEncoder() {
         return this.deployAbsEncoder.get();
+    }
+
+    public double getDeployPositionRotations() {
+        return deployEncoder.getPosition();
     }
     
     @Override

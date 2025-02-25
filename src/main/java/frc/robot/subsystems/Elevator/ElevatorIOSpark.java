@@ -98,7 +98,6 @@ public class ElevatorIOSpark implements ElevatorIO {
         
         double desiredVoltage = this.controller.calculate(inputs.rightPositionRotations) + this.tuningG.get();
         Logger.recordOutput("Elevator/RequestedVoltage", desiredVoltage);
-        Logger.recordOutput("Bus Voltage", rightMotor.getBusVoltage());
         Logger.recordOutput("Output Current", rightMotor.getAppliedOutput());
         this.setVoltage(desiredVoltage);
 
@@ -131,7 +130,6 @@ public class ElevatorIOSpark implements ElevatorIO {
     }
 
     public void setVoltage(double volts) {
-        Logger.recordOutput("Elevator/SetVoltage", volts);
         rightMotor.setVoltage(volts);
     }
 

@@ -18,4 +18,10 @@ public class DealgaefierConstants {
     public static final double kIntegralTermSpark = 0.0;
     public static final double kDerivativeTermSpark = 0.0;
     public static final double kGravityTermSpark = 0.0;
+
+    public static final double kProportionalTermSim = 0.1;
+    public static final double kDerivativeTermSim = 0.0;
+
+    public static final double kDeployGearRatio = 1;
+    public static final double kIntakeGearRatio = 1;
 }

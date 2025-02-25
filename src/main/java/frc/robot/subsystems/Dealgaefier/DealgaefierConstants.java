@@ -3,14 +3,11 @@ package frc.robot.subsystems.Dealgaefier;
 public class DealgaefierConstants {
     public static final boolean kTuningMode = true;
 
-    public static final int kDeployCanID = 50;
-    public static final int kIntakeCanID = 51;
+    public static final int kDeployCanID = 55;
+    public static final int kIntakeCanID = 54;
 
     public static final double kRestAbsoluteRotations = 0;
     public static final double kDeployedAbsoluteRotations = 0.5;
-
-    public static final double kDealgaefierPivotSpeed = 0; 
-    public static final double kDealgaefierSpinSpeed = 0;
 
     public static final int kDeployAbsEncoder = 4 ;
 

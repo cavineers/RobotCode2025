@@ -11,7 +11,6 @@ public class Dealgaefier extends SubsystemBase {
 
     public Dealgaefier(DealgaefierIO io) {
         this.io = io;
-        io.initializeDutyEncoder();
     }
 
     @Override
@@ -26,6 +25,10 @@ public class Dealgaefier extends SubsystemBase {
 
     public Command setIntakeVoltageCommand(double volts) {
         return Commands.run(() -> io.setIntakeVoltage(volts), this).finallyDo(interrupted -> io.setIntakeVoltage(0));
+    }
+
+    public Command updateSetpointCommand(double setpoint) {
+        return Commands.run(() -> io.updateSetpoint(setpoint), this).finallyDo(interrupted -> io.setIntakeVoltage(0));
     }
 
     public void setDeployVoltage(double volts) {

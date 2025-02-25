@@ -37,9 +37,9 @@ public class DealgaefierIOSpark implements DealgaefierIO {
     private double absSetpoint;
 
     private PIDController controller = new PIDController(kProportionalGainSpark, kIntegralTermSpark, kDerivativeTermSpark);
-
+    
     public DealgaefierIOSpark(){
-
+        initializeDutyEncoder();
     }
 
     @Override
@@ -63,15 +63,16 @@ public class DealgaefierIOSpark implements DealgaefierIO {
         double desiredVoltage = this.controller.calculate(getAbsEncoder()) + this.tuningG.get();
         this.setDeployVoltage(desiredVoltage);
 
-        System.out.println(getAbsEncoder());
-
         if (DealgaefierConstants.kTuningMode){
             this.updatePID();
         }
     }
 
     public void initializeDutyEncoder(){
-        this.absSetpoint = deployAbsEncoder.get();
+        System.out.println("ran");
+        System.out.println(getAbsEncoder());
+        this.absSetpoint = this.deployAbsEncoder.get();
+        System.out.println(absSetpoint);
     }
 
     public boolean getSensor(DigitalInput sensor) {

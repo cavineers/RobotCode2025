@@ -9,7 +9,7 @@ public class ElevatorConstants {
     public static final boolean kTuningMode = true; // allows for tuning the feedforward gains
     public static final int kLeftMotorCanID = 42;
     public static final int kRightMotorCanID = 40;
-    public static final boolean kInverted = true;
+    public static final boolean kInverted = false;
 
     public static final int kLimitSwitchID = 0;
 
@@ -27,14 +27,14 @@ public class ElevatorConstants {
     public static final double kLoadMassKg = Units.lbsToKilograms(10); // represents the weight shooter
     public static final double kElevatorMassKg = Units.lbsToKilograms(25); // represents the weight of the elevator
 
-    public static final double kRestRotations = 0.712;
-    public static final double kL1Rotations = 2;
-    public static final double kL2Rotations = 11;
-    public static final double kL3Rotations = 16;
+    public static final double kRestRotations = 2;
+    public static final double kL1Rotations = 13;
+    public static final double kL2Rotations = 29;
+    public static final double kL3Rotations = 42.5;
     public static final double kL4Rotations = 8;
 
     public static final double kMinRotations = 0;
-    public static final double kMaxRotations = 23;
+    public static final double kMaxRotations = 45;
 
     public static final double kProportionalGainSpark = 0.0;
     public static final double kIntegralTermSpark = 0;

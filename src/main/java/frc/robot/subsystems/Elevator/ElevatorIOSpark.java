@@ -137,7 +137,7 @@ public class ElevatorIOSpark implements ElevatorIO {
 
     public void updateSetpoint(double setpoint) {
         this.motorSetpoint = this.clipSetpoint(setpoint);
-        this.controller.setSetpoint(setpoint);
+        this.controller.setSetpoint(motorSetpoint);
     }
 
     public double clipSetpoint(double setpoint) {

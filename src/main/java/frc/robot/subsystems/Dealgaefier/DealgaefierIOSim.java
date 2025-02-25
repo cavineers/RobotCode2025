@@ -27,12 +27,12 @@ public class DealgaefierIOSim implements DealgaefierIO {
         deployMotor.update(0.02);
         intakeMotor.update(0.02);
 
-        inputs.deployMotorPositionRad = deployMotor.getAngularPositionRad();
+        inputs.deployMotorPositionRotations = deployMotor.getAngularPositionRad();
         inputs.deployMotorVelocityRadPerSec = deployMotor.getAngularVelocityRadPerSec();
         inputs.deployMotorAppliedVolts = deployAppliedVolts;
         inputs.deployMotorCurrentAmps = deployMotor.getCurrentDrawAmps();
 
-        inputs.intakeMotorPositionRad = intakeMotor.getAngularPositionRad();
+        inputs.intakeMotorPositionRotations = intakeMotor.getAngularPositionRad();
         inputs.intakeMotorVelocityRadPerSec = intakeMotor.getAngularVelocityRadPerSec();
         inputs.intakeMotorAppliedVolts = intakeAppliedVolts;
         inputs.intakeMotorCurrentAmps = intakeMotor.getCurrentDrawAmps();

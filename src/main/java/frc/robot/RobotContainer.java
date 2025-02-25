@@ -86,7 +86,7 @@ public class RobotContainer {
                 );
                 
                 endEffector = new EndEffector(new EndEffectorIOSpark());
-                elevator = new Elevator(new ElevatorIOSpark());
+                elevator = new Elevator(new ElevatorIOSpark(), drivetrain::needsSafety);
 
                 break;
             case SIM:
@@ -105,7 +105,7 @@ public class RobotContainer {
                 canRangeArray = new CanRangeArray(new CanRangeIOSim(0), new CanRangeIOSim(1), new CanRangeIOSim(2), new CanRangeIOSim(3));
 
                 endEffector = new EndEffector(new EndEffectorIOSim());
-                elevator = new Elevator(new ElevatorIOSim());
+                elevator = new Elevator(new ElevatorIOSim(), drivetrain::needsSafety);
             
                 break;
             default:
@@ -120,7 +120,7 @@ public class RobotContainer {
                 vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
                 canRangeArray = new CanRangeArray(new CanRangeIO() {}, new CanRangeIO() {}, new CanRangeIO() {}, new CanRangeIO() {});
                 endEffector = new EndEffector(new EndEffectorIO(){});
-                elevator = new Elevator(new ElevatorIO(){});
+                elevator = new Elevator(new ElevatorIO(){}, drivetrain::needsSafety);
 
                 break;
         }

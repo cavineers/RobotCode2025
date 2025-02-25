@@ -16,6 +16,9 @@ import static frc.robot.subsystems.Drivetrain.SwerveDriveConstants.DriveConstant
 public class GyroPigeonIO implements GyroIO {
     private final Pigeon2 pigeon = new Pigeon2(kPigeonID);
     private final StatusSignal<Angle> yaw = pigeon.getYaw();
+    private final StatusSignal<Angle> pitch = pigeon.getPitch();
+    private final StatusSignal<Angle> roll = pigeon.getRoll();
+
     private final StatusSignal<AngularVelocity> yawVelocity = pigeon.getAngularVelocityZWorld();
 
     public GyroPigeonIO() {
@@ -28,8 +31,10 @@ public class GyroPigeonIO implements GyroIO {
 
     @Override
     public void updateInputs(GyroIOInputs inputs) {
-        inputs.connected = BaseStatusSignal.refreshAll(yaw, yawVelocity).equals(StatusCode.OK);
+        inputs.connected = BaseStatusSignal.refreshAll(yaw, yawVelocity, pitch, roll).equals(StatusCode.OK);
         inputs.yawPosition = Rotation2d.fromDegrees(yaw.getValueAsDouble());
+        inputs.pitchPosition = Rotation2d.fromDegrees(pitch.getValueAsDouble());
+        inputs.rollPosition = Rotation2d.fromDegrees(roll.getValueAsDouble());
         inputs.yawVelocityRadPerSec = Units.degreesToRadians(yawVelocity.getValueAsDouble());
     }
 }

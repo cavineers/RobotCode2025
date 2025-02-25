@@ -176,6 +176,19 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             gyroRotation = gyroRotation.plus(new Rotation2d(delta.dtheta));
         }
         poseEstimator.update(gyroRotation, this.getModulePositions());
+
+        if (frontTip()) {
+            driveVelocity(new ChassisSpeeds(0, (Math.signum(gyroInputs.pitchPosition.getDegrees()))/4, 0));
+        }
+
+        if (sideTip()) {
+            driveVelocity(new ChassisSpeeds((Math.signum(gyroInputs.pitchPosition.getDegrees()))/4, 0, 0));
+        }
+
+        // Log whether the angle is out of acceptable ranges
+        Logger.recordOutput("Drivetrain/NeedsSafety", this.needsSafety());
+        Logger.recordOutput("Drivetrain/FrontTip", this.frontTip());
+        Logger.recordOutput("Drivetrain/SideTip", this.sideTip());
     }
 
 
@@ -343,6 +356,33 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         return run(() -> runCharacterization(0.0)).withTimeout(1.0).andThen(sysId.dynamic(direction));
     }
 
+    /** Returns whether the automatic tilt saftey should run 
+     * @return boolean needs safety
+     */
+    public boolean frontTip() {
+        if (Math.abs(gyroInputs.pitchPosition.getDegrees()) > 4) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean sideTip() {
+        if (Math.abs(gyroInputs.rollPosition.getDegrees()) > 4) {
+            return true;
+        }
+        return false;
+    }
+
+     public boolean needsSafety() {
+        if (frontTip()) {
+            return true;
+        }
+        if (sideTip()) {
+            return true;
+        }
+        return false;
+    }
+    
     public Pose2d getClosestTag(){
         Pose2d closest = null;
         boolean isRedAlliance = this.shouldFlipPose();

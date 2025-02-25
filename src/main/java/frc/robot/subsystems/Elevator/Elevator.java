@@ -11,17 +11,22 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.subsystems.Elevator.ElevatorConstants.*;
 
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends SubsystemBase {
     public final ElevatorIO io;
     private final ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
-
-    public Elevator(ElevatorIO io) {
+    public Supplier<Boolean> needsSafety;
+    
+    public Elevator(ElevatorIO io, Supplier<Boolean> needsSafety) {
         this.io = io;
+        this.needsSafety = needsSafety;
     }
 
+    
     @Override
     public void periodic() { 
         io.updateInputs(inputs); 
@@ -29,6 +34,12 @@ public class Elevator extends SubsystemBase {
         Logger.processInputs("Elevator", inputs);
 
         Logger.recordOutput("3DMechanisms/Elevator", this.getElevatorStagePoses(inputs.rightPositionRotations));
+        
+        if (needsSafety.get()) {
+            //io.setSetpoint()
+            System.out.println("Elevator needs safety");
+
+        }
     }
 
     public Command setVoltageCommand(double volts) {

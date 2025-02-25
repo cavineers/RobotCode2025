@@ -194,11 +194,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         }
         
         if (frontTip()) {
-            driveVelocity(new ChassisSpeeds(0, Math.signum(gyroInputs.pitchPosition.getDegrees()), 0));
+            driveVelocity(new ChassisSpeeds(0, (Math.signum(gyroInputs.pitchPosition.getDegrees()))/4, 0));
         }
         
         if (sideTip()) {
-            driveVelocity(new ChassisSpeeds(Math.signum(gyroInputs.pitchPosition.getDegrees()), 0, 0));
+            driveVelocity(new ChassisSpeeds((Math.signum(gyroInputs.pitchPosition.getDegrees()))/4, 0, 0));
         }
     
         // Log whether the angle is out of acceptable ranges

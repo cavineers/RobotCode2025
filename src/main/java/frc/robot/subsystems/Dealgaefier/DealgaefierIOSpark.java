@@ -37,13 +37,16 @@ public class DealgaefierIOSpark implements DealgaefierIO {
     private double absSetpoint;
 
     private PIDController controller = new PIDController(kProportionalGainSpark, kIntegralTermSpark, kDerivativeTermSpark);
+
+    public boolean absEncoderInitialized = false;
     
     public DealgaefierIOSpark(){
-        initializeDutyEncoder();
+
     }
 
     @Override
     public void updateInputs(DealgaefierIOInputs inputs) {
+
         ifOk(deployMotor, deployEncoder::getPosition, (value) -> inputs.deployMotorPositionRotations = value);
         ifOk(deployMotor, deployEncoder::getVelocity, (value) -> inputs.deployMotorVelocityRadPerSec = value);
         ifOk(
@@ -60,8 +63,14 @@ public class DealgaefierIOSpark implements DealgaefierIO {
             (values -> inputs.intakeMotorAppliedVolts = values[0] * values[1]));
         ifOk(intakeMotor, intakeMotor::getOutputCurrent, (value) -> inputs.intakeMotorCurrentAmps = value);
 
+        if(absEncoderInitialized == false) {
+            initializeDutyEncoder();
+            System.out.println("fort");
+        }
+
         double desiredVoltage = this.controller.calculate(getAbsEncoder()) + this.tuningG.get();
         this.setDeployVoltage(desiredVoltage);
+        System.out.println(desiredVoltage);
 
         if (DealgaefierConstants.kTuningMode){
             this.updatePID();
@@ -69,10 +78,8 @@ public class DealgaefierIOSpark implements DealgaefierIO {
     }
 
     public void initializeDutyEncoder(){
-        System.out.println("ran");
-        System.out.println(getAbsEncoder());
-        this.absSetpoint = this.deployAbsEncoder.get();
-        System.out.println(absSetpoint);
+        this.absSetpoint = getAbsEncoder();
+        absEncoderInitialized = true;
     }
 
     public boolean getSensor(DigitalInput sensor) {

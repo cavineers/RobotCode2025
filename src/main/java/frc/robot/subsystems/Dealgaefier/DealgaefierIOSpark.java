@@ -9,8 +9,14 @@ import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -35,6 +41,8 @@ public class DealgaefierIOSpark implements DealgaefierIO {
 
     private PIDController controller = new PIDController(kProportionalGainSpark, kIntegralTermSpark, kDerivativeTermSpark);
 
+    private SparkMaxConfig deployConfig;
+
     @AutoLogOutput(key="Dealgaefier/DesiredVoltage")
     private double desiredVoltage = 0.0;
 
@@ -42,6 +50,29 @@ public class DealgaefierIOSpark implements DealgaefierIO {
     
     public DealgaefierIOSpark(){
         this.controller.enableContinuousInput(0, 1);
+    
+        deployConfig = new SparkMaxConfig();
+        deployConfig
+            .idleMode(IdleMode.kBrake)
+            .smartCurrentLimit(DealgaefierConstants.kCurrentLimit)    
+            .voltageCompensation(12); 
+     
+        tryUntilOk(
+            deployMotor,
+            5,
+            () -> deployMotor.configure(deployConfig, ResetMode.kResetSafeParameters,
+                    PersistMode.kPersistParameters));
+
+        var intakeConfig = new SparkMaxConfig().apply(deployConfig);
+        
+        intakeConfig.inverted(true);
+        tryUntilOk(
+            intakeMotor,
+            5,
+            () -> intakeMotor.configure(intakeConfig, ResetMode.kResetSafeParameters,
+                    PersistMode.kPersistParameters));
+
+        this.controller.setTolerance(kTolerance); // doesn't actually do anything unless you are using controller.atSetpoint()
 
     }
 
@@ -68,7 +99,7 @@ public class DealgaefierIOSpark implements DealgaefierIO {
             initializeDutyEncoder();
         }
 
-        this.desiredVoltage = this.controller.calculate(getAbsEncoder()) + this.tuningG.get();
+        this.desiredVoltage = this.controller.calculate(getAbsEncoder()) * -1.0 + (this.tuningG.get() * Math.cos(getAbsEncoder()*2*Math.PI));
         this.setDeployVoltage(this.desiredVoltage);
 
         if (DealgaefierConstants.kTuningMode){
@@ -78,6 +109,7 @@ public class DealgaefierIOSpark implements DealgaefierIO {
 
     public void initializeDutyEncoder(){
         this.absSetpoint = getAbsEncoder();
+        this.controller.setSetpoint(absSetpoint);
         absEncoderInitialized = true;
     }
 
@@ -87,7 +119,7 @@ public class DealgaefierIOSpark implements DealgaefierIO {
 
     @AutoLogOutput(key="Dealgaefier/AbsRotations")
     public double getAbsEncoder() {
-        return this.deployAbsEncoder.get();
+        return this.deployAbsEncoder.get() + kAbsEncoderOffset;
     }
 
     public double getDeployPositionRotations() {
@@ -110,11 +142,11 @@ public class DealgaefierIOSpark implements DealgaefierIO {
     }
 
     public double clipSetpoint(double setpoint) {
-        if(absSetpoint > DealgaefierConstants.kDeployedAbsoluteRotations) {
-            return DealgaefierConstants.kDeployedAbsoluteRotations;
-        } else if(absSetpoint < DealgaefierConstants.kRestAbsoluteRotations) {
-            return DealgaefierConstants.kRestAbsoluteRotations;
-        }
+        // if(absSetpoint < DealgaefierConstants.kDeployedAbsoluteRotations) {
+        //     return DealgaefierConstants.kDeployedAbsoluteRotations;
+        // } else if(absSetpoint < DealgaefierConstants.kRestAbsoluteRotations) {
+        //     return DealgaefierConstants.kRestAbsoluteRotations;
+        // }
         return setpoint;
     }
 

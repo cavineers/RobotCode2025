@@ -1,30 +1,39 @@
-package frc.robot.subsystems.Algaebar;
+package frc.robot.subsystems.AlgaeBar;
 
 import org.littletonrobotics.junction.AutoLog;
 
 public interface AlgaeBarIO {
-    
     @AutoLog
-    public static class AlgaeBarIOInputs {
-        public double pivotMotorPositionRad = 0.0;
-        public double pivotMotorVelocityRadPerSec = 0.0;
-        public double pivotMotorAppliedVolts = 0.0;
-        public double pivotMotorCurrentAmps = 0.0;
+    public static class AlgaeBarIOInputs{
+        public double deployMotorPositionRotations = 0.0;
+        public double deployMotorVelocityRadPerSec = 0.0;
+        public double deployMotorAppliedVolts = 0.0;
+        public double deployMotorCurrentAmps = 0.0;
 
-        public double algaeBarMotorPositionRad = 0.0;
-        public double algaeBarMotorVelocityRadPerSec = 0.0;
-        public double algaeBarMotorAppliedVolts = 0.0;
-        public double algaeBarMotorCurrentAmps = 0.0;
-    } 
-
-    public default void updateInputs(AlgaeBarIOInputs inputs){
+        public double intakeMotorPositionRotations = 0.0;
+        public double intakeMotorVelocityRadPerSec = 0.0;
+        public double intakeMotorAppliedVolts = 0.0;
+        public double intakeMotorCurrentAmps = 0.0;
+    }
+    
+    default void updateInputs(AlgaeBarIOInputs inputs) {
     }
 
-    public default void setPivotVoltage(double volts){
-    }
-    public default void setAlgaeBarVoltage(double volts){
+    public default void setDeployVoltage(double volts) {
     }
 
-    public default void initializeDutyEncoder(){
+    public default void setIntakeVoltage(double volts) {
+    }
+
+    public default void initializeDutyEncoder() {
+    }
+
+    public default void updateSetpoint(double setpoint) {
+    }
+
+    public default void deploy() {
+    }
+
+    public default void retract() {
     }
 }

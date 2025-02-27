@@ -1,63 +1,171 @@
-package frc.robot.subsystems.Algaebar;
+package frc.robot.subsystems.AlgaeBar;
 
 import static frc.lib.SparkUtil.*;
 
-import static frc.robot.subsystems.Algaebar.AlgaeBarConstants.*;
+import static frc.robot.subsystems.AlgaeBar.AlgaeBarConstants.*;
 
 import java.util.function.DoubleSupplier;
 
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
+
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
+import org.littletonrobotics.junction.AutoLogOutput;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
 public class AlgaeBarIOSpark implements AlgaeBarIO {
-    private final SparkMax pivotMotor = new SparkMax(kAlgaeBarPivotCanID, MotorType.kBrushless); 
-    private final RelativeEncoder pivotEncoder = pivotMotor.getEncoder();
+    final SparkMax deployMotor = new SparkMax(kDeployCanID, MotorType.kBrushless);
+    final RelativeEncoder deployEncoder = deployMotor.getEncoder();
 
-    private final SparkMax algaeBarMotor = new SparkMax(kAlgaeBarCanID, MotorType.kBrushless);
-    private final RelativeEncoder algaeBarEncoder = algaeBarMotor.getEncoder(); 
+    final SparkMax intakeMotor = new SparkMax(kIntakeCanID, MotorType.kBrushless);
+    final RelativeEncoder intakeEncoder = intakeMotor.getEncoder();
 
-    public DutyCycleEncoder algaeBarAbsEncoder = new DutyCycleEncoder(AlgaeBarConstants.kAlgaeBarAbsEncoder);
+    public DutyCycleEncoder deployAbsEncoder = new DutyCycleEncoder(AlgaeBarConstants.kDeployAbsEncoder);
 
-    public double motorSetpoint;
+    private LoggedNetworkNumber tuningP = new LoggedNetworkNumber("/Tuning/AlgaeBar/P", AlgaeBarConstants.kProportionalGainSpark);
+    private LoggedNetworkNumber tuningD = new LoggedNetworkNumber("/Tuning/AlgaeBar/D", AlgaeBarConstants.kDerivativeTermSpark);
+    private LoggedNetworkNumber tuningG = new LoggedNetworkNumber("/Tuning/AlgaeBar/G", AlgaeBarConstants.kGravityTermSpark); 
 
+    @AutoLogOutput(key="AlgaeBar/Setpoint")
+    private double absSetpoint;
 
+    private PIDController controller = new PIDController(kProportionalGainSpark, kIntegralTermSpark, kDerivativeTermSpark);
+
+    private SparkMaxConfig deployConfig;
+
+    @AutoLogOutput(key="AlgaeBar/DesiredVoltage")
+    private double desiredVoltage = 0.0;
+
+    public boolean absEncoderInitialized = false;
+    
     public AlgaeBarIOSpark(){
-        //could do motor configuration here
+        this.controller.enableContinuousInput(0, 1);
+    
+        deployConfig = new SparkMaxConfig();
+        deployConfig
+            .idleMode(IdleMode.kBrake)
+            .smartCurrentLimit(AlgaeBarConstants.kCurrentLimit)    
+            .voltageCompensation(12); 
+     
+        tryUntilOk(
+            deployMotor,
+            5,
+            () -> deployMotor.configure(deployConfig, ResetMode.kResetSafeParameters,
+                    PersistMode.kPersistParameters));
+
+        var intakeConfig = new SparkMaxConfig().apply(deployConfig);
+        
+        intakeConfig.inverted(true);
+        tryUntilOk(
+            intakeMotor,
+            5,
+            () -> intakeMotor.configure(intakeConfig, ResetMode.kResetSafeParameters,
+                    PersistMode.kPersistParameters));
+
+        this.controller.setTolerance(kTolerance);
+
     }
 
     @Override
     public void updateInputs(AlgaeBarIOInputs inputs) {
-        ifOk(pivotMotor, pivotEncoder::getPosition, (value) -> inputs.pivotMotorPositionRad = value);  
-        ifOk(pivotMotor, pivotEncoder::getVelocity, (value) -> inputs.pivotMotorVelocityRadPerSec = value);
+
+        ifOk(deployMotor, deployEncoder::getPosition, (value) -> inputs.deployMotorPositionRotations = value);
+        ifOk(deployMotor, deployEncoder::getVelocity, (value) -> inputs.deployMotorVelocityRadPerSec = value);
         ifOk(
-            pivotMotor,
-                new DoubleSupplier[] {pivotMotor::getAppliedOutput, pivotMotor::getBusVoltage},
-                (values) -> inputs.pivotMotorAppliedVolts = values[0] * values[1]);
-        ifOk(pivotMotor, pivotMotor::getOutputCurrent, (value) -> inputs.pivotMotorCurrentAmps = value);   
+            deployMotor,
+            new DoubleSupplier[] {deployMotor::getAppliedOutput, deployMotor::getBusVoltage},
+            (values -> inputs.deployMotorAppliedVolts = values[0] * values[1]));
+        ifOk(deployMotor, deployMotor::getOutputCurrent, (value) -> inputs.deployMotorCurrentAmps = value);
         
-        ifOk(algaeBarMotor, algaeBarEncoder::getPosition, (value) -> inputs.algaeBarMotorPositionRad = value); 
-        ifOk(algaeBarMotor, algaeBarEncoder::getVelocity, (value) -> inputs.algaeBarMotorVelocityRadPerSec = value);
+        ifOk(intakeMotor, intakeEncoder::getPosition, (value) -> inputs.intakeMotorPositionRotations = value);
+        ifOk(intakeMotor, intakeEncoder::getVelocity, (value) -> inputs.intakeMotorVelocityRadPerSec = value);
         ifOk(
-            algaeBarMotor,
-                new DoubleSupplier[] {algaeBarMotor::getAppliedOutput, algaeBarMotor::getBusVoltage},
-                (values) -> inputs.algaeBarMotorAppliedVolts = values[0] * values[1]);
-        ifOk(algaeBarMotor, algaeBarMotor::getOutputCurrent, (value) -> inputs.algaeBarMotorCurrentAmps= value); 
-    } 
+            intakeMotor,
+            new DoubleSupplier[] {intakeMotor::getAppliedOutput, intakeMotor::getBusVoltage},
+            (values -> inputs.intakeMotorAppliedVolts = values[0] * values[1]));
+        ifOk(intakeMotor, intakeMotor::getOutputCurrent, (value) -> inputs.intakeMotorCurrentAmps = value);
 
-    public void initizlizeDutyEncoder(){
-        this.motorSetpoint = algaeBarAbsEncoder.get();
-    }  
-
-    @Override
-    public void setPivotVoltage(double volts) {
-            pivotMotor.setVoltage(volts);
+        if(absEncoderInitialized == false) {
+            initializeDutyEncoder();
         }
 
+        this.desiredVoltage = this.controller.calculate(getAbsEncoder()) * -1.0 + (this.tuningG.get() * Math.cos(getAbsEncoder()*2*Math.PI));
+        this.setDeployVoltage(this.desiredVoltage);
+
+        if (AlgaeBarConstants.kTuningMode){
+            this.updatePID();
+        }
+    }
+
+    public void initializeDutyEncoder(){
+        this.absSetpoint = getAbsEncoder();
+        this.controller.setSetpoint(absSetpoint);
+        absEncoderInitialized = true;
+    }
+
+    public boolean getSensor(DigitalInput sensor) {
+        return sensor.get();
+    }
+
+    @AutoLogOutput(key="AlgaeBar/AbsRotations")
+    public double getAbsEncoder() {
+        return this.deployAbsEncoder.get() + kAbsEncoderOffset;
+    }
+
+    public double getDeployPositionRotations() {
+        return deployEncoder.getPosition();
+    }
+    
     @Override
-    public void setAlgaeBarVoltage(double volts) {
-        algaeBarMotor.setVoltage(volts);
+    public void setDeployVoltage(double volts) {
+        deployMotor.setVoltage(volts);
+    }
+
+    @Override
+    public void setIntakeVoltage(double volts) {
+        intakeMotor.setVoltage(volts);
+    }
+
+    public void updateSetpoint(double setpoint) {
+        this.absSetpoint = this.clipSetpoint(setpoint);
+        this.controller.setSetpoint(absSetpoint);
+    }
+
+    public double clipSetpoint(double setpoint) {
+        // if(absSetpoint < AlgaeBarConstants.kDeployedAbsoluteRotations) {
+        //     return AlgaeBarConstants.kDeployedAbsoluteRotations;
+        // } else if(absSetpoint < AlgaeBarConstants.kRestAbsoluteRotations) {
+        //     return AlgaeBarConstants.kRestAbsoluteRotations;
+        // }
+        return setpoint;
+    }
+
+    private void updatePID() {
+        double currentP = this.controller.getP();
+        double currentD = this.controller.getD();
+
+        if (currentP != this.tuningP.get() || currentD != this.tuningD.get()){
+            this.controller.setPID(this.tuningP.get(), 0, this.tuningD.get());
+        }
+    }
+
+    public void deploy() {
+        updateSetpoint(kDeployedAbsoluteRotations);
+        setIntakeVoltage(kIntakeSpeed * 12);
+    }
+
+    public void retract() {
+        updateSetpoint(kRestAbsoluteRotations);
+        setIntakeVoltage(0.0);
     }
  }

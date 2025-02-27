@@ -1,8 +1,10 @@
-package frc.robot.subsystems.Algaebar;
+package frc.robot.subsystems.AlgaeBar;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.Algaebar.AlgaeBarIOInputsAutoLogged;
+
 import org.littletonrobotics.junction.Logger;
 
 public class AlgaeBar extends SubsystemBase {
@@ -11,36 +13,35 @@ public class AlgaeBar extends SubsystemBase {
 
     public AlgaeBar(AlgaeBarIO io) {
         this.io = io;
-        io.initializeDutyEncoder();
     }
 
     @Override
     public void periodic() {
-        io.updateInputs(inputs); 
-        Logger.processInputs("AlgaeBar", inputs); 
+        io.updateInputs(inputs);
+        Logger.processInputs("AlgaeBar", inputs);
     }
 
-    public Command setPivotVoltageCommand(double volts) {
-        return Commands.run(() -> io.setPivotVoltage(volts), this).finallyDo(interrupted -> io.setPivotVoltage(0));
+    public Command setDeployVoltageCommand(double volts) {
+        return Commands.run(() -> io.setDeployVoltage(volts), this).finallyDo(interrupted -> io.setDeployVoltage(0));
     }
 
-    public Command setAlgaeBarVoltageCommand(double volts) {
-        return Commands.run(() -> io.setAlgaeBarVoltage(volts), this).finallyDo(interrupted -> io.setAlgaeBarVoltage(0));
+    public Command setIntakeVoltageCommand(double volts) {
+        return Commands.run(() -> io.setIntakeVoltage(volts), this).finallyDo(interrupted -> io.setIntakeVoltage(0));
     }
 
-    public void setPivotVoltage(double volts) {
-        io.setPivotVoltage(volts);
+    public Command deployCommand() {
+        return Commands.run(() -> io.deploy(), this).finallyDo(interrupted -> io.setIntakeVoltage(0));
     }
 
-    public void setAlgaeBarVoltage(double volts){
-        io.setAlgaeBarVoltage(volts);
+    public Command intakeCommand() {
+        return Commands.run(() -> io.retract(), this).finallyDo(interrupted -> io.setIntakeVoltage(0));
     }
 
-    public void setPivotPercentage(double percentage) {
-        io.setPivotVoltage(percentage * 12.0);
+    public void setDeployVoltage(double volts) {
+        io.setDeployVoltage(volts);
     }
-    
-    public void setAlgaeBarPercentage(double percentage) {
-        io.setAlgaeBarVoltage(percentage * 12.0);
+
+    public void setIntakeVoltage(double volts) {
+        io.setIntakeVoltage(volts);
     }
 }

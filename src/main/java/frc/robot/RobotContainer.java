@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.SwerveCommand;
-import frc.robot.subsystems.Algaebar.AlgaeBar;
-import frc.robot.subsystems.Algaebar.AlgaeBarIO;
-import frc.robot.subsystems.Algaebar.AlgaeBarIOSim;
-import frc.robot.subsystems.Algaebar.AlgaeBarIOSpark;
+import frc.robot.subsystems.AlgaeBar.AlgaeBar;
+import frc.robot.subsystems.AlgaeBar.AlgaeBarIO;
+import frc.robot.subsystems.AlgaeBar.AlgaeBarIOSim;
+import frc.robot.subsystems.AlgaeBar.AlgaeBarIOSpark;
 import frc.robot.subsystems.Drivetrain.GyroIO;
 import frc.robot.subsystems.Drivetrain.GyroPigeonIO;
 import frc.robot.subsystems.Drivetrain.ModuleIO;
@@ -27,14 +27,13 @@ public class RobotContainer {
     private final AlgaeBar algaeBar;
 
     // Controllers
-    private final CommandXboxController driverController = new CommandXboxController(0);
+    private final CommandXboxController PrimaryDriverController = new CommandXboxController(0);
 
     // Auto chooser
     private final LoggedDashboardChooser<Command> autoChooser;
 
     public RobotContainer() {
         switch (Constants.currentMode) {
-            // Instantiate input/output for their respective modes
             case REAL:
                 drivetrain = new SwerveDriveSubsystem(
                         new GyroPigeonIO(),
@@ -96,14 +95,12 @@ public class RobotContainer {
         // Set the drivetrain default command
         drivetrain.setDefaultCommand(new SwerveCommand(
                 drivetrain,
-                driverController::getLeftY,
-                driverController::getLeftX,
-                driverController::getRightX));
+                PrimaryDriverController::getLeftY,
+                PrimaryDriverController::getLeftX,
+                PrimaryDriverController::getRightX));
 
-        driverController.a().whileTrue(algaeBar.setPivotVoltageCommand(12.0));
-        driverController.b().whileTrue(algaeBar.setPivotVoltageCommand(-12.0));
-        driverController.y().whileTrue(algaeBar.setAlgaeBarVoltageCommand(12.0));
-        driverController.x().whileTrue(algaeBar.setAlgaeBarVoltageCommand(-12.0));
+                PrimaryDriverController.a().onTrue(algaeBar.deployCommand());
+                PrimaryDriverController.a().onFalse(algaeBar.intakeCommand());
     }
 
     public Command getAutonomousCommand() {

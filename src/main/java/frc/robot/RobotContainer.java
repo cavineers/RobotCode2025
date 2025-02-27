@@ -63,7 +63,7 @@ public class RobotContainer {
 
 
     // Controllers
-    private final CommandXboxController PrimaryDriverController = new CommandXboxController(0);
+    private final CommandXboxController primaryDriverController = new CommandXboxController(0);
     private final CommandXboxController secondaryDriverController = new CommandXboxController(1);
 
     
@@ -176,14 +176,14 @@ public class RobotContainer {
         // Set the drivetrain default command
         drivetrain.setDefaultCommand(new SwerveCommand(
                 drivetrain,
-                PrimaryDriverController::getLeftY,
-                PrimaryDriverController::getLeftX,
-                PrimaryDriverController::getRightX));
+                primaryDriverController::getLeftY,
+                primaryDriverController::getLeftX,
+                primaryDriverController::getRightX));
 
 
-        PrimaryDriverController.b().whileTrue(endEffector.shootCommand());
-        driverController.a().onTrue(dealgaefier.deployCommand());
-        driverController.a().onFalse(dealgaefier.intakeCommand());
+        primaryDriverController.b().whileTrue(endEffector.shootCommand());
+        primaryDriverController.a().onTrue(dealgaefier.deployCommand());
+        primaryDriverController.a().onFalse(dealgaefier.intakeCommand());
       
         secondaryDriverController.povLeft().onTrue(elevator.goToPresetCommand(ElevatorConstants.kRestRotations));
         secondaryDriverController.povUp().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL1Rotations));

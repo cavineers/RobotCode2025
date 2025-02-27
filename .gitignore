@@ -189,5 +189,9 @@ compile_commands.json
 BuildConstants.java
 
 .vscode
+simgui-ds.json
 
 .apt_generated*
+
+simgui-ds.json
+

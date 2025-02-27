@@ -14,8 +14,6 @@ public interface DealgaefierIO {
         public double intakeMotorVelocityRadPerSec = 0.0;
         public double intakeMotorAppliedVolts = 0.0;
         public double intakeMotorCurrentAmps = 0.0;
-
-        public double absolutePosition = 0.0;
     }
     
     default void updateInputs(DealgaefierIOInputs inputs) {
@@ -28,5 +26,14 @@ public interface DealgaefierIO {
     }
 
     public default void initializeDutyEncoder() {
+    }
+
+    public default void updateSetpoint(double setpoint) {
+    }
+
+    public default void deploy() {
+    }
+
+    public default void retract() {
     }
 }

@@ -19,7 +19,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.SwerveCommand;
+
+import frc.robot.subsystems.Dealgaefier.Dealgaefier;
+import frc.robot.subsystems.Dealgaefier.DealgaefierIO;
+import frc.robot.subsystems.Dealgaefier.DealgaefierIOSim;
+import frc.robot.subsystems.Dealgaefier.DealgaefierIOSpark;
 import frc.robot.subsystems.CanRangeArray.CanRangeArray;
+
 import frc.robot.subsystems.Drivetrain.GyroIO;
 import frc.robot.subsystems.Drivetrain.GyroPigeonIO;
 import frc.robot.subsystems.Drivetrain.ModuleIO;
@@ -46,11 +52,15 @@ public class RobotContainer {
 
     // Subsystems
     private final SwerveDriveSubsystem drivetrain;
+
+    private final Dealgaefier dealgaefier;
+
     private final Vision vision;
     private final CanRangeArray canRangeArray;
 
     private final EndEffector endEffector;
     private final Elevator elevator;
+
 
     // Controllers
     private final CommandXboxController PrimaryDriverController = new CommandXboxController(0);
@@ -73,6 +83,9 @@ public class RobotContainer {
                         new ModuleIOSpark(2),
                         new ModuleIOSpark(3));
 
+
+                dealgaefier = new Dealgaefier(new DealgaefierIOSpark());
+
                 vision = new Vision(
                     drivetrain::addVisionMeasurement,
                     new VisionIOPhoton(frontCameraName, robotToFrontCam));
@@ -88,6 +101,7 @@ public class RobotContainer {
                 endEffector = new EndEffector(new EndEffectorIOSpark());
                 elevator = new Elevator(new ElevatorIOSpark());
 
+
                 break;
             case SIM:
                 drivetrain = new SwerveDriveSubsystem(
@@ -96,6 +110,8 @@ public class RobotContainer {
                         new ModuleIOSim(),
                         new ModuleIOSim(),
                         new ModuleIOSim());
+
+                dealgaefier = new Dealgaefier(new DealgaefierIOSim());
 
                 vision = new Vision(
                     drivetrain::addVisionMeasurement,
@@ -107,6 +123,7 @@ public class RobotContainer {
                 endEffector = new EndEffector(new EndEffectorIOSim());
                 elevator = new Elevator(new ElevatorIOSim());
             
+
                 break;
             default:
                 // Replay
@@ -117,10 +134,14 @@ public class RobotContainer {
                         new ModuleIO() {},
                         new ModuleIO() {});
 
+
+                dealgaefier = new Dealgaefier(new DealgaefierIO(){});     
+
                 vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
                 canRangeArray = new CanRangeArray(new CanRangeIO() {}, new CanRangeIO() {}, new CanRangeIO() {}, new CanRangeIO() {});
                 endEffector = new EndEffector(new EndEffectorIO(){});
                 elevator = new Elevator(new ElevatorIO(){});
+
 
                 break;
         }
@@ -161,12 +182,15 @@ public class RobotContainer {
 
 
         PrimaryDriverController.b().whileTrue(endEffector.shootCommand());
-
+        driverController.a().onTrue(dealgaefier.deployCommand());
+        driverController.a().onFalse(dealgaefier.intakeCommand());
+      
         secondaryDriverController.povLeft().onTrue(elevator.goToPresetCommand(ElevatorConstants.kRestRotations));
         secondaryDriverController.povUp().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL1Rotations));
         secondaryDriverController.povRight().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL2Rotations));
         secondaryDriverController.povDown().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL3Rotations));
         secondaryDriverController.a().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL4Rotations));
+
     }
 
     public Command getAutonomousCommand() {

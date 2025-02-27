@@ -22,29 +22,16 @@ public class DealgaefierIOSim implements DealgaefierIO {
         LinearSystemId.createDCMotorSystem(DCMotor.getNEO(1), 0.004, 1), // not applying any gear ratio here bc it doesn't matter
         DCMotor.getNEO(1));
 
-    private LoggedNetworkNumber tuningP = new LoggedNetworkNumber("Tuning/Dealgaefier/P", kProportionalTermSim);
-    private LoggedNetworkNumber tuningD = new LoggedNetworkNumber("Tuning/Dealgaefier/I", kDerivativeTermSim);
-    
-    private PIDController deployController = new PIDController(tuningP.get(), 0.0, tuningD.get());
 
     private double deployAppliedVolts = 0.0;
     private double intakeAppliedVolts = 0.0;
 
     @AutoLogOutput(key="Dealgaefier/Setpoint")
-    private double deploySetpoint = 0.0;
 
     @Override
     public void updateInputs(DealgaefierIOInputs inputs){
 
-        if (tuningP.get() != deployController.getP() || tuningD.get() != deployController.getD()) {
-            deployController.setPID(tuningP.get(), 0.0, tuningD.get());
-        }
-
-        double absoluteRotations = this.deployMotor.getAngularPositionRotations() * kDeployGearRatio;
-
-        deployMotor.setInputVoltage(deployController.calculate(absoluteRotations));
-        intakeMotor.setInputVoltage(intakeAppliedVolts);
-        
+    
         deployMotor.update(0.02);
         intakeMotor.update(0.02);
 
@@ -57,6 +44,9 @@ public class DealgaefierIOSim implements DealgaefierIO {
         inputs.intakeMotorVelocityRadPerSec = intakeMotor.getAngularVelocityRadPerSec();
         inputs.intakeMotorAppliedVolts = intakeAppliedVolts;
         inputs.intakeMotorCurrentAmps = intakeMotor.getCurrentDrawAmps();
+
+        // Continuous from 0 to 1
+        inputs.absolutePosition = deployMotor.getAngularPositionRotations() * kDeployGearRatio;
     }
 
     @Override
@@ -67,11 +57,5 @@ public class DealgaefierIOSim implements DealgaefierIO {
     @Override
     public void setIntakeVoltage(double volts) {
         intakeAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
-    }
-
-    @Override 
-    public void updateSetpoint(double rotations){
-        this.deploySetpoint = rotations;
-        deployController.setSetpoint(this.deploySetpoint);
     }
 }

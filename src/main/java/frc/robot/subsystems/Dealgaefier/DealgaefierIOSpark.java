@@ -32,25 +32,13 @@ public class DealgaefierIOSpark implements DealgaefierIO {
 
     public DutyCycleEncoder deployAbsEncoder = new DutyCycleEncoder(DealgaefierConstants.kDeployAbsEncoder);
 
-    private LoggedNetworkNumber tuningP = new LoggedNetworkNumber("/Tuning/Dealgaefier/P", DealgaefierConstants.kProportionalGainSpark);
-    private LoggedNetworkNumber tuningD = new LoggedNetworkNumber("/Tuning/Dealgaefier/D", DealgaefierConstants.kDerivativeTermSpark);
-    private LoggedNetworkNumber tuningG = new LoggedNetworkNumber("/Tuning/Dealgaefier/G", DealgaefierConstants.kGravityTermSpark); 
-
     @AutoLogOutput(key="Dealgaefier/Setpoint")
-    private double absSetpoint;
-
-    private PIDController controller = new PIDController(kProportionalGainSpark, kIntegralTermSpark, kDerivativeTermSpark);
 
     private SparkMaxConfig deployConfig;
 
-    @AutoLogOutput(key="Dealgaefier/DesiredVoltage")
-    private double desiredVoltage = 0.0;
-
     public boolean absEncoderInitialized = false;
     
-    public DealgaefierIOSpark(){
-        this.controller.enableContinuousInput(0, 1);
-    
+    public DealgaefierIOSpark(){    
         deployConfig = new SparkMaxConfig();
         deployConfig
             .idleMode(IdleMode.kBrake)
@@ -71,9 +59,6 @@ public class DealgaefierIOSpark implements DealgaefierIO {
             5,
             () -> intakeMotor.configure(intakeConfig, ResetMode.kResetSafeParameters,
                     PersistMode.kPersistParameters));
-
-        this.controller.setTolerance(kTolerance); // doesn't actually do anything unless you are using controller.atSetpoint()
-
     }
 
     @Override
@@ -95,21 +80,13 @@ public class DealgaefierIOSpark implements DealgaefierIO {
             (values -> inputs.intakeMotorAppliedVolts = values[0] * values[1]));
         ifOk(intakeMotor, intakeMotor::getOutputCurrent, (value) -> inputs.intakeMotorCurrentAmps = value);
 
+        inputs.absolutePosition = getAbsEncoder();
         if(absEncoderInitialized == false) {
             initializeDutyEncoder();
-        }
-
-        this.desiredVoltage = this.controller.calculate(getAbsEncoder()) * -1.0 + (this.tuningG.get() * Math.cos(getAbsEncoder()*2*Math.PI));
-        this.setDeployVoltage(this.desiredVoltage);
-
-        if (DealgaefierConstants.kTuningMode){
-            this.updatePID();
         }
     }
 
     public void initializeDutyEncoder(){
-        this.absSetpoint = getAbsEncoder();
-        this.controller.setSetpoint(absSetpoint);
         absEncoderInitialized = true;
     }
 
@@ -117,7 +94,6 @@ public class DealgaefierIOSpark implements DealgaefierIO {
         return sensor.get();
     }
 
-    @AutoLogOutput(key="Dealgaefier/AbsRotations")
     public double getAbsEncoder() {
         return this.deployAbsEncoder.get() + kAbsEncoderOffset;
     }
@@ -134,38 +110,5 @@ public class DealgaefierIOSpark implements DealgaefierIO {
     @Override
     public void setIntakeVoltage(double volts) {
         intakeMotor.setVoltage(volts);
-    }
-
-    public void updateSetpoint(double setpoint) {
-        this.absSetpoint = this.clipSetpoint(setpoint);
-        this.controller.setSetpoint(absSetpoint);
-    }
-
-    public double clipSetpoint(double setpoint) {
-        // if(absSetpoint < DealgaefierConstants.kDeployedAbsoluteRotations) {
-        //     return DealgaefierConstants.kDeployedAbsoluteRotations;
-        // } else if(absSetpoint < DealgaefierConstants.kRestAbsoluteRotations) {
-        //     return DealgaefierConstants.kRestAbsoluteRotations;
-        // }
-        return setpoint;
-    }
-
-    private void updatePID() {
-        double currentP = this.controller.getP();
-        double currentD = this.controller.getD();
-
-        if (currentP != this.tuningP.get() || currentD != this.tuningD.get()){
-            this.controller.setPID(this.tuningP.get(), 0, this.tuningD.get());
-        }
-    }
-
-    public void deploy() {
-        updateSetpoint(kDeployedAbsoluteRotations);
-        setIntakeVoltage(kIntakeSpeed * 12);
-    }
-
-    public void retract() {
-        updateSetpoint(kRestAbsoluteRotations);
-        setIntakeVoltage(0.0);
     }
  }

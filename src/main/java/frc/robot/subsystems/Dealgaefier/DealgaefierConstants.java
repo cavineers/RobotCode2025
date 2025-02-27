@@ -22,7 +22,7 @@ public class DealgaefierConstants {
     public static final double kDeployGearRatio = 1;
     public static final double kIntakeGearRatio = 1;
 
-    public static final double kIntakeSpeed = 0.2;
+    public static final double kIntakeSpeed = 0.4;
 
     public static final boolean kInverted = false;
     public static final int kCurrentLimit = 40;
@@ -32,4 +32,5 @@ public class DealgaefierConstants {
     public static final int kIntakeCurrentLimit = 20;
 
     public static final double kAbsEncoderOffset = 0.00556;
+    public static final double kGearRatio = 1 / 10.0;
 }

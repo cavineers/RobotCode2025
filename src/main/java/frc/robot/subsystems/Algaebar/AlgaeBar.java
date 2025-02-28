@@ -3,7 +3,7 @@ package frc.robot.subsystems.AlgaeBar;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.Algaebar.AlgaeBarIOInputsAutoLogged;
+import frc.robot.subsystems.AlgaeBar.AlgaeBarIOInputsAutoLogged;
 
 import org.littletonrobotics.junction.Logger;
 

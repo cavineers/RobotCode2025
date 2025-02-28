@@ -39,6 +39,7 @@ import frc.robot.subsystems.EndEffector.EndEffector;
 import frc.robot.subsystems.EndEffector.EndEffectorIO;
 import frc.robot.subsystems.EndEffector.EndEffectorIOSim;
 import frc.robot.subsystems.EndEffector.EndEffectorIOSpark;
+import frc.robot.subsystems.Lights.Lights;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorConstants;
 import frc.robot.subsystems.Elevator.ElevatorIO;
@@ -57,6 +58,8 @@ public class RobotContainer {
 
     private final Vision vision;
     private final CanRangeArray canRangeArray;
+
+    private final Lights lights;
 
     private final EndEffector endEffector;
     private final Elevator elevator;
@@ -101,7 +104,6 @@ public class RobotContainer {
                 endEffector = new EndEffector(new EndEffectorIOSpark());
                 elevator = new Elevator(new ElevatorIOSpark());
 
-
                 break;
             case SIM:
                 drivetrain = new SwerveDriveSubsystem(
@@ -122,7 +124,6 @@ public class RobotContainer {
 
                 endEffector = new EndEffector(new EndEffectorIOSim());
                 elevator = new Elevator(new ElevatorIOSim());
-            
 
                 break;
             default:
@@ -145,6 +146,9 @@ public class RobotContainer {
 
                 break;
         }
+
+        // create non simulated subsystems
+        lights = new Lights();
         // Create commands
        
         configureButtonBindings();

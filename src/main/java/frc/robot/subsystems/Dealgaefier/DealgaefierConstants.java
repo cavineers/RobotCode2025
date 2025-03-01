@@ -6,7 +6,7 @@ public class DealgaefierConstants {
     public static final int kDeployCanID = 54;
     public static final int kIntakeCanID = 55;
 
-    public static final double kRestAbsoluteRotations = 0.3;
+    public static final double kRestAbsoluteRotations = 0.22;
     public static final double kDeployedAbsoluteRotations = 0.0;
 
     public static final int kDeployAbsEncoder = 6;
@@ -22,7 +22,7 @@ public class DealgaefierConstants {
     public static final double kDeployGearRatio = 1;
     public static final double kIntakeGearRatio = 1;
 
-    public static final double kIntakeSpeed = 0.2;
+    public static final double kIntakeSpeed = 0.35;
 
     public static final boolean kInverted = false;
     public static final int kCurrentLimit = 40;
@@ -31,5 +31,5 @@ public class DealgaefierConstants {
     public static final int kDeployCurrentLimit = 40;
     public static final int kIntakeCurrentLimit = 20;
 
-    public static final double kAbsEncoderOffset = -0.0;
+    public static final double kAbsEncoderOffset = -0.4219;
 }

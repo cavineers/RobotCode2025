@@ -74,6 +74,7 @@ public class Lights extends SubsystemBase {
 
         this.elevatorVelocity = elevatorVelocity;
         this.shooterRunning = shooterRunning;
+        System.out.println("LIGHTS ACTIVATED");
     }
 
     @Override

@@ -19,8 +19,8 @@ public class LightsConstants {
 
     public static final Distance kLedSpacing = Units.Meters.of(1 / 120.0);
 
-    public static final int kFunnelCount = 25; // number of LEDs on a single side
-    public static final int kTopCount = 25; // number of LEDs on a single side
-    public static final int kElevatorCount = 25; // number of LEDs on a single side
+    public static final int kFunnelCount = 21; // number of LEDs on a single side
+    public static final int kTopCount = 15; // number of LEDs on a single side
+    public static final int kElevatorCount = 20; // number of LEDs on a single side
     public static final int kRightSideStart = kFunnelCount + kTopCount + kElevatorCount; // start of the right side of the LED strip
 }

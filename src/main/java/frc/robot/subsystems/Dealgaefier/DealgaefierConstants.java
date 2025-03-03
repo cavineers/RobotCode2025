@@ -9,7 +9,7 @@ public class DealgaefierConstants {
     public static final double kRestAbsoluteRotations = 0.22;
     public static final double kDeployedAbsoluteRotations = 0.0;
 
-    public static final int kDeployAbsEncoder = 6;
+    public static final int kDeployAbsEncoder = 5;
 
     public static final double kProportionalGainSpark = 8.0;
     public static final double kIntegralTermSpark = 0.0;
@@ -31,5 +31,5 @@ public class DealgaefierConstants {
     public static final int kDeployCurrentLimit = 40;
     public static final int kIntakeCurrentLimit = 20;
 
-    public static final double kAbsEncoderOffset = -0.4219;
+    public static final double kAbsEncoderOffset = -0.5791;
 }

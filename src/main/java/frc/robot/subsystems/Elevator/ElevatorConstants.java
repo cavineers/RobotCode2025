@@ -33,6 +33,9 @@ public class ElevatorConstants {
     public static final double kL3Rotations = 42.5;
     public static final double kL4Rotations = 8;
 
+    public static final double kGravityTermChangeRotations = 20.0; //arbitrary value don't have actual meaurements
+
+
     public static final double kMinRotations = 0;
     public static final double kMaxRotations = 45;
 
@@ -41,6 +44,7 @@ public class ElevatorConstants {
     public static final double kDerivativeTermSpark = 0;
     public static final double kStaticFrictionTermSpark = 0.0;
     public static final double kGravityTermSpark = 0.0;
+    public static final double kGravityTermHeightCompensation = 0.0; // once carriage engages, add this to gravity term
     public static final double kTolerance = 0.5;
 
 

@@ -96,7 +96,7 @@ public class ElevatorIOSpark implements ElevatorIO {
         // Update limit switch
         inputs.limitSwitch = getLimitSwitch();        
         
-        double desiredVoltage = this.controller.calculate(inputs.rightPositionRotations) + this.tuningG.get();
+        double desiredVoltage = this.controller.calculate(inputs.rightPositionRotations) + this.calculateFeedforward();
         Logger.recordOutput("Elevator/RequestedVoltage", desiredVoltage);
         Logger.recordOutput("Output Current", rightMotor.getAppliedOutput());
         this.setVoltage(desiredVoltage);
@@ -117,8 +117,12 @@ public class ElevatorIOSpark implements ElevatorIO {
         }
     }
 
-    private double calculateFeedforward(int errorDirection) {
-        return kGravityTermSpark;   
+    private double calculateFeedforward() {
+        double feedforward = ElevatorConstants.kTuningMode ? this.tuningG.get() : ElevatorConstants.kGravityTermSpark;
+        if (this.rightMotor.getEncoder().getPosition() < ElevatorConstants.kGravityTermChangeRotations){
+            return feedforward;
+        }
+        return feedforward + ElevatorConstants.kGravityTermHeightCompensation;
     }
 
     public double getElevMotorPosition() {

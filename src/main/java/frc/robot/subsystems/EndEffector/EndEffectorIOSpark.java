@@ -27,6 +27,8 @@ public class EndEffectorIOSpark implements EndEffectorIO {
 
     private SparkFlexConfig config;
 
+    private boolean shooting;
+
     public EndEffectorIOSpark() {
         config = new SparkFlexConfig();
         config

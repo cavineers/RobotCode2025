@@ -65,4 +65,8 @@ public class Elevator extends SubsystemBase {
         Pose3d stage3 = new Pose3d(0.0, 0.0, stage3Height, new Rotation3d()).plus(kStage3Position);
         return new Pose3d[]{stage1, stage2, stage3};
     }
+
+    public double getElevatorVelocity() {
+        return inputs.rightVelocityRPM;
+    }
 }

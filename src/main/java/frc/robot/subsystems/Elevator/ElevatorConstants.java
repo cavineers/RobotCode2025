@@ -13,7 +13,7 @@ public class ElevatorConstants {
 
     public static final int kLimitSwitchID = 0;
 
-    public static final double kGearRatio = 1.0 / 6.0; // output to input
+    public static final double kGearRatio = 1.0 / 14.4; // output to input
 
     public static final double kSprocketDiameter = 1.775; // in inches
     public static final double kRotationToInches = kGearRatio * kSprocketDiameter * Math.PI; // 1.638 is the diameter of the sprocket in inches

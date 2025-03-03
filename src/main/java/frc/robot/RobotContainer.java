@@ -148,7 +148,7 @@ public class RobotContainer {
         }
 
         // create non simulated subsystems
-        lights = new Lights();
+        lights = new Lights(this.elevator::getElevatorVelocity, this.endEffector::isShooting);
         // Create commands
        
         configureButtonBindings();

@@ -90,8 +90,8 @@ public class SwerveDriveConstants {
         // Drive PID configuration
         public static final double kDriveKp = 0.0;
         public static final double kDriveKd = 0.0;
-        public static final double kDriveKs = 0.10431;
-        public static final double kDriveKv = 0.115;
+        public static final double kDriveKs = 0.0;
+        public static final double kDriveKv = 0.0;
         
         public static final double kDriveSimP = 1;
         public static final double kDriveSimD = 0.0;
@@ -108,7 +108,7 @@ public class SwerveDriveConstants {
         // Check the conversion factors
 
         // Turn PID configuration
-        public static final double kTurnKp = 0.35;
+        public static final double kTurnKp = 2;
         public static final double kTurnKd = 0.0;
         public static final double kTurnSimP = 9.0;
         public static final double kTurnSimD = 0.0;

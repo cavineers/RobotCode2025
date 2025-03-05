@@ -58,10 +58,15 @@ public class EndEffectorIOSpark implements EndEffectorIO {
                 new DoubleSupplier[] {motor::getAppliedOutput, motor::getBusVoltage},
                 (values) -> inputs.appliedVolts = values[0] * values[1]);
         ifOk(motor, motor::getOutputCurrent, (value) -> inputs.currentAmps = value);
+        inputs.coralLoadedLimit = this.getBumpStop();
+        inputs.coralPresentIR = getSensor(coralPresentIR);
     }
 
+    public boolean getBumpStop(){
+        return !this.coralLoadedLimit.get();
+    }
     public boolean getSensor(DigitalInput sensor) {
-        return sensor.get();
+        return !sensor.get();
     }
 
     @Override
@@ -80,10 +85,10 @@ public class EndEffectorIOSpark implements EndEffectorIO {
 
     @Override
     public void shoot() {
-        // if(getSensor(coralLoadedLimit) == false) {
+        if(getSensor(coralLoadedLimit) == false) {
             motor.setVoltage(EndEffectorConstants.kEndEffectorShootSpeed * 12.0);
-        // } else {
-            // motor.setVoltage(0.0);
-        // }
+        } else {
+            motor.setVoltage(0.0);
+        }
     }
 }

@@ -152,21 +152,21 @@ public class RobotContainer {
 
         // // Set up auto routines for SysIds
         autoChooser = new LoggedDashboardChooser<>("Auto Choices");
-        // // Set up SysId routines
-        // autoChooser.addOption(
-        //     "Drive Wheel Radius Characterization", SystemIdCommands.wheelRadiusCharacterization(drivetrain));
-        // autoChooser.addOption(
-        //     "Drive Simple FF Characterization", SystemIdCommands.feedforwardCharacterization(drivetrain));
-        // autoChooser.addOption(
-        //     "Drive SysId (Quasistatic Forward)",
-        //     drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-        // autoChooser.addOption(
-        //     "Drive SysId (Quasistatic Reverse)",
-        //     drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-        // autoChooser.addOption(
-        //     "Drive SysId (Dynamic Forward)", drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
-        // autoChooser.addOption(
-        //     "Drive SysId (Dynamic Reverse)", drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        // Set up SysId routines
+        autoChooser.addOption(
+            "Drive Wheel Radius Characterization", SystemIdCommands.wheelRadiusCharacterization(drivetrain));
+        autoChooser.addOption(
+            "Drive Simple FF Characterization", SystemIdCommands.feedforwardCharacterization(drivetrain));
+        autoChooser.addOption(
+            "Drive SysId (Quasistatic Forward)",
+            drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        autoChooser.addOption(
+            "Drive SysId (Quasistatic Reverse)",
+            drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        autoChooser.addOption(
+            "Drive SysId (Dynamic Forward)", drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
+        autoChooser.addOption(
+            "Drive SysId (Dynamic Reverse)", drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
         
         // Configure the button bindings
         configureButtonBindings();

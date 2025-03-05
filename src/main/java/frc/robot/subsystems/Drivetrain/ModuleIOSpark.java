@@ -27,6 +27,8 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import java.util.Queue;
 import java.util.function.DoubleSupplier;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.CANcoder;
 
@@ -55,6 +57,8 @@ public class ModuleIOSpark implements ModuleIO {
     // Connection debouncers
     private final Debouncer driveConnectedDebounce = new Debouncer(0.5);
     private final Debouncer turnConnectedDebounce = new Debouncer(0.5);
+
+    private int moduleNumber;
 
     public ModuleIOSpark(int module) {
         zeroRotation = switch (module) {
@@ -154,6 +158,8 @@ public class ModuleIOSpark implements ModuleIO {
                 5,
                 () -> turnSpark.configure(
                         turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
+
+        this.moduleNumber = module;
     }
 
     @Override
@@ -180,7 +186,7 @@ public class ModuleIOSpark implements ModuleIO {
         ifOk(turnSpark, turnSpark::getOutputCurrent, (value) -> inputs.turnCurrentAmps = value);
         inputs.turnConnected = turnConnectedDebounce.calculate(!sparkStickyFault);
 
-        this.turnSpark.setVoltage(this.turnController.calculate(this.getTurnPosition().getRadians()));
+        this.setTurnOpenLoop(this.turnController.calculate(this.getTurnPosition().getRadians()));
     }
 
     public Rotation2d getTurnPosition(){
@@ -194,6 +200,8 @@ public class ModuleIOSpark implements ModuleIO {
 
     @Override
     public void setTurnOpenLoop(double output) {
+        output = MathUtil.clamp(output, -12.0, 12.0);
+        Logger.recordOutput("SwerveStates/SetTurnVoltage" + this.moduleNumber, output);
         turnSpark.setVoltage(output);
     }
 

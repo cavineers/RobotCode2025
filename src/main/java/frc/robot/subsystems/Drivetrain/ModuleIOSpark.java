@@ -136,7 +136,7 @@ public class ModuleIOSpark implements ModuleIO {
                 .uvwMeasurementPeriod(10)
                 .uvwAverageDepth(2);
         turnConfig.closedLoop
-                .feedbackSensor(FeedbackSensor.kAlternateOrExternalEncoder)
+                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                 .positionWrappingEnabled(true)
                 .positionWrappingInputRange(kTurnPIDMinInput, kTurnPIDMaxInput)
                 .pidf(

@@ -38,7 +38,7 @@ public class Elevator extends SubsystemBase {
         if (needsSafety.get()) {
             //io.setSetpoint()
             System.out.println("Elevator needs safety");
-
+            io.updateSetpoint(kRestRotations);
         }
     }
 

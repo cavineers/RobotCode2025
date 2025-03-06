@@ -181,6 +181,7 @@ public class RobotContainer {
                 primaryDriverController::getRightX));
 
 
+        primaryDriverController.x().whileTrue(endEffector.intakeCommand());
         primaryDriverController.b().whileTrue(endEffector.shootCommand());
         primaryDriverController.a().onTrue(dealgaefier.deployCommand());
         primaryDriverController.a().onFalse(dealgaefier.intakeCommand());

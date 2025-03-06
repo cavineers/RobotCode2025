@@ -54,7 +54,7 @@ public class ElevatorConstants {
     public static final double kStaticFrictionTermSim = 0.0;
     public static final double kGravityTermSim = 0.55;
 
-    public static final int kCurrentLimit = 40;
+    public static final int kCurrentLimit = 80;
 
     public enum ElevatorState {
         REST,

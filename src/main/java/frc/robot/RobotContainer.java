@@ -8,6 +8,7 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -148,6 +149,7 @@ public class RobotContainer {
         // Create commands
        
         configureButtonBindings();
+        configureNamedCommands();
 
 
         // // Set up auto routines for SysIds
@@ -192,6 +194,18 @@ public class RobotContainer {
         secondaryDriverController.povDown().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL3Rotations));
         secondaryDriverController.a().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL4Rotations));
 
+    }
+
+    public void configureNamedCommands(){
+         // Register Named Commands
+        NamedCommands.registerCommand("pegLeft", new AlignToPeg(drivetrain, canRangeArray, true));
+        NamedCommands.registerCommand("pegRight", new AlignToPeg(drivetrain, canRangeArray, false));
+        NamedCommands.registerCommand("elevatorL1", elevator.goToPresetCommand(kL1Rotations));
+        NamedCommands.registerCommand("elevatorL2", elevator.goToPresetCommand(ElevatorConstants.kL2Rotations));
+        NamedCommands.registerCommand("elevatorL3", elevator.goToPresetCommand(ElevatorConstants.kL3Rotations));
+        NamedCommands.registerCommand("elevatorL4", elevator.goToPresetCommand(ElevatorConstants.kL4Rotations));
+        NamedCommands.registerCommand("elevatorRest", elevator.goToPresetCommand(ElevatorConstants.kRestRotations));
+        
     }
 
     public Command getAutonomousCommand() {

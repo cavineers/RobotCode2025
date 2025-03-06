@@ -2,6 +2,8 @@ package frc.robot.subsystems.CanRangeArray;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+
 import static frc.robot.subsystems.CanRangeArray.CanRangeArrayConstants.*;
 
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -62,6 +64,7 @@ public class CanRangeArray extends SubsystemBase {
      * @return true if the sensors are aligned, false if they are not
      */
     public boolean isAligned(boolean side){
+        if (!(Constants.currentMode == Constants.Mode.REAL)) return true;
         double baselineDistance = side ? inputs[3].distance : inputs[1].distance;
 
         // Checks the left side sensors, (One too far and one close)

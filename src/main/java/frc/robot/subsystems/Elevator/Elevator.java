@@ -16,7 +16,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends SubsystemBase {
     public final ElevatorIO io;
-    private final ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
+    private static final ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
 
     public Elevator(ElevatorIO io) {
         this.io = io;
@@ -37,6 +37,10 @@ public class Elevator extends SubsystemBase {
 
     public Command goToPresetCommand(double rotations) {
         return Commands.run(() -> io.updateSetpoint(rotations), this);
+    }
+
+    public static double getElevatorPosition() {
+        return inputs.rightPositionRotations;
     }
 
     public Pose3d getRelativeCoralPose() {

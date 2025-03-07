@@ -1,6 +1,11 @@
 package frc.robot.subsystems.EndEffector;
 
 import static frc.lib.SparkUtil.*;
+
+import frc.robot.subsystems.Elevator.Elevator;
+
+import static frc.robot.subsystems.Elevator.ElevatorConstants.kIntakeShootBoundry;
+import static frc.robot.subsystems.Elevator.ElevatorConstants.kShootIntakeBountryOffset;
 import static frc.robot.subsystems.EndEffector.EndEffectorConstants.kCoralPresentIR;
 import static frc.robot.subsystems.EndEffector.EndEffectorConstants.kEndEffectorCanID;
 
@@ -80,20 +85,20 @@ public class EndEffectorIOSpark implements EndEffectorIO {
     }
 
     @Override
-    public void intake() {
-        if(getSensor(coralLoadedLimit) == false) {
-            motor.setVoltage(EndEffectorConstants.kEndEffectorIntakeSpeed * 12.0);
+    public void manipulate() {
+        if(Elevator.getElevatorPosition() < kIntakeShootBoundry) {
+            if(getSensor(coralLoadedLimit) == false) {
+                motor.setVoltage(EndEffectorConstants.kEndEffectorIntakeSpeed * 12.0);
+            } else {
+                motor.setVoltage(0.0);
+            }
         } else {
             motor.setVoltage(0.0);
-        }
-    }
-
-    @Override
-    public void shoot() {
-        if(getSensor(coralLoadedLimit) == false) {
-            motor.setVoltage(EndEffectorConstants.kEndEffectorShootSpeed * 12.0);
-        } else {
-            motor.setVoltage(0.0);
+            if(getSensor(coralLoadedLimit) == false) {
+                motor.setVoltage(EndEffectorConstants.kEndEffectorShootSpeed * 12.0);
+            } else {
+                motor.setVoltage(0.0);
+            }
         }
     }
 }

@@ -182,7 +182,7 @@ public class RobotContainer {
                 primaryDriverController::getLeftX,
                 primaryDriverController::getRightX));
 
-        primaryDriverController.b().whileTrue(endEffector.shootCommand());
+        primaryDriverController.b().whileTrue(endEffector.manipulateCommand());
         primaryDriverController.rightTrigger(0.85).onTrue(
             Commands.runOnce(() -> {
                 if (dealgaefier.getDeployed() == false){

@@ -32,10 +32,18 @@ public class EndEffector extends SubsystemBase {
     }
 
     public Command setVoltageCommand(double volts) {
-        return Commands.run(() -> io.setVoltage(volts), this).finallyDo(interrupted -> io.setVoltage(0));
+        return Commands.run(() -> io.setVoltage(volts), this);
     }
 
-    public Command manipulateCommand() {
-        return Commands.run(() -> io.manipulate(), this).finallyDo(interrupted -> io.setVoltage(0));
+    public Command intakeCommand() {
+        return Commands.run(() -> io.intake(), this);
+    }
+
+    public Command shootCommand() {
+        return Commands.run(() -> io.shoot(), this);
+    }
+
+    public Command stopCommand() {
+        return Commands.run(() -> io.setVoltage(0), this);
     }
 }

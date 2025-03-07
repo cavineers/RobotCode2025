@@ -182,7 +182,17 @@ public class RobotContainer {
                 primaryDriverController::getLeftX,
                 primaryDriverController::getRightX));
 
-        primaryDriverController.b().whileTrue(endEffector.manipulateCommand());
+        primaryDriverController.b().onTrue(
+            Commands.runOnce(() -> {
+                if (elevator.isIntakePosition()){
+                    endEffector.intakeCommand().schedule();
+                } else {
+                    endEffector.shootCommand().schedule();
+                }
+            })
+        );
+        primaryDriverController.b().onFalse(endEffector.stopCommand());
+
         primaryDriverController.rightTrigger(0.85).onTrue(
             Commands.runOnce(() -> {
                 if (dealgaefier.getDeployed() == false){

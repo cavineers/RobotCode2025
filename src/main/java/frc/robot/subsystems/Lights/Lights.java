@@ -24,18 +24,14 @@ import frc.robot.subsystems.Elevator.ElevatorConstants.ElevatorState;
 
 public class Lights extends SubsystemBase {
     private Supplier<Double> elevatorVelocity;
-    private Supplier<ElevatorState> elevatorState;
     private Supplier<Boolean> shooterRunning;
     private Supplier<Boolean> isNearStation;
+    private Supplier<Boolean> bumpStop;
+    private Supplier<Boolean> intakeInPosition;
 
     private AddressableLED ledStrip = new AddressableLED(kPWMPort);
     private AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(111);
 
-    private LoggedNetworkNumber elevatorTestVelocity = new LoggedNetworkNumber("/Tuning/Lights/ElevatorVelo", 0);
-    private LoggedNetworkNumber shooterTestVelocity = new LoggedNetworkNumber("/Tuning/Lights/ShooterVelo", 0);
-
-    private LoggedNetworkNumber intakeInArea = new LoggedNetworkNumber("/Tuning/Lights/IntakeInRegion", 0);
-    private LoggedNetworkNumber intakeReady = new LoggedNetworkNumber("/Tuning/Lights/IntakeReady", 0);
 
 
 
@@ -56,7 +52,12 @@ public class Lights extends SubsystemBase {
     private Optional<Alliance> ally = DriverStation.getAlliance();
 
     // Our LED strip has a density of 120 LEDs per meter
-    public Lights(Supplier<Double> elevatorVelocity, Supplier<Boolean> shooterRunning) {
+    public Lights(Supplier<Double> elevatorVelocity, 
+        Supplier<Boolean> shooterRunning, 
+        Supplier<Boolean> isNearStation, 
+        Supplier<Boolean> bumpStop,
+        Supplier<Boolean> intakeInPosition
+        ) {
         this.ledStrip.setLength(this.ledBuffer.getLength());
 
         // Set the data
@@ -71,8 +72,6 @@ public class Lights extends SubsystemBase {
 
     @Override
     public void periodic(){
-        double velocity = elevatorTestVelocity.get();
-        double shooter = shooterTestVelocity.get();
 
         LEDPattern basePattern = LEDPattern.solid(Color.kDarkRed);
         LEDPattern breathePattern = basePattern.breathe(Units.Seconds.of(5));
@@ -85,26 +84,26 @@ public class Lights extends SubsystemBase {
         breathePattern.applyTo(elevatorRight);
         // Go in order of importance (Last one will overwrite the previous)
 
-        // if (Math.abs(velocity) > LightsConstants.kElevatorVelocityThreshold) {
-        //     this.setElevatorEffect(velocity);
-        // }
-        // if (shooter > 25.0) {
-        //     this.setShooterEffect();
-        // }
-
-        // this.setIntakeStandbyEffect();
-
+        if (Math.abs(elevatorVelocity.get()) > LightsConstants.kElevatorVelocityThreshold) {
+            this.setElevatorEffect(elevatorVelocity.get());
+        }
+        if (shooterRunning.get()){
+            this.setShooterEffect();
+        }
 
         // Must update the LED strip with the new data
 
-        if (intakeInArea.get() == 1){
-            if (intakeReady.get() == 1){
+        if (isNearStation.get()){
+            if (intakeInPosition.get()){
                 this.setIntakeReadyEffect();
             }
             else{
                 this.setIntakeStandbyEffect();
             }
 
+            if (bumpStop.get()){
+                this.setIntakeSuccessEffect();
+            }
         }
         this.ledStrip.setData(this.ledBuffer);
     }
@@ -122,10 +121,9 @@ public class Lights extends SubsystemBase {
         LEDPattern pattern = LEDPattern.steps(Map.of(0, color, 0.25, Color.kBlack));
 
         // Calculate the speed of the pattern based on the velocity of the elevator
-        double normalizedVelocity = velocity / 2000.0; // rando value
+        double normalizedVelocity = velocity / 4000.0; // rando value
 
         pattern = pattern.scrollAtAbsoluteSpeed(Units.MetersPerSecond.of(normalizedVelocity), kLedSpacing);
-        System.out.println("RUN");
         pattern.applyTo(elevatorLeft);
         pattern.applyTo(elevatorRight);
         pattern.applyTo(topLeft);
@@ -180,6 +178,18 @@ public class Lights extends SubsystemBase {
             pattern.applyTo(topRight);
         }
         
+    }
+
+    private void setIntakeSuccessEffect(){
+        LEDPattern pattern = LEDPattern.solid(Color.kSeaGreen);
+        pattern = pattern.atBrightness(Units.Percent.of(100));   
+        pattern.blink(Units.Seconds.of(0.5));
+        pattern.applyTo(topLeft);
+        pattern.applyTo(topRight);
+        pattern.applyTo(funnelLeft);
+        pattern.applyTo(funnelRight);
+        pattern.applyTo(elevatorLeft);
+        pattern.applyTo(elevatorRight);        
     }
 
     private void setShooterEffect(){

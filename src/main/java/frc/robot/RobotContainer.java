@@ -69,7 +69,7 @@ public class RobotContainer {
     
 
         // create non simulated subsystems
-        lights = new Lights(() -> 0.0, () -> false);
+        lights = new Lights(); // FILL IN SUPPLIERS
         // Create commands
        
         configureButtonBindings();

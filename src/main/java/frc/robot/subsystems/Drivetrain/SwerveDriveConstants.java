@@ -23,8 +23,7 @@ public class SwerveDriveConstants {
 
         public static final double kOdometryFrequency = 100.0;
 
-        public static final double kPhysicalMaxSpeedMetersPerSecond = 3.63; // Free speed of NEO *
-                                                                            // kDriveEncoderRot2Meter
+        public static final double kPhysicalMaxSpeedMetersPerSecond = 3.63; 
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = Units.degreesToRadians(720);
         public static final double kWheelRadiusMeters = Units.inchesToMeters(1.963);
 
@@ -67,11 +66,11 @@ public class SwerveDriveConstants {
         public static final double kBackRightAbsoluteEncoderOffset = 0;
 
         // Distance between right and left wheels
-        public static final double kTrackWidth = Units.inchesToMeters(24.5);
+        public static final double kTrackWidth = Units.inchesToMeters(23.62);
         // Distance between front and back wheels
-        public static final double kWheelBase = Units.inchesToMeters(24.0);
+        public static final double kWheelBase = Units.inchesToMeters(22.36);
         public static final double kDriveBaseRadius = Math.hypot(kTrackWidth / 2.0, kWheelBase / 2.0);
-        public static final double kSideLength = Units.inchesToMeters(37.5); // 2.5 inches bumper: Represents full width
+        public static final double kSideLength = Units.inchesToMeters(36.5); // 2.5 inches bumper: Represents full width
                                                                              // of the robot
 
         public static final Translation2d[] moduleTranslations = new Translation2d[] {
@@ -90,8 +89,8 @@ public class SwerveDriveConstants {
         // Drive PID configuration
         public static final double kDriveKp = 0.0;
         public static final double kDriveKd = 0.0;
-        public static final double kDriveKs = 0.10431;
-        public static final double kDriveKv = 0.115;
+        public static final double kDriveKs = 0.16534;
+        public static final double kDriveKv = 0.13004;
         
         public static final double kDriveSimP = 1;
         public static final double kDriveSimD = 0.0;
@@ -108,7 +107,7 @@ public class SwerveDriveConstants {
         // Check the conversion factors
 
         // Turn PID configuration
-        public static final double kTurnKp = 0.35;
+        public static final double kTurnKp = 1.5;
         public static final double kTurnKd = 0.0;
         public static final double kTurnSimP = 9.0;
         public static final double kTurnSimD = 0.0;
@@ -116,7 +115,7 @@ public class SwerveDriveConstants {
         public static final double kTurnPIDMaxInput = 2 * Math.PI; // Radians
 
         // PathPlanner configuration
-        public static final double kRobotMassKg = 74.088;
+        public static final double kRobotMassKg = 56.7;
         public static final double kRobotMOI = 6.883;
         public static final double kWheelCOF = 1.0;
         public static final RobotConfig robotConfig = new RobotConfig(

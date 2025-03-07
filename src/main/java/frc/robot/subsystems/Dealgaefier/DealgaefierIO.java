@@ -36,4 +36,8 @@ public interface DealgaefierIO {
 
     public default void retract() {
     }
+
+    public default void shoot() {
+        
+    }
 }

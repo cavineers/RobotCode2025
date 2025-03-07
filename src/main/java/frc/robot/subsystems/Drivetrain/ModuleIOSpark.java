@@ -111,7 +111,6 @@ public class ModuleIOSpark implements ModuleIO {
                         kDriveKd, 0.0);
         driveConfig.signals
                 .primaryEncoderPositionAlwaysOn(true)
-                .primaryEncoderPositionPeriodMs((int) (1000.0 / kOdometryFrequency))
                 .primaryEncoderVelocityAlwaysOn(true)
                 .primaryEncoderVelocityPeriodMs(20)
                 .appliedOutputPeriodMs(20)
@@ -145,7 +144,6 @@ public class ModuleIOSpark implements ModuleIO {
                         kTurnKd, 0.0);
         turnConfig.signals
                 .primaryEncoderPositionAlwaysOn(true)
-                .primaryEncoderPositionPeriodMs((int) (1000.0 / kOdometryFrequency))
                 .primaryEncoderVelocityAlwaysOn(true)
                 .primaryEncoderVelocityPeriodMs(20)
                 .appliedOutputPeriodMs(20)

@@ -93,10 +93,25 @@ public class ElevatorIOSpark implements ElevatorIO {
         
         ifOk(rightMotor, rightMotor::getOutputCurrent, (value) -> inputs.rightCurrentAmps = value);
 
+        ifOk(leftMotor, leftEncoder::getPosition, (value) -> inputs.leftPositionRotations = value);
+        ifOk(leftMotor, leftEncoder::getVelocity, (value) -> inputs.leftVelocityRPM = value);
+        ifOk(
+            leftMotor,
+            new DoubleSupplier[] {leftMotor::getAppliedOutput, leftMotor::getBusVoltage},
+            (values) -> inputs.leftAppliedVolts = values[0] * values[1]);        
+        
+        ifOk(leftMotor, leftMotor::getOutputCurrent, (value) -> inputs.leftCurrentAmps = value);
+
+
         // Update limit switch
         inputs.limitSwitch = getLimitSwitch();        
         
-        double desiredVoltage = this.controller.calculate(inputs.rightPositionRotations) + this.tuningG.get();
+        double desiredVoltage = this.controller.calculate(inputs.rightPositionRotations) + this.calculateFeedforward();
+        if (desiredVoltage > 6.0){
+            desiredVoltage = 6.0;
+        } else if (desiredVoltage < -1.0){
+            desiredVoltage = -1.0;
+        }
         Logger.recordOutput("Elevator/RequestedVoltage", desiredVoltage);
         Logger.recordOutput("Output Current", rightMotor.getAppliedOutput());
         this.setVoltage(desiredVoltage);
@@ -117,8 +132,12 @@ public class ElevatorIOSpark implements ElevatorIO {
         }
     }
 
-    private double calculateFeedforward(int errorDirection) {
-        return kGravityTermSpark;   
+    private double calculateFeedforward() {
+        double feedforward = ElevatorConstants.kTuningMode ? this.tuningG.get() : ElevatorConstants.kGravityTermSpark;
+        if (this.rightMotor.getEncoder().getPosition() < ElevatorConstants.kGravityTermChangeRotations){
+            return feedforward;
+        }
+        return feedforward + ElevatorConstants.kGravityTermHeightCompensation;
     }
 
     public double getElevMotorPosition() {

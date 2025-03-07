@@ -8,6 +8,7 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -73,25 +74,26 @@ public class RobotContainer {
         // Create commands
        
         configureButtonBindings();
+        configureNamedCommands();
 
 
         // // Set up auto routines for SysIds
         autoChooser = new LoggedDashboardChooser<>("Auto Choices");
-        // // Set up SysId routines
-        // autoChooser.addOption(
-        //     "Drive Wheel Radius Characterization", SystemIdCommands.wheelRadiusCharacterization(drivetrain));
-        // autoChooser.addOption(
-        //     "Drive Simple FF Characterization", SystemIdCommands.feedforwardCharacterization(drivetrain));
-        // autoChooser.addOption(
-        //     "Drive SysId (Quasistatic Forward)",
-        //     drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-        // autoChooser.addOption(
-        //     "Drive SysId (Quasistatic Reverse)",
-        //     drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-        // autoChooser.addOption(
-        //     "Drive SysId (Dynamic Forward)", drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
-        // autoChooser.addOption(
-        //     "Drive SysId (Dynamic Reverse)", drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        // Set up SysId routines
+        autoChooser.addOption(
+            "Drive Wheel Radius Characterization", SystemIdCommands.wheelRadiusCharacterization(drivetrain));
+        autoChooser.addOption(
+            "Drive Simple FF Characterization", SystemIdCommands.feedforwardCharacterization(drivetrain));
+        autoChooser.addOption(
+            "Drive SysId (Quasistatic Forward)",
+            drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        autoChooser.addOption(
+            "Drive SysId (Quasistatic Reverse)",
+            drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+        autoChooser.addOption(
+            "Drive SysId (Dynamic Forward)", drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
+        autoChooser.addOption(
+            "Drive SysId (Dynamic Reverse)", drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
         
         // Configure the button bindings
         configureButtonBindings();
@@ -100,6 +102,39 @@ public class RobotContainer {
     private void configureButtonBindings() {
         // Set the drivetrain default command
 
+        drivetrain.setDefaultCommand(new SwerveCommand(
+                drivetrain,
+                primaryDriverController::getLeftY,
+                primaryDriverController::getLeftX,
+                primaryDriverController::getRightX));
+
+        primaryDriverController.b().whileTrue(endEffector.shootCommand());
+        primaryDriverController.a().onTrue(dealgaefier.deployCommand());
+        primaryDriverController.a().onFalse(dealgaefier.intakeCommand());
+        primaryDriverController.x().onFalse(dealgaefier.shootCommand());
+
+        primaryDriverController.leftBumper().whileTrue(new AlignToPeg(drivetrain, canRangeArray, true));
+        primaryDriverController.rightBumper().whileTrue(new AlignToPeg(drivetrain, canRangeArray, false));
+      
+        secondaryDriverController.povLeft().onTrue(elevator.goToPresetCommand(ElevatorConstants.kRestRotations));
+        secondaryDriverController.povUp().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL1Rotations));
+        secondaryDriverController.povRight().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL2Rotations));
+        secondaryDriverController.povDown().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL3Rotations));
+        secondaryDriverController.a().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL4Rotations));
+        secondaryDriverController.b().onTrue(elevator.goToPresetCommand(ElevatorConstants.kAlgae1Rotations));
+
+    }
+
+    public void configureNamedCommands(){
+         // Register Named Commands
+        NamedCommands.registerCommand("pegLeft", new AlignToPeg(drivetrain, canRangeArray, true));
+        NamedCommands.registerCommand("pegRight", new AlignToPeg(drivetrain, canRangeArray, false));
+        NamedCommands.registerCommand("elevatorL1", elevator.goToPresetCommand(kL1Rotations));
+        NamedCommands.registerCommand("elevatorL2", elevator.goToPresetCommand(ElevatorConstants.kL2Rotations));
+        NamedCommands.registerCommand("elevatorL3", elevator.goToPresetCommand(ElevatorConstants.kL3Rotations));
+        NamedCommands.registerCommand("elevatorL4", elevator.goToPresetCommand(ElevatorConstants.kL4Rotations));
+        NamedCommands.registerCommand("elevatorRest", elevator.goToPresetCommand(ElevatorConstants.kRestRotations));
+        
     }
 
     public Command getAutonomousCommand() {

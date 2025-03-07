@@ -27,20 +27,25 @@ public class ElevatorConstants {
     public static final double kLoadMassKg = Units.lbsToKilograms(10); // represents the weight shooter
     public static final double kElevatorMassKg = Units.lbsToKilograms(25); // represents the weight of the elevator
 
-    public static final double kRestRotations = 2;
-    public static final double kL1Rotations = 13;
-    public static final double kL2Rotations = 29;
-    public static final double kL3Rotations = 42.5;
-    public static final double kL4Rotations = 8;
+    public static final double kRestRotations = 2.5;
+    public static final double kL1Rotations = 0;
+    public static final double kL2Rotations = 28.3;
+    public static final double kL3Rotations = 42;
+    public static final double kL4Rotations = 50;
+    public static final double kAlgae1Rotations = 25.5;
+
+    public static final double kGravityTermChangeRotations = 20.0; //arbitrary value don't have actual meaurements
+
 
     public static final double kMinRotations = 0;
-    public static final double kMaxRotations = 45;
+    public static final double kMaxRotations = 60;
 
-    public static final double kProportionalGainSpark = 0.0;
+    public static final double kProportionalGainSpark = 0.4;
     public static final double kIntegralTermSpark = 0;
     public static final double kDerivativeTermSpark = 0;
     public static final double kStaticFrictionTermSpark = 0.0;
-    public static final double kGravityTermSpark = 0.0;
+    public static final double kGravityTermSpark = 0.3;
+    public static final double kGravityTermHeightCompensation = 0.0; // once carriage engages, add this to gravity term
     public static final double kTolerance = 0.5;
 
 
@@ -50,7 +55,7 @@ public class ElevatorConstants {
     public static final double kStaticFrictionTermSim = 0.0;
     public static final double kGravityTermSim = 0.55;
 
-    public static final int kCurrentLimit = 40;
+    public static final int kCurrentLimit = 60;
 
     public enum ElevatorState {
         REST,

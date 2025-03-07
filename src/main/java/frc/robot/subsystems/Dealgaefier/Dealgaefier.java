@@ -31,6 +31,10 @@ public class Dealgaefier extends SubsystemBase {
         return Commands.run(() -> io.deploy(), this).finallyDo(interrupted -> io.setIntakeVoltage(0));
     }
 
+    public Command shootCommand() {
+        return Commands.run(() -> io.shoot(), this).finallyDo(interrupted -> io.setIntakeVoltage(0));
+    }
+
     public Command intakeCommand() {
         return Commands.run(() -> io.retract(), this).finallyDo(interrupted -> io.setIntakeVoltage(0));
     }

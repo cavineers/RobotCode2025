@@ -39,8 +39,13 @@ public class Elevator extends SubsystemBase {
         return Commands.run(() -> io.updateSetpoint(rotations), this);
     }
 
-    public static double getElevatorPosition() {
+    public double getElevatorPosition() {
         return inputs.rightPositionRotations;
+    }
+
+    @AutoLogOutput(key="Elevator/IsIntakePosition")
+    public boolean isIntakePosition(){
+        return this.getElevatorPosition() < ElevatorConstants.kIntakeShootBoundry;
     }
 
     public Pose3d getRelativeCoralPose() {

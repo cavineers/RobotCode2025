@@ -104,7 +104,10 @@ public class ElevatorIOSpark implements ElevatorIO {
 
 
         // Update limit switch
-        inputs.limitSwitch = getLimitSwitch();        
+        inputs.limitSwitch = getLimitSwitch(); 
+        
+        // Update setpoint
+        inputs.setpoint = motorSetpoint;
         
         double desiredVoltage = this.controller.calculate(inputs.rightPositionRotations) + this.calculateFeedforward();
         if (desiredVoltage > 6.0){

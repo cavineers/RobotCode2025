@@ -19,12 +19,17 @@ public class Dealgaefier extends SubsystemBase {
         Logger.processInputs("Dealgaefier", inputs);
     }
 
+
+    public boolean getDeployed() {
+        return inputs.deployed;
+    }
+
     public Command setDeployVoltageCommand(double volts) {
         return Commands.run(() -> io.setDeployVoltage(volts), this).finallyDo(interrupted -> io.setDeployVoltage(0));
     }
 
     public Command setIntakeVoltageCommand(double volts) {
-        return Commands.run(() -> io.setIntakeVoltage(volts), this).finallyDo(interrupted -> io.setIntakeVoltage(0));
+        return Commands.run(() -> io.setIntakeVoltage(volts), this).finallyDo(end -> io.retract());
     }
 
     public Command deployCommand() {
@@ -35,7 +40,7 @@ public class Dealgaefier extends SubsystemBase {
         return Commands.run(() -> io.shoot(), this).finallyDo(interrupted -> io.setIntakeVoltage(0));
     }
 
-    public Command intakeCommand() {
+    public Command retractCommand() {
         return Commands.run(() -> io.retract(), this).finallyDo(interrupted -> io.setIntakeVoltage(0));
     }
 

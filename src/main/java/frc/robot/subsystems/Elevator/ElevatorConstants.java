@@ -55,6 +55,11 @@ public class ElevatorConstants {
     public static final double kStaticFrictionTermSim = 0.0;
     public static final double kGravityTermSim = 0.55;
 
+    public static final double kShootIntakeBountryOffset = 10;
+    public static final double kIntakeShootBoundry = kRestRotations + kShootIntakeBountryOffset;
+
+    public static final double kSetPointTolerance = 0.75;
+
     public static final int kCurrentLimit = 60;
 
     public enum ElevatorState {

@@ -20,6 +20,14 @@ public class EndEffector extends SubsystemBase {
         io.updateInputs(inputs); 
         Logger.processInputs("EndEffector", inputs);
     }
+    
+    public boolean getIR() {
+        return inputs.coralPresentIR;
+    }
+
+    public boolean getBumpStop() {
+        return inputs.coralLoadedLimit;
+    }
 
     public void setVoltage(double volts) {
         io.setVoltage(volts);
@@ -30,7 +38,7 @@ public class EndEffector extends SubsystemBase {
     }
 
     public Command setVoltageCommand(double volts) {
-        return Commands.run(() -> io.setVoltage(volts), this).finallyDo(interrupted -> io.setVoltage(0));
+        return Commands.run(() -> io.setVoltage(volts), this);
     }
 
     public Command intakeCommand() {
@@ -49,5 +57,11 @@ public class EndEffector extends SubsystemBase {
 
     public boolean isShooting() {
         return this.isShooting;
+
+        return Commands.run(() -> io.intake(), this);
+    }
+
+    public Command stopCommand() {
+        return Commands.run(() -> io.setVoltage(0), this);
     }
 }

@@ -17,6 +17,8 @@ public interface ElevatorIO {
         public double rightAppliedVolts = 0.0;
         public double rightCurrentAmps = 0.0;
 
+        public double setpoint = 0.0;
+
         public boolean limitSwitch;
 
         public ElevatorState state = ElevatorState.REST;

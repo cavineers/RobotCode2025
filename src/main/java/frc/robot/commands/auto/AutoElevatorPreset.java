@@ -41,6 +41,6 @@ public class AutoElevatorPreset extends Command {
     @Override
     public boolean isFinished() {
 
-        return (Elevator.getElevatorPosition() > setpointGoal - kSetPointTolerance && Elevator.getElevatorPosition() < setpointGoal +  kSetPointTolerance);
+        return elevator.IsAtSetpoint();
     }
 }

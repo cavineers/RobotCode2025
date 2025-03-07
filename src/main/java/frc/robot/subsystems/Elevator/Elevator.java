@@ -48,6 +48,11 @@ public class Elevator extends SubsystemBase {
         return this.getElevatorPosition() < ElevatorConstants.kIntakeShootBoundry;
     }
 
+    @AutoLogOutput(key="Elevator/IsAtSetpoint")
+    public boolean IsAtSetpoint(){
+        return inputs.rightPositionRotations > inputs.setpoint - kSetPointTolerance && inputs.rightPositionRotations < inputs.setpoint +  kSetPointTolerance;
+    }
+
     public Pose3d getRelativeCoralPose() {
         return this.getElevatorStagePoses(inputs.rightPositionRotations)[2].plus(new Transform3d(Units.inchesToMeters(3), 0.0, Units.inchesToMeters(10.25), new Rotation3d(0.0, Units.degreesToRadians(35), 0.0)));
     }

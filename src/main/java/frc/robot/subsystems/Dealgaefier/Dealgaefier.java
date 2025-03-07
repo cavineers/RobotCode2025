@@ -19,6 +19,11 @@ public class Dealgaefier extends SubsystemBase {
         Logger.processInputs("Dealgaefier", inputs);
     }
 
+
+    public boolean getDeployed() {
+        return inputs.deployed;
+    }
+
     public Command setDeployVoltageCommand(double volts) {
         return Commands.run(() -> io.setDeployVoltage(volts), this).finallyDo(interrupted -> io.setDeployVoltage(0));
     }

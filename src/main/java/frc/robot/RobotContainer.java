@@ -183,7 +183,20 @@ public class RobotContainer {
                 primaryDriverController::getRightX));
 
         primaryDriverController.b().whileTrue(endEffector.shootCommand());
-        primaryDriverController.a().onTrue(dealgaefier.deployCommand());
+        primaryDriverController.rightTrigger(0.85).onTrue(
+            Commands.runOnce(() -> {
+                if (dealgaefier.getDeployed()){
+                    dealgaefier.deployCommand().schedule();
+                    
+                } else {
+                    dealgaefier.retractCommand().schedule();
+                }
+            })
+        );
+
+        primaryDriverController.leftTrigger(0.85).onTrue(dealgaefier.shootCommand());
+        primaryDriverController.leftTrigger(0.85).onFalse(dealgaefier.retractCommand());
+
 
         primaryDriverController.leftBumper().whileTrue(new AlignToPeg(drivetrain, canRangeArray, true));
         primaryDriverController.rightBumper().whileTrue(new AlignToPeg(drivetrain, canRangeArray, false));

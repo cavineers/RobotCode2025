@@ -14,6 +14,7 @@ public interface DealgaefierIO {
         public double intakeMotorVelocityRadPerSec = 0.0;
         public double intakeMotorAppliedVolts = 0.0;
         public double intakeMotorCurrentAmps = 0.0;
+        public boolean deployed = false;
     }
     
     default void updateInputs(DealgaefierIOInputs inputs) {

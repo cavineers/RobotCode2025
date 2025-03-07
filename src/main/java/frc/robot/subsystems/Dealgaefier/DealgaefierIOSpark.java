@@ -47,6 +47,8 @@ public class DealgaefierIOSpark implements DealgaefierIO {
     private double desiredVoltage = 0.0;
 
     public boolean absEncoderInitialized = false;
+
+    public boolean deployed = false;
     
     public DealgaefierIOSpark(){
         this.controller.enableContinuousInput(0, 1);
@@ -160,12 +162,19 @@ public class DealgaefierIOSpark implements DealgaefierIO {
     }
 
     public void deploy() {
-        updateSetpoint(kDeployedAbsoluteRotations);
-        setIntakeVoltage(kIntakeSpeed * 12);
+        if(deployed == false) {
+            updateSetpoint(kDeployedAbsoluteRotations);
+            setIntakeVoltage(kIntakeSpeed * 12.0);
+        } else {
+            updateSetpoint(kRestAbsoluteRotations);
+            setIntakeVoltage(0.0);
+        }
+        deployed = !deployed;
     }
 
     public void shoot() {
-        setIntakeVoltage(kIntakeSpeed * -12);
+        updateSetpoint(kDeployedAbsoluteRotations);
+        setIntakeVoltage(kIntakeSpeed * -12.0);
     }
 
     public void retract() {

@@ -184,8 +184,6 @@ public class RobotContainer {
 
         primaryDriverController.b().whileTrue(endEffector.shootCommand());
         primaryDriverController.a().onTrue(dealgaefier.deployCommand());
-        primaryDriverController.a().onFalse(dealgaefier.intakeCommand());
-        primaryDriverController.x().onFalse(dealgaefier.shootCommand());
 
         primaryDriverController.leftBumper().whileTrue(new AlignToPeg(drivetrain, canRangeArray, true));
         primaryDriverController.rightBumper().whileTrue(new AlignToPeg(drivetrain, canRangeArray, false));

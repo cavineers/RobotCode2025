@@ -23,6 +23,10 @@ public class EndEffector extends SubsystemBase {
         return inputs.coralPresentIR;
     }
 
+    public boolean getBumpStop() {
+        return inputs.coralLoadedLimit;
+    }
+
     public void setVoltage(double volts) {
         io.setVoltage(volts);
     }

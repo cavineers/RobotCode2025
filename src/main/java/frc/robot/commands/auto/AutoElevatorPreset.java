@@ -22,11 +22,11 @@ public class AutoElevatorPreset extends Command {
     @Override
     public void initialize() {
 
+        Logger.recordOutput("Commands/AutoElevatorPreset", true);
     }
 
     @Override
     public void execute() {
-        Logger.recordOutput("Commands/AutoElevatorPreset", true);
 
         this.goToPreset = elevator.goToPresetCommand(setpointGoal);
         this.goToPreset.schedule();

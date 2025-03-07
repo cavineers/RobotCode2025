@@ -53,7 +53,7 @@ public class ElevatorIOSpark implements ElevatorIO {
         config = new SparkFlexConfig();
         config
             .inverted(kInverted)
-            .idleMode(IdleMode.kCoast)
+            .idleMode(IdleMode.kBrake)
             .smartCurrentLimit(ElevatorConstants.kCurrentLimit)    
             .voltageCompensation(12);
         config.signals
@@ -70,7 +70,7 @@ public class ElevatorIOSpark implements ElevatorIO {
             () -> rightMotor.configure(config, ResetMode.kResetSafeParameters,
                     PersistMode.kPersistParameters));
 
-        var leftMotorConfig = new SparkFlexConfig().apply(config).idleMode(IdleMode.kCoast);
+        var leftMotorConfig = new SparkFlexConfig().apply(config).idleMode(IdleMode.kBrake);
         leftMotorConfig.follow(rightMotor);
         tryUntilOk(
             leftMotor,
@@ -107,8 +107,8 @@ public class ElevatorIOSpark implements ElevatorIO {
         inputs.limitSwitch = getLimitSwitch();        
         
         double desiredVoltage = this.controller.calculate(inputs.rightPositionRotations) + this.calculateFeedforward();
-        if (desiredVoltage > 2.5){
-            desiredVoltage = 2.5;
+        if (desiredVoltage > 6.0){
+            desiredVoltage = 6.0;
         } else if (desiredVoltage < -1.0){
             desiredVoltage = -1.0;
         }

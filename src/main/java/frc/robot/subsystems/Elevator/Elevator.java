@@ -16,7 +16,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends SubsystemBase {
     public final ElevatorIO io;
-    private static final ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
+    private final ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
 
     public Elevator(ElevatorIO io) {
         this.io = io;

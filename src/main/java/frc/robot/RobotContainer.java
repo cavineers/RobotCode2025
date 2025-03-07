@@ -40,6 +40,7 @@ import frc.robot.subsystems.EndEffector.EndEffector;
 import frc.robot.subsystems.EndEffector.EndEffectorIO;
 import frc.robot.subsystems.EndEffector.EndEffectorIOSim;
 import frc.robot.subsystems.EndEffector.EndEffectorIOSpark;
+import frc.robot.subsystems.Lights.Lights;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorConstants;
 import frc.robot.subsystems.Elevator.ElevatorIO;
@@ -51,16 +52,8 @@ import frc.robot.subsystems.Vision.*;
 
 public class RobotContainer {
 
-    // Subsystems
-    private final SwerveDriveSubsystem drivetrain;
+    private final Lights lights;
 
-    private final Dealgaefier dealgaefier;
-
-    private final Vision vision;
-    private final CanRangeArray canRangeArray;
-
-    private final EndEffector endEffector;
-    private final Elevator elevator;
 
 
     // Controllers
@@ -74,78 +67,10 @@ public class RobotContainer {
     private final LoggedDashboardChooser<Command> autoChooser;
 
     public RobotContainer() {
-        switch (Constants.currentMode) {
-            // Instantiate input/output for their respective modes
-            case REAL:
-                drivetrain = new SwerveDriveSubsystem(
-                        new GyroPigeonIO(),
-                        new ModuleIOSpark(0),
-                        new ModuleIOSpark(1),
-                        new ModuleIOSpark(2),
-                        new ModuleIOSpark(3));
+    
 
-
-                dealgaefier = new Dealgaefier(new DealgaefierIOSpark());
-
-                vision = new Vision(
-                    drivetrain::addVisionMeasurement,
-                    new VisionIOPhoton(frontCameraName, robotToFrontCam));
-                    // new VisionIOPhoton(backCameraName, robotToBackCam));
-
-                canRangeArray = new CanRangeArray(
-                    new CanRangeIOReal(0),
-                    new CanRangeIOReal(1),
-                    new CanRangeIOReal(2),
-                    new CanRangeIOReal(3)
-                );
-                
-                endEffector = new EndEffector(new EndEffectorIOSpark());
-                elevator = new Elevator(new ElevatorIOSpark());
-
-
-                break;
-            case SIM:
-                drivetrain = new SwerveDriveSubsystem(
-                        new GyroIO() {},
-                        new ModuleIOSim(),
-                        new ModuleIOSim(),
-                        new ModuleIOSim(),
-                        new ModuleIOSim());
-
-                dealgaefier = new Dealgaefier(new DealgaefierIOSim());
-
-                vision = new Vision(
-                    drivetrain::addVisionMeasurement,
-                    new VisionIOPhotonSim(frontCameraName, robotToFrontCam, () -> drivetrain.getPose()));
-                    // new VisionIOPhotonSim(backCameraName, robotToBackCam, () -> drivetrain.getPose()));
-
-                canRangeArray = new CanRangeArray(new CanRangeIOSim(0), new CanRangeIOSim(1), new CanRangeIOSim(2), new CanRangeIOSim(3));
-
-                endEffector = new EndEffector(new EndEffectorIOSim());
-                elevator = new Elevator(new ElevatorIOSim());
-            
-
-                break;
-            default:
-                // Replay
-                drivetrain = new SwerveDriveSubsystem(
-                        new GyroIO() {},
-                        new ModuleIO() {},
-                        new ModuleIO() {},
-                        new ModuleIO() {},
-                        new ModuleIO() {});
-
-
-                dealgaefier = new Dealgaefier(new DealgaefierIO(){});     
-
-                vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
-                canRangeArray = new CanRangeArray(new CanRangeIO() {}, new CanRangeIO() {}, new CanRangeIO() {}, new CanRangeIO() {});
-                endEffector = new EndEffector(new EndEffectorIO(){});
-                elevator = new Elevator(new ElevatorIO(){});
-
-
-                break;
-        }
+        // create non simulated subsystems
+        lights = new Lights(); // FILL IN SUPPLIERS
         // Create commands
        
         configureButtonBindings();
@@ -176,6 +101,7 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         // Set the drivetrain default command
+
         drivetrain.setDefaultCommand(new SwerveCommand(
                 drivetrain,
                 primaryDriverController::getLeftY,

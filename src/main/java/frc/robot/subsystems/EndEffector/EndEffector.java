@@ -9,6 +9,8 @@ public class EndEffector extends SubsystemBase {
     private final EndEffectorIO io;
     private final EndEffectorIOInputsAutoLogged inputs = new EndEffectorIOInputsAutoLogged();
 
+    private boolean isShooting = false;
+
     public EndEffector(EndEffectorIO io) {
         this.io = io;
     }
@@ -40,11 +42,23 @@ public class EndEffector extends SubsystemBase {
     }
 
     public Command intakeCommand() {
-        return Commands.run(() -> io.intake(), this);
-    }
+        return Commands.run(() -> io.intake(), this).finallyDo(interrupted -> io.setVoltage(0));
+    } 
 
     public Command shootCommand() {
-        return Commands.run(() -> io.shoot(), this);
+        return Commands.run(() -> {
+            this.isShooting = true;
+            io.shoot();
+        }, this).finallyDo(interrupted -> {
+            this.isShooting = false;
+            io.setVoltage(0);
+        });
+    }
+
+    public boolean isShooting() {
+        return this.isShooting;
+
+        return Commands.run(() -> io.intake(), this);
     }
 
     public Command stopCommand() {

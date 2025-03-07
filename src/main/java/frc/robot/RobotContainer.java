@@ -185,9 +185,8 @@ public class RobotContainer {
         primaryDriverController.b().whileTrue(endEffector.shootCommand());
         primaryDriverController.rightTrigger(0.85).onTrue(
             Commands.runOnce(() -> {
-                if (dealgaefier.getDeployed()){
+                if (dealgaefier.getDeployed() == false){
                     dealgaefier.deployCommand().schedule();
-                    
                 } else {
                     dealgaefier.retractCommand().schedule();
                 }

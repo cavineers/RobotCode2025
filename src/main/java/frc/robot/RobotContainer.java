@@ -40,6 +40,7 @@ import frc.robot.subsystems.EndEffector.EndEffector;
 import frc.robot.subsystems.EndEffector.EndEffectorIO;
 import frc.robot.subsystems.EndEffector.EndEffectorIOSim;
 import frc.robot.subsystems.EndEffector.EndEffectorIOSpark;
+import frc.robot.subsystems.Lights.Lights;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorConstants;
 import frc.robot.subsystems.Elevator.ElevatorIO;
@@ -61,6 +62,7 @@ public class RobotContainer {
 
     private final EndEffector endEffector;
     private final Elevator elevator;
+    private final Lights lights;
 
 
     // Controllers
@@ -143,9 +145,9 @@ public class RobotContainer {
                 endEffector = new EndEffector(new EndEffectorIO(){});
                 elevator = new Elevator(new ElevatorIO(){});
 
-
                 break;
         }
+        lights = new Lights(elevator::getElevatorVelocity, endEffector::isShooting, ()-> false, endEffector::getBumpStop, elevator::isIntakePosition);
         // Create commands
        
         configureButtonBindings();

@@ -57,8 +57,6 @@ public class EndEffector extends SubsystemBase {
 
     public boolean isShooting() {
         return this.isShooting;
-
-        return Commands.run(() -> io.intake(), this);
     }
 
     public Command stopCommand() {

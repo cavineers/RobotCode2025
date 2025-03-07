@@ -54,7 +54,14 @@ public class RobotContainer {
 
     private final Lights lights;
 
+    private final SwerveDriveSubsystem drivetrain;
 
+    private final Vision vision;
+    private final CanRangeArray canRangeArray;
+
+    private final EndEffector endEffector;
+    private final Elevator elevator;
+    private final Dealgaefier dealgaefier;
 
     // Controllers
     private final CommandXboxController primaryDriverController = new CommandXboxController(0);

@@ -182,17 +182,20 @@ public class RobotContainer {
                 primaryDriverController::getLeftX,
                 primaryDriverController::getRightX));
 
-
-        primaryDriverController.x().whileTrue(endEffector.intakeCommand());
         primaryDriverController.b().whileTrue(endEffector.shootCommand());
         primaryDriverController.a().onTrue(dealgaefier.deployCommand());
         primaryDriverController.a().onFalse(dealgaefier.intakeCommand());
+        primaryDriverController.x().onFalse(dealgaefier.shootCommand());
+
+        primaryDriverController.leftBumper().whileTrue(new AlignToPeg(drivetrain, canRangeArray, true));
+        primaryDriverController.rightBumper().whileTrue(new AlignToPeg(drivetrain, canRangeArray, false));
       
         secondaryDriverController.povLeft().onTrue(elevator.goToPresetCommand(ElevatorConstants.kRestRotations));
         secondaryDriverController.povUp().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL1Rotations));
         secondaryDriverController.povRight().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL2Rotations));
         secondaryDriverController.povDown().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL3Rotations));
         secondaryDriverController.a().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL4Rotations));
+        secondaryDriverController.b().onTrue(elevator.goToPresetCommand(ElevatorConstants.kAlgae1Rotations));
 
     }
 

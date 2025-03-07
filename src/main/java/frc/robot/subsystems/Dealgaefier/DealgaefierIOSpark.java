@@ -164,6 +164,10 @@ public class DealgaefierIOSpark implements DealgaefierIO {
         setIntakeVoltage(kIntakeSpeed * 12);
     }
 
+    public void shoot() {
+        setIntakeVoltage(kIntakeSpeed * -12);
+    }
+
     public void retract() {
         updateSetpoint(kRestAbsoluteRotations);
         setIntakeVoltage(0.0);

@@ -7,7 +7,7 @@ public class DealgaefierConstants {
     public static final int kIntakeCanID = 55;
 
     public static final double kRestAbsoluteRotations = 0.22;
-    public static final double kDeployedAbsoluteRotations = 0.0;
+    public static final double kDeployedAbsoluteRotations = -0.06;
 
     public static final int kDeployAbsEncoder = 5;
 

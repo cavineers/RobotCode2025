@@ -53,7 +53,7 @@ public class ElevatorIOSpark implements ElevatorIO {
         config = new SparkFlexConfig();
         config
             .inverted(kInverted)
-            .idleMode(IdleMode.kBrake)
+            .idleMode(IdleMode.kCoast)
             .smartCurrentLimit(ElevatorConstants.kCurrentLimit)    
             .voltageCompensation(12);
         config.signals
@@ -70,7 +70,7 @@ public class ElevatorIOSpark implements ElevatorIO {
             () -> rightMotor.configure(config, ResetMode.kResetSafeParameters,
                     PersistMode.kPersistParameters));
 
-        var leftMotorConfig = new SparkFlexConfig().apply(config).idleMode(IdleMode.kBrake);
+        var leftMotorConfig = new SparkFlexConfig().apply(config).idleMode(IdleMode.kCoast);
         leftMotorConfig.follow(rightMotor);
         tryUntilOk(
             leftMotor,
@@ -93,10 +93,25 @@ public class ElevatorIOSpark implements ElevatorIO {
         
         ifOk(rightMotor, rightMotor::getOutputCurrent, (value) -> inputs.rightCurrentAmps = value);
 
+        ifOk(leftMotor, leftEncoder::getPosition, (value) -> inputs.leftPositionRotations = value);
+        ifOk(leftMotor, leftEncoder::getVelocity, (value) -> inputs.leftVelocityRPM = value);
+        ifOk(
+            leftMotor,
+            new DoubleSupplier[] {leftMotor::getAppliedOutput, leftMotor::getBusVoltage},
+            (values) -> inputs.leftAppliedVolts = values[0] * values[1]);        
+        
+        ifOk(leftMotor, leftMotor::getOutputCurrent, (value) -> inputs.leftCurrentAmps = value);
+
+
         // Update limit switch
         inputs.limitSwitch = getLimitSwitch();        
         
         double desiredVoltage = this.controller.calculate(inputs.rightPositionRotations) + this.calculateFeedforward();
+        if (desiredVoltage > 2.5){
+            desiredVoltage = 2.5;
+        } else if (desiredVoltage < -1.0){
+            desiredVoltage = -1.0;
+        }
         Logger.recordOutput("Elevator/RequestedVoltage", desiredVoltage);
         Logger.recordOutput("Output Current", rightMotor.getAppliedOutput());
         this.setVoltage(desiredVoltage);

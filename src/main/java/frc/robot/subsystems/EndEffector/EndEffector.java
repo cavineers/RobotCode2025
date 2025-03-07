@@ -18,6 +18,10 @@ public class EndEffector extends SubsystemBase {
         io.updateInputs(inputs); 
         Logger.processInputs("EndEffector", inputs);
     }
+    
+    public boolean getIR() {
+        return inputs.coralPresentIR;
+    }
 
     public void setVoltage(double volts) {
         io.setVoltage(volts);

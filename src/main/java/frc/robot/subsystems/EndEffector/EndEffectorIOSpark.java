@@ -59,12 +59,17 @@ public class EndEffectorIOSpark implements EndEffectorIO {
                 (values) -> inputs.appliedVolts = values[0] * values[1]);
         ifOk(motor, motor::getOutputCurrent, (value) -> inputs.currentAmps = value);
         inputs.coralLoadedLimit = this.getBumpStop();
-        inputs.coralPresentIR = getSensor(coralPresentIR);
+        inputs.coralPresentIR = this.getIR();
     }
 
     public boolean getBumpStop(){
         return !this.coralLoadedLimit.get();
     }
+
+    public boolean getIR(){
+        return this.coralPresentIR.get();
+    }
+
     public boolean getSensor(DigitalInput sensor) {
         return !sensor.get();
     }

@@ -58,6 +58,8 @@ public class ElevatorConstants {
     public static final double kShootIntakeBountryOffset = 10;
     public static final double kIntakeShootBoundry = kRestRotations + kShootIntakeBountryOffset;
 
+    public static final double kSetPointTolerance = 0.3;
+
     public static final int kCurrentLimit = 60;
 
     public enum ElevatorState {

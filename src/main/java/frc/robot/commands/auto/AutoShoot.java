@@ -3,14 +3,8 @@ import static frc.robot.subsystems.EndEffector.EndEffectorConstants.kEndEffector
 
 import org.littletonrobotics.junction.Logger;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.CanRangeArray.CanRangeArray;
-import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
-import frc.robot.subsystems.Drivetrain.SwerveDriveConstants.DriveConstants;
 import frc.robot.subsystems.EndEffector.EndEffector;
-import frc.robot.subsystems.EndEffector.EndEffectorConstants;
 
 public class AutoShoot extends Command {
 

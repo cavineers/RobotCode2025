@@ -47,6 +47,9 @@ public class DealgaefierIOSpark implements DealgaefierIO {
     private double desiredVoltage = 0.0;
 
     public boolean absEncoderInitialized = false;
+
+    @AutoLogOutput(key="Dealgaefier/Deployed")
+    public boolean deployed = false;
     
     public DealgaefierIOSpark(){
         this.controller.enableContinuousInput(0, 1);
@@ -105,6 +108,7 @@ public class DealgaefierIOSpark implements DealgaefierIO {
         if (DealgaefierConstants.kTuningMode){
             this.updatePID();
         }
+        inputs.deployed = this.deployed;
     }
 
     public void initializeDutyEncoder(){
@@ -161,15 +165,18 @@ public class DealgaefierIOSpark implements DealgaefierIO {
 
     public void deploy() {
         updateSetpoint(kDeployedAbsoluteRotations);
-        setIntakeVoltage(kIntakeSpeed * 12);
+        setIntakeVoltage(kIntakeSpeed * 12.0);
+        deployed = true;
     }
 
     public void shoot() {
-        setIntakeVoltage(kIntakeSpeed * -12);
+        updateSetpoint(kDeployedAbsoluteRotations);
+        setIntakeVoltage(kIntakeSpeed * -12.0);
     }
 
     public void retract() {
         updateSetpoint(kRestAbsoluteRotations);
         setIntakeVoltage(0.0);
+        deployed = false;
     }
  }

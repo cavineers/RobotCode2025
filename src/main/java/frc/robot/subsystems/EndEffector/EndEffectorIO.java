@@ -20,9 +20,8 @@ public interface EndEffectorIO {
     public default void setVoltage(double volts) {
     }
 
-    public default void intake() {
-    }
-
     public default void shoot() {
     }
+
+    public default void intake() {}
 }

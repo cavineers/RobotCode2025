@@ -15,6 +15,12 @@
           "data": {
             "name": "pegRight"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "elevatorL4"
+          }
         }
       ]
     }

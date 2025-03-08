@@ -53,16 +53,16 @@ import frc.robot.subsystems.Vision.*;
 public class RobotContainer {
 
     // Subsystems
-    private final SwerveDriveSubsystem drivetrain;
+    public final SwerveDriveSubsystem drivetrain;
 
-    private final Dealgaefier dealgaefier;
+    public final Dealgaefier dealgaefier;
 
-    private final Vision vision;
-    private final CanRangeArray canRangeArray;
+    public final Vision vision;
+    public final CanRangeArray canRangeArray;
 
-    private final EndEffector endEffector;
-    private final Elevator elevator;
-    private final Lights lights;
+    public final EndEffector endEffector;
+    public final Elevator elevator;
+    public final Lights lights;
 
 
     // Controllers
@@ -91,8 +91,8 @@ public class RobotContainer {
 
                 vision = new Vision(
                     drivetrain::addVisionMeasurement,
-                    new VisionIOPhoton(frontCameraName, robotToFrontCam));
-                    // new VisionIOPhoton(backCameraName, robotToBackCam));
+                    new VisionIOPhoton(frontCameraName, robotToFrontCam),
+                    new VisionIOPhoton(backCameraName, robotToBackCam));
 
                 canRangeArray = new CanRangeArray(
                     new CanRangeIOReal(0),
@@ -155,7 +155,7 @@ public class RobotContainer {
 
 
         // // Set up auto routines for SysIds
-        autoChooser = new LoggedDashboardChooser<>("Auto Choices");
+        autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
         // Set up SysId routines
         autoChooser.addOption(
             "Drive Wheel Radius Characterization", SystemIdCommands.wheelRadiusCharacterization(drivetrain));
@@ -229,13 +229,13 @@ public class RobotContainer {
 
     public void configureNamedCommands(){
          // Register Named Commands
-        NamedCommands.registerCommand("pegLeft", new AlignToPeg(drivetrain, canRangeArray, true));
-        NamedCommands.registerCommand("pegRight", new AlignToPeg(drivetrain, canRangeArray, false));
-        NamedCommands.registerCommand("elevatorL1", elevator.goToPresetCommand(kL1Rotations));
-        NamedCommands.registerCommand("elevatorL2", elevator.goToPresetCommand(ElevatorConstants.kL2Rotations));
-        NamedCommands.registerCommand("elevatorL3", elevator.goToPresetCommand(ElevatorConstants.kL3Rotations));
-        NamedCommands.registerCommand("elevatorL4", elevator.goToPresetCommand(ElevatorConstants.kL4Rotations));
-        NamedCommands.registerCommand("elevatorRest", elevator.goToPresetCommand(ElevatorConstants.kRestRotations));
+        NamedCommands.registerCommand("pegLeft", AutoHelpers.alignToPeg(true));
+        NamedCommands.registerCommand("pegRight", AutoHelpers.alignToPeg(false));
+        NamedCommands.registerCommand("elevatorL1", new AutoElevatorPreset(elevator, ElevatorConstants.kL1Rotations));
+        NamedCommands.registerCommand("elevatorL2", new AutoElevatorPreset(elevator, ElevatorConstants.kL2Rotations));
+        NamedCommands.registerCommand("elevatorL3", new AutoElevatorPreset(elevator, ElevatorConstants.kL3Rotations));
+        NamedCommands.registerCommand("elevatorL4", new AutoElevatorPreset(elevator, ElevatorConstants.kL4Rotations));
+        NamedCommands.registerCommand("elevatorRest", new AutoElevatorPreset(elevator, ElevatorConstants.kRestRotations));
         
     }
 

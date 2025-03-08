@@ -8,7 +8,7 @@ import edu.wpi.first.math.util.Units;
 
 public class VisionConstants {
 
-    public static AprilTagFieldLayout aprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
+    public static AprilTagFieldLayout aprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
 
     // Camera names FROM PHOTON
     public static String frontCameraName = "CameraFront";
@@ -23,7 +23,7 @@ public class VisionConstants {
 
     // Standard deviation baselines, for 1 meter distance and 1 tag
     public static double linearStdDevBaseline = 0.02; // Meters
-    public static double angularStdDevBaseline = 1000.0; // Radians (DOES NOT TRUST VISION ROTATION AT ALL)
+    public static double angularStdDevBaseline = 0.06; // Radians (DOES NOT TRUST VISION ROTATION AT ALL)
 
     // Standard dev factors for each camera
     public static double[] cameraStdDevFactors = new double[] {

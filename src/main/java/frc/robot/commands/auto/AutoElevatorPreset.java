@@ -15,8 +15,9 @@ public class AutoElevatorPreset extends Command {
     private double setpointGoal;
 
     public AutoElevatorPreset(Elevator elevator, double setPoint) {
-        addRequirements(elevator);
         setpointGoal = setPoint;
+        this.elevator = elevator;
+        addRequirements(elevator);
     }
 
     @Override

@@ -63,6 +63,7 @@ public class CanRangeArray extends SubsystemBase {
      * @param side true aligning to left side, false if to right side
      * @return true if the sensors are aligned, false if they are not
      */
+    @AutoLogOutput (key="CanRangeArray/isAligned")
     public boolean isAligned(boolean side){
         if (!(Constants.currentMode == Constants.Mode.REAL)) return true;
         double baselineDistance = side ? inputs[3].distance : inputs[1].distance;

@@ -23,6 +23,7 @@ import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import frc.robot.Constants;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -309,6 +310,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     */
     public void addVisionMeasurement(Pose2d poseMeters, double timestamp, Matrix<N3, N1> visionMeasurementStdDevs) {
         // Pose2d withoutGyroOnly = new Pose2d(poseMeters.getTranslation(), gyroRotation);
+        if (Constants.currentMode != Constants.Mode.REAL)
+            return; // for some reason sim camera is being funky
         poseEstimator.addVisionMeasurement(
             poseMeters, timestamp, visionMeasurementStdDevs);
     }

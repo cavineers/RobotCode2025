@@ -28,6 +28,8 @@ public class ElevatorIOSim implements ElevatorIO {
 
     private static DIOSim limitSwitch = new DIOSim(ElevatorConstants.kLimitSwitchID);
 
+    private boolean isClosed = true;
+
     PIDController elevPid = new PIDController(ElevatorConstants.kProportionalGainSim,
             ElevatorConstants.kIntegralTermSim, ElevatorConstants.kDerivativeTermSim);
 
@@ -74,14 +76,16 @@ public class ElevatorIOSim implements ElevatorIO {
             elevPid.setD(this.tuningD.get());
         }
 
-
-        for (int i = 0; i < 0.02 / (1.0 / 1000.0); i++) {
-            inputTorqueCurrent = elevPid.calculate(Units.metersToInches(X.get(0)) / kRotationToInches) + this.tuningG.get();
-            inputTorqueCurrent = MathUtil.clamp(inputTorqueCurrent, -motors.stallCurrentAmps / 2.0,
-                motors.stallCurrentAmps / 2.0);
-            setInputTorqueCurrent(
-                    inputTorqueCurrent); // expects rotations --> given meters from state vector
-            update(1.0 / 1000.0);
+        if (this.isClosed) {
+            for (int i = 0; i < 0.02 / (1.0 / 1000.0); i++) {
+                inputTorqueCurrent = elevPid.calculate(Units.metersToInches(X.get(0)) / kRotationToInches)
+                        + this.tuningG.get();
+                inputTorqueCurrent = MathUtil.clamp(inputTorqueCurrent, -motors.stallCurrentAmps / 2.0,
+                        motors.stallCurrentAmps / 2.0);
+                setInputTorqueCurrent(
+                        inputTorqueCurrent); // expects rotations --> given meters from state vector
+                update(1.0 / 1000.0);
+            }
         }
 
         inputs.leftPositionRotations = Units.metersToInches(X.get(0)) / kRotationToInches;
@@ -96,26 +100,26 @@ public class ElevatorIOSim implements ElevatorIO {
 
         if (elevPid.atSetpoint()) {
             inputs.state = switch ((int) motorSetpoint) {
-            case (int) ElevatorConstants.kRestRotations -> ElevatorState.REST;
-            case (int) ElevatorConstants.kL1Rotations -> ElevatorState.L1;
-            case (int) ElevatorConstants.kL2Rotations -> ElevatorState.L2;
-            case (int) ElevatorConstants.kL3Rotations -> ElevatorState.L3;
-            case (int) ElevatorConstants.kL4Rotations -> ElevatorState.L4; 
-            default -> ElevatorState.REST;
+                case (int) ElevatorConstants.kRestRotations -> ElevatorState.REST;
+                case (int) ElevatorConstants.kL1Rotations -> ElevatorState.L1;
+                case (int) ElevatorConstants.kL2Rotations -> ElevatorState.L2;
+                case (int) ElevatorConstants.kL3Rotations -> ElevatorState.L3;
+                case (int) ElevatorConstants.kL4Rotations -> ElevatorState.L4;
+                default -> ElevatorState.REST;
             };
         }
-
     }
 
     @AutoLogOutput(key = "Elevator/Error")
-    private double getError(){
+    private double getError() {
         return elevPid.getPositionError();
     }
 
     private void update(double dt) {
         // Clamp the input voltage to the motor
-        // inputTorqueCurrent = MathUtil.clamp(inputTorqueCurrent, -motors.stallCurrentAmps / 2.0,
-        //         motors.stallCurrentAmps / 2.0);
+        // inputTorqueCurrent = MathUtil.clamp(inputTorqueCurrent,
+        // -motors.stallCurrentAmps / 2.0,
+        // motors.stallCurrentAmps / 2.0);
 
         // Do some physics calculations to update the state
         Matrix<N2, N1> updatedState = NumericalIntegration.rkdp(
@@ -134,9 +138,10 @@ public class ElevatorIOSim implements ElevatorIO {
         // Apply the limits (bounds max and min values)
         ElevatorIOSim.X.set(0, 0, MathUtil.clamp(ElevatorIOSim.X.get(0), ElevatorConstants.kMinRotations,
                 ElevatorConstants.kMaxRotations));
-        
-        if (ElevatorIOSim.X.get(0) == ElevatorConstants.kMinRotations || ElevatorIOSim.X.get(0) == ElevatorConstants.kMaxRotations) {
-            ElevatorIOSim.X.set(1,0, 0.0); // stop the elevator (velocity) if it hits the top or bottom
+
+        if (ElevatorIOSim.X.get(0) == ElevatorConstants.kMinRotations
+                || ElevatorIOSim.X.get(0) == ElevatorConstants.kMaxRotations) {
+            ElevatorIOSim.X.set(1, 0, 0.0); // stop the elevator (velocity) if it hits the top or bottom
         }
     }
 
@@ -144,7 +149,8 @@ public class ElevatorIOSim implements ElevatorIO {
     public void setInputTorqueCurrent(double torqueCurrent) {
         inputTorqueCurrent = torqueCurrent;
         appliedVolts = motors.getVoltage(
-                motors.getTorque(inputTorqueCurrent), Units.metersToInches(X.get(1)) / ElevatorConstants.kSprocketDiameter * 2 * Math.PI);
+                motors.getTorque(inputTorqueCurrent),
+                Units.metersToInches(X.get(1)) / ElevatorConstants.kSprocketDiameter * 2 * Math.PI);
         appliedVolts = MathUtil.clamp(appliedVolts, -12.0, 12.0);
     }
 
@@ -169,5 +175,10 @@ public class ElevatorIOSim implements ElevatorIO {
             return ElevatorConstants.kMinRotations;
         }
         return setpoint;
+    }
+
+    @Override
+    public void setClosedLoop(boolean isClosed) {
+        this.isClosed = isClosed;
     }
 }

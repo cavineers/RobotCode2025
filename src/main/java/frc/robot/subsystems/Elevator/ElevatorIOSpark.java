@@ -51,6 +51,7 @@ public class ElevatorIOSpark implements ElevatorIO {
     private SparkFlexConfig config;
     private PIDController controller = new PIDController(kProportionalGainSpark, kIntegralTermSpark, kDerivativeTermSpark);
 
+    private boolean isClosed = true;
 
     public ElevatorIOSpark() {
         // Set up the PID controller on Spark Max
@@ -113,7 +114,7 @@ public class ElevatorIOSpark implements ElevatorIO {
         // Update setpoint
         inputs.setpoint = motorSetpoint;
         
-        double desiredVoltage = this.controller.calculate(inputs.rightPositionRotations) + this.calculateFeedforward();
+        double desiredVoltage = 0;
         if (desiredVoltage > 6.0){
             desiredVoltage = 6.0;
         } else if (desiredVoltage < -1.0){
@@ -130,11 +131,14 @@ public class ElevatorIOSpark implements ElevatorIO {
         double filteredVoltage = 0.0;
         if (DriverStation.isEnabled())
             filteredVoltage = filter.calculate(desiredVoltage);
-        Logger.recordOutput("Elevator/RequestedVoltage", desiredVoltage);
-        Logger.recordOutput("Elevator/FilteredRequestedVoltage", filteredVoltage);
+        Logger.recordOutput("Elevator/PIDRequestedVoltage", desiredVoltage);
+        Logger.recordOutput("Elevator/PIDFilteredRequestedVoltage", filteredVoltage);
         Logger.recordOutput("Output Current", rightMotor.getAppliedOutput());
-        this.setVoltage(desiredVoltage);
 
+        if (this.isClosed){
+            this.setVoltage(desiredVoltage);
+        }
+        
         if (kTuningMode){
             this.updatePID();
         }
@@ -192,5 +196,10 @@ public class ElevatorIOSpark implements ElevatorIO {
         if (currentP != this.tuningP.get() || currentD != this.tuningD.get()){
             this.controller.setPID(this.tuningP.get(), 0, this.tuningD.get());
         }
+    }
+
+    @Override
+    public void setClosedLoop(boolean isClosed) {
+        this.isClosed = isClosed;
     }
 }

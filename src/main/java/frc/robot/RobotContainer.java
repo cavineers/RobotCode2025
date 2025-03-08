@@ -208,6 +208,12 @@ public class RobotContainer {
         primaryDriverController.leftTrigger(0.85).onTrue(dealgaefier.shootCommand());
         primaryDriverController.leftTrigger(0.85).onFalse(dealgaefier.retractCommand());
 
+        primaryDriverController.povUp().onTrue(elevator.setVoltageCommand(1));
+        primaryDriverController.povUp().onFalse(elevator.setVoltageCommand(0));
+        primaryDriverController.povDown().onTrue(elevator.setVoltageCommand(-1));
+        primaryDriverController.povDown().onFalse(elevator.setVoltageCommand(0));
+
+
 
         primaryDriverController.leftBumper().whileTrue(new AlignToPeg(drivetrain, canRangeArray, true));
         primaryDriverController.rightBumper().whileTrue(new AlignToPeg(drivetrain, canRangeArray, false));

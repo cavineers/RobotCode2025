@@ -93,7 +93,7 @@ public class RobotContainer {
 
                 vision = new Vision(
                     drivetrain::addVisionMeasurement,
-                    new VisionIOPhoton(backCameraName, robotToFrontCam));
+                    new VisionIOPhoton(frontCameraName, robotToFrontCam));
                     // new VisionIOPhoton(backCameraName, robotToBackCam));
 
                 canRangeArray = new CanRangeArray(
@@ -215,10 +215,10 @@ public class RobotContainer {
         primaryDriverController.povDown().onTrue(elevator.setVoltageCommand(-1));
         primaryDriverController.povDown().onFalse(elevator.setVoltageCommand(0));
 
-
-
         primaryDriverController.leftBumper().whileTrue(new AlignToPeg(drivetrain, canRangeArray, true));
         primaryDriverController.rightBumper().whileTrue(new AlignToPeg(drivetrain, canRangeArray, false));
+
+        primaryDriverController.povLeft().onTrue(Commands.runOnce(() -> this.drivetrain.zeroHeading()));
       
         secondaryDriverController.povLeft().onTrue(elevator.goToPresetCommand(ElevatorConstants.kRestRotations));
         secondaryDriverController.povUp().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL1Rotations));

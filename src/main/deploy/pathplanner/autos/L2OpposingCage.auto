@@ -23,9 +23,27 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "elevatorRest"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "EPickup"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake"
           }
         }
       ]

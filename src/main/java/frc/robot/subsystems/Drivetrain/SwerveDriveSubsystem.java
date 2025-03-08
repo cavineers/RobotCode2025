@@ -219,6 +219,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * Supplier to determine if the path should be flipped
      * @return flipped if Red
      */
+    @AutoLogOutput(key = "Odometry/ShouldFlipPose")
     public Boolean shouldFlipPose() {
         return ally.isPresent() && ally.get() == Alliance.Red;
     }
@@ -312,8 +313,14 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Pose2d withoutGyroOnly = new Pose2d(poseMeters.getTranslation(), gyroRotation);
         if (Constants.currentMode != Constants.Mode.REAL)
             return; // for some reason sim camera is being funky
+        Pose2d pose = new Pose2d(poseMeters.getX(), poseMeters.getY(), this.gyroRotation);
         poseEstimator.addVisionMeasurement(
-            poseMeters, timestamp, visionMeasurementStdDevs);
+            pose, timestamp, visionMeasurementStdDevs);
+    }
+
+    public void zeroHeading(){
+        System.out.println("RESETTING HEADING");
+        this.poseEstimator.resetPosition(gyroRotation, previousModulePositions, new Pose2d(this.getPose().getX(), this.getPose().getY(), new Rotation2d()));
     }
 
     /**

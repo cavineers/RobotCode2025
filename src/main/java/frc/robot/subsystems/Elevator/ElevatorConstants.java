@@ -9,7 +9,7 @@ public class ElevatorConstants {
     public static final boolean kTuningMode = true; // allows for tuning the feedforward gains
     public static final int kLeftMotorCanID = 42;
     public static final int kRightMotorCanID = 40;
-    public static final boolean kInverted = false;
+    public static final boolean kInverted = true;
 
     public static final int kLimitSwitchID = 0;
 
@@ -58,7 +58,7 @@ public class ElevatorConstants {
     public static final double kShootIntakeBountryOffset = 10;
     public static final double kIntakeShootBoundry = kRestRotations + kShootIntakeBountryOffset;
 
-    public static final double kSetPointTolerance = 0.75;
+    public static final double kSetPointTolerance = 2;
 
     public static final int kCurrentLimit = 60;
 

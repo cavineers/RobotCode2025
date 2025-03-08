@@ -12,6 +12,7 @@ public class AutoShoot extends Command {
 
     public AutoShoot(EndEffector endEffector) {
         addRequirements(endEffector);
+        this.endEffector = endEffector;
     }
 
     @Override

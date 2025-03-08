@@ -133,7 +133,7 @@ public class ElevatorIOSpark implements ElevatorIO {
         Logger.recordOutput("Elevator/RequestedVoltage", desiredVoltage);
         Logger.recordOutput("Elevator/FilteredRequestedVoltage", filteredVoltage);
         Logger.recordOutput("Output Current", rightMotor.getAppliedOutput());
-        this.setVoltage(filteredVoltage);
+        this.setVoltage(desiredVoltage);
 
         if (kTuningMode){
             this.updatePID();

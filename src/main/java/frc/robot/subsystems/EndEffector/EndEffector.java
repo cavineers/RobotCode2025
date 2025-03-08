@@ -56,7 +56,7 @@ public class EndEffector extends SubsystemBase {
     }
 
     public boolean isShooting() {
-        return this.isShooting;
+        return inputs.velocityRadPerSec > 250;
     }
 
     public Command stopCommand() {

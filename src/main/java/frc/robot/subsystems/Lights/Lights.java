@@ -59,7 +59,11 @@ public class Lights extends SubsystemBase {
         Supplier<Boolean> intakeInPosition
         ) {
         this.ledStrip.setLength(this.ledBuffer.getLength());
-
+        this.isNearStation = isNearStation;
+        this.shooterRunning = shooterRunning;
+        this.bumpStop = bumpStop;
+        this.intakeInPosition = intakeInPosition;
+        this.elevatorVelocity = elevatorVelocity;
         // Set the data
         this.ledStrip.setData(this.ledBuffer);
         this.ledStrip.start();
@@ -93,18 +97,18 @@ public class Lights extends SubsystemBase {
 
         // Must update the LED strip with the new data
 
-        if (isNearStation.get()){
-            if (intakeInPosition.get()){
-                this.setIntakeReadyEffect();
-            }
-            else{
-                this.setIntakeStandbyEffect();
-            }
+        // if (isNearStation.get()){
+        //     if (intakeInPosition.get()){
+        //         this.setIntakeReadyEffect();
+        //     }
+        //     else{
+        //         this.setIntakeStandbyEffect();
+        //     }
 
-            if (bumpStop.get()){
-                this.setIntakeSuccessEffect();
-            }
-        }
+        //     if (bumpStop.get()){
+        //         this.setIntakeSuccessEffect();
+        //     }
+        // }
         this.ledStrip.setData(this.ledBuffer);
     }
 
@@ -121,7 +125,7 @@ public class Lights extends SubsystemBase {
         LEDPattern pattern = LEDPattern.steps(Map.of(0, color, 0.25, Color.kBlack));
 
         // Calculate the speed of the pattern based on the velocity of the elevator
-        double normalizedVelocity = velocity / 4000.0; // rando value
+        double normalizedVelocity = velocity / 10000.0; // rando value
 
         pattern = pattern.scrollAtAbsoluteSpeed(Units.MetersPerSecond.of(normalizedVelocity), kLedSpacing);
         pattern.applyTo(elevatorLeft);

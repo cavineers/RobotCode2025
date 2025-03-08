@@ -24,7 +24,9 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.Elevator.ElevatorConstants.ElevatorState;
 
 public class ElevatorIOSpark implements ElevatorIO {
@@ -40,6 +42,8 @@ public class ElevatorIOSpark implements ElevatorIO {
     private LoggedNetworkNumber tuningG = new LoggedNetworkNumber("/Tuning/Elevator/G", ElevatorConstants.kGravityTermSpark); 
 
     private final DigitalInput limitSwitch = new DigitalInput(ElevatorConstants.kLimitSwitchID);
+
+    private SlewRateLimiter filter = new SlewRateLimiter(3); // volt/second
 
     @AutoLogOutput(key = "Elevator/Setpoint")
     private double motorSetpoint = 0;
@@ -115,9 +119,21 @@ public class ElevatorIOSpark implements ElevatorIO {
         } else if (desiredVoltage < -1.0){
             desiredVoltage = -1.0;
         }
+
+        if (rightEncoder.getPosition() < kCarriageActivationPoint){
+            if (desiredVoltage > 1.0){
+                desiredVoltage = 1.0;
+            } else if (desiredVoltage < -1.0){
+                desiredVoltage = -1.0;
+            }
+        }
+        double filteredVoltage = 0.0;
+        if (DriverStation.isEnabled())
+            filteredVoltage = filter.calculate(desiredVoltage);
         Logger.recordOutput("Elevator/RequestedVoltage", desiredVoltage);
+        Logger.recordOutput("Elevator/FilteredRequestedVoltage", filteredVoltage);
         Logger.recordOutput("Output Current", rightMotor.getAppliedOutput());
-        this.setVoltage(desiredVoltage);
+        this.setVoltage(filteredVoltage);
 
         if (kTuningMode){
             this.updatePID();
@@ -137,9 +153,9 @@ public class ElevatorIOSpark implements ElevatorIO {
 
     private double calculateFeedforward() {
         double feedforward = ElevatorConstants.kTuningMode ? this.tuningG.get() : ElevatorConstants.kGravityTermSpark;
-        if (this.rightMotor.getEncoder().getPosition() < ElevatorConstants.kGravityTermChangeRotations){
-            return feedforward;
-        }
+        // if (this.rightMotor.getEncoder().getPosition() < ElevatorConstants.kGravityTermChangeRotations){
+        //     return feedforward;
+        // }
         return feedforward + ElevatorConstants.kGravityTermHeightCompensation;
     }
 

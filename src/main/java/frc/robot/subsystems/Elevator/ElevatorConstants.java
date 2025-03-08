@@ -34,7 +34,7 @@ public class ElevatorConstants {
     public static final double kL4Rotations = 50;
     public static final double kAlgae1Rotations = 25.5;
 
-    public static final double kGravityTermChangeRotations = 20.0; //arbitrary value don't have actual meaurements
+    public static final double kCarriageActivationPoint = 7; //arbitrary value don't have actual meaurements
 
 
     public static final double kMinRotations = 0;

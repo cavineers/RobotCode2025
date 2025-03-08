@@ -27,7 +27,7 @@ public class ElevatorConstants {
     public static final double kLoadMassKg = Units.lbsToKilograms(10); // represents the weight shooter
     public static final double kElevatorMassKg = Units.lbsToKilograms(25); // represents the weight of the elevator
 
-    public static final double kRestRotations = 2.5;
+    public static final double kRestRotations = 3;
     public static final double kL1Rotations = 0;
     public static final double kL2Rotations = 28.3;
     public static final double kL3Rotations = 42;
@@ -46,7 +46,7 @@ public class ElevatorConstants {
     public static final double kStaticFrictionTermSpark = 0.0;
     public static final double kGravityTermSpark = 0.3;
     public static final double kGravityTermHeightCompensation = 0.0; // once carriage engages, add this to gravity term
-    public static final double kTolerance = 0.5;
+    public static final double kTolerance = 3;
 
 
     public static final double kProportionalGainSim = 200;

@@ -21,6 +21,7 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.simulation.DIOSim;
+import frc.robot.subsystems.Elevator.ElevatorConstants.ElevatorState;
 
 public class ElevatorIOSim implements ElevatorIO {
 
@@ -110,8 +111,9 @@ public class ElevatorIOSim implements ElevatorIO {
         }
     }
 
+    @Override
     @AutoLogOutput(key = "Elevator/Error")
-    private double getError() {
+    public double getError() {
         return elevPid.getPositionError();
     }
 

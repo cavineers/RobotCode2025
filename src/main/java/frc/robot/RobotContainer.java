@@ -49,6 +49,8 @@ import frc.robot.subsystems.Elevator.ElevatorIOSpark;
 import frc.robot.commands.SystemIdCommands;
 import frc.robot.commands.auto.*;
 import frc.robot.subsystems.Vision.*;
+import frc.robot.commands.auto.AutoShoot;
+import frc.robot.commands.auto.AutoIntake;
 
 public class RobotContainer {
 
@@ -91,8 +93,8 @@ public class RobotContainer {
 
                 vision = new Vision(
                     drivetrain::addVisionMeasurement,
-                    new VisionIOPhoton(frontCameraName, robotToFrontCam),
-                    new VisionIOPhoton(backCameraName, robotToBackCam));
+                    new VisionIOPhoton(backCameraName, robotToFrontCam));
+                    // new VisionIOPhoton(backCameraName, robotToBackCam));
 
                 canRangeArray = new CanRangeArray(
                     new CanRangeIOReal(0),
@@ -229,6 +231,7 @@ public class RobotContainer {
 
     public void configureNamedCommands(){
          // Register Named Commands
+        Command l2Command = new AutoElevatorPreset(elevator, ElevatorConstants.kL2Rotations);
         NamedCommands.registerCommand("pegLeft", AutoHelpers.alignToPeg(true));
         NamedCommands.registerCommand("pegRight", AutoHelpers.alignToPeg(false));
         NamedCommands.registerCommand("elevatorL1", new AutoElevatorPreset(elevator, ElevatorConstants.kL1Rotations));
@@ -236,6 +239,9 @@ public class RobotContainer {
         NamedCommands.registerCommand("elevatorL3", new AutoElevatorPreset(elevator, ElevatorConstants.kL3Rotations));
         NamedCommands.registerCommand("elevatorL4", new AutoElevatorPreset(elevator, ElevatorConstants.kL4Rotations));
         NamedCommands.registerCommand("elevatorRest", new AutoElevatorPreset(elevator, ElevatorConstants.kRestRotations));
+        NamedCommands.registerCommand("shoot", new AutoShoot(endEffector));
+        NamedCommands.registerCommand("intake", new AutoIntake(endEffector));
+
         
     }
 

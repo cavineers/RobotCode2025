@@ -61,7 +61,7 @@ public class Elevator extends SubsystemBase {
 
     @AutoLogOutput(key="Elevator/IsAtSetpoint")
     public boolean IsAtSetpoint(){
-        return Math.abs(inputs.rightPositionRotations - inputs.setpoint) < kSetPointTolerance;
+        return Math.abs(this.io.getError()) < kSetPointTolerance;
     }
 
     public Pose3d getRelativeCoralPose() {

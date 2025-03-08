@@ -7,37 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RedCenterCageC"
+            "pathName": "OpposingSideCloseL2"
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 2.5
+            "name": "pegLeft"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "CPickup"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
+            "name": "elevatorL2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "PickupC"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.5
+            "pathName": "EPickup"
           }
         }
       ]

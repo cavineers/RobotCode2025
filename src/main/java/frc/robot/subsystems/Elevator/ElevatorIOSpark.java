@@ -51,6 +51,7 @@ public class ElevatorIOSpark implements ElevatorIO {
     private SparkFlexConfig config;
     private PIDController controller = new PIDController(kProportionalGainSpark, kIntegralTermSpark, kDerivativeTermSpark);
 
+    @AutoLogOutput(key="Elevator/IsClosed")
     private boolean isClosed = true;
 
     public ElevatorIOSpark() {
@@ -114,7 +115,7 @@ public class ElevatorIOSpark implements ElevatorIO {
         // Update setpoint
         inputs.setpoint = motorSetpoint;
         
-        double desiredVoltage = 0;
+        double desiredVoltage = this.controller.calculate(inputs.rightPositionRotations);
         if (desiredVoltage > 6.0){
             desiredVoltage = 6.0;
         } else if (desiredVoltage < -1.0){
@@ -138,7 +139,7 @@ public class ElevatorIOSpark implements ElevatorIO {
         if (this.isClosed){
             this.setVoltage(desiredVoltage);
         }
-        
+
         if (kTuningMode){
             this.updatePID();
         }
@@ -201,5 +202,11 @@ public class ElevatorIOSpark implements ElevatorIO {
     @Override
     public void setClosedLoop(boolean isClosed) {
         this.isClosed = isClosed;
+    }
+
+    @Override
+    @AutoLogOutput(key = "Elevator/Error")
+    public double getError() {
+        return controller.getError();
     }
 }

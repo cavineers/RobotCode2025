@@ -49,20 +49,22 @@ import frc.robot.subsystems.Elevator.ElevatorIOSpark;
 import frc.robot.commands.SystemIdCommands;
 import frc.robot.commands.auto.*;
 import frc.robot.subsystems.Vision.*;
+import frc.robot.commands.auto.AutoShoot;
+import frc.robot.commands.auto.AutoIntake;
 
 public class RobotContainer {
 
     // Subsystems
-    private final SwerveDriveSubsystem drivetrain;
+    public final SwerveDriveSubsystem drivetrain;
 
-    private final Dealgaefier dealgaefier;
+    public final Dealgaefier dealgaefier;
 
-    private final Vision vision;
-    private final CanRangeArray canRangeArray;
+    public final Vision vision;
+    public final CanRangeArray canRangeArray;
 
-    private final EndEffector endEffector;
-    private final Elevator elevator;
-    private final Lights lights;
+    public final EndEffector endEffector;
+    public final Elevator elevator;
+    public final Lights lights;
 
 
     // Controllers
@@ -90,8 +92,8 @@ public class RobotContainer {
                 dealgaefier = new Dealgaefier(new DealgaefierIOSpark());
 
                 vision = new Vision(
-                    drivetrain::addVisionMeasurement,
-                    new VisionIOPhoton(frontCameraName, robotToFrontCam));
+                    drivetrain::addVisionMeasurement);
+                    // new VisionIOPhoton(frontCameraName, robotToFrontCam));
                     // new VisionIOPhoton(backCameraName, robotToBackCam));
 
                 canRangeArray = new CanRangeArray(
@@ -117,8 +119,8 @@ public class RobotContainer {
                 dealgaefier = new Dealgaefier(new DealgaefierIOSim());
 
                 vision = new Vision(
-                    drivetrain::addVisionMeasurement,
-                    new VisionIOPhotonSim(frontCameraName, robotToFrontCam, () -> drivetrain.getPose()));
+                    drivetrain::addVisionMeasurement);
+                    // new VisionIOPhotonSim(frontCameraName, robotToFrontCam, () -> drivetrain.getPose()));
                     // new VisionIOPhotonSim(backCameraName, robotToBackCam, () -> drivetrain.getPose()));
 
                 canRangeArray = new CanRangeArray(new CanRangeIOSim(0), new CanRangeIOSim(1), new CanRangeIOSim(2), new CanRangeIOSim(3));
@@ -155,7 +157,7 @@ public class RobotContainer {
 
 
         // // Set up auto routines for SysIds
-        autoChooser = new LoggedDashboardChooser<>("Auto Choices");
+        autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
         // Set up SysId routines
         autoChooser.addOption(
             "Drive Wheel Radius Characterization", SystemIdCommands.wheelRadiusCharacterization(drivetrain));
@@ -209,9 +211,15 @@ public class RobotContainer {
         primaryDriverController.leftTrigger(0.85).onTrue(dealgaefier.shootCommand());
         primaryDriverController.leftTrigger(0.85).onFalse(dealgaefier.retractCommand());
 
+        primaryDriverController.povUp().onTrue(elevator.setVoltageCommand(1));
+        primaryDriverController.povUp().onFalse(elevator.setVoltageCommand(0));
+        primaryDriverController.povDown().onTrue(elevator.setVoltageCommand(-1));
+        primaryDriverController.povDown().onFalse(elevator.setVoltageCommand(0));
 
         primaryDriverController.leftBumper().whileTrue(new AlignToPeg(drivetrain, canRangeArray, true));
         primaryDriverController.rightBumper().whileTrue(new AlignToPeg(drivetrain, canRangeArray, false));
+
+        primaryDriverController.povLeft().onTrue(Commands.runOnce(() -> this.drivetrain.zeroHeading()));
       
         secondaryDriverController.povLeft().onTrue(elevator.goToPresetCommand(ElevatorConstants.kRestRotations));
         secondaryDriverController.povUp().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL1Rotations));
@@ -224,13 +232,17 @@ public class RobotContainer {
 
     public void configureNamedCommands(){
          // Register Named Commands
-        NamedCommands.registerCommand("pegLeft", new AlignToPeg(drivetrain, canRangeArray, true));
-        NamedCommands.registerCommand("pegRight", new AlignToPeg(drivetrain, canRangeArray, false));
-        NamedCommands.registerCommand("elevatorL1", elevator.goToPresetCommand(kL1Rotations));
-        NamedCommands.registerCommand("elevatorL2", elevator.goToPresetCommand(ElevatorConstants.kL2Rotations));
-        NamedCommands.registerCommand("elevatorL3", elevator.goToPresetCommand(ElevatorConstants.kL3Rotations));
-        NamedCommands.registerCommand("elevatorL4", elevator.goToPresetCommand(ElevatorConstants.kL4Rotations));
-        NamedCommands.registerCommand("elevatorRest", elevator.goToPresetCommand(ElevatorConstants.kRestRotations));
+        Command l2Command = new AutoElevatorPreset(elevator, ElevatorConstants.kL2Rotations);
+        NamedCommands.registerCommand("pegLeft", AutoHelpers.alignToPeg(true));
+        NamedCommands.registerCommand("pegRight", AutoHelpers.alignToPeg(false));
+        NamedCommands.registerCommand("elevatorL1", new AutoElevatorPreset(elevator, ElevatorConstants.kL1Rotations));
+        NamedCommands.registerCommand("elevatorL2", new AutoElevatorPreset(elevator, ElevatorConstants.kL2Rotations));
+        NamedCommands.registerCommand("elevatorL3", new AutoElevatorPreset(elevator, ElevatorConstants.kL3Rotations));
+        NamedCommands.registerCommand("elevatorL4", new AutoElevatorPreset(elevator, ElevatorConstants.kL4Rotations));
+        NamedCommands.registerCommand("elevatorRest", new AutoElevatorPreset(elevator, ElevatorConstants.kRestRotations));
+        NamedCommands.registerCommand("shoot", new AutoShoot(endEffector));
+        NamedCommands.registerCommand("intake", new AutoIntake(endEffector));
+
         
     }
 

@@ -24,7 +24,9 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.Elevator.ElevatorConstants.ElevatorState;
 
 public class ElevatorIOSpark implements ElevatorIO {
@@ -41,12 +43,16 @@ public class ElevatorIOSpark implements ElevatorIO {
 
     private final DigitalInput limitSwitch = new DigitalInput(ElevatorConstants.kLimitSwitchID);
 
+    private SlewRateLimiter filter = new SlewRateLimiter(3); // volt/second
+
     @AutoLogOutput(key = "Elevator/Setpoint")
     private double motorSetpoint = 0;
 
     private SparkFlexConfig config;
     private PIDController controller = new PIDController(kProportionalGainSpark, kIntegralTermSpark, kDerivativeTermSpark);
 
+    @AutoLogOutput(key="Elevator/IsClosed")
+    private boolean isClosed = true;
 
     public ElevatorIOSpark() {
         // Set up the PID controller on Spark Max
@@ -109,15 +115,38 @@ public class ElevatorIOSpark implements ElevatorIO {
         // Update setpoint
         inputs.setpoint = motorSetpoint;
         
-        double desiredVoltage = this.controller.calculate(inputs.rightPositionRotations) + this.calculateFeedforward();
-        if (desiredVoltage > 6.0){
-            desiredVoltage = 6.0;
-        } else if (desiredVoltage < -1.0){
-            desiredVoltage = -1.0;
+        double desiredVoltage = this.controller.calculate(inputs.rightPositionRotations);
+        if (desiredVoltage > 4.0){
+            desiredVoltage = 4.0;
+        } else if (desiredVoltage < -2.0){
+            desiredVoltage = -2.0;
         }
-        Logger.recordOutput("Elevator/RequestedVoltage", desiredVoltage);
+
+        if (rightEncoder.getPosition() < kCarriageActivationPoint){
+            if (desiredVoltage > 1.0){
+                desiredVoltage = 1.0;
+            } else if (desiredVoltage < -1.0){
+                desiredVoltage = -1.0;
+            }
+        } else if (rightEncoder.getPosition() < kZone2) {
+            if (desiredVoltage > 2.0){
+                desiredVoltage = 2.0;
+            }
+        } else if (rightEncoder.getPosition() < kZone3) {
+            if (desiredVoltage > 3.0){
+                desiredVoltage = 3.0;
+            }
+        }
+        double filteredVoltage = 0.0;
+        if (DriverStation.isEnabled())
+            filteredVoltage = filter.calculate(desiredVoltage);
+        Logger.recordOutput("Elevator/PIDRequestedVoltage", desiredVoltage);
+        Logger.recordOutput("Elevator/PIDFilteredRequestedVoltage", filteredVoltage);
         Logger.recordOutput("Output Current", rightMotor.getAppliedOutput());
-        this.setVoltage(desiredVoltage);
+
+        if (this.isClosed){
+            this.setVoltage(desiredVoltage);
+        }
 
         if (kTuningMode){
             this.updatePID();
@@ -137,9 +166,9 @@ public class ElevatorIOSpark implements ElevatorIO {
 
     private double calculateFeedforward() {
         double feedforward = ElevatorConstants.kTuningMode ? this.tuningG.get() : ElevatorConstants.kGravityTermSpark;
-        if (this.rightMotor.getEncoder().getPosition() < ElevatorConstants.kGravityTermChangeRotations){
-            return feedforward;
-        }
+        // if (this.rightMotor.getEncoder().getPosition() < ElevatorConstants.kGravityTermChangeRotations){
+        //     return feedforward;
+        // }
         return feedforward + ElevatorConstants.kGravityTermHeightCompensation;
     }
 
@@ -176,5 +205,16 @@ public class ElevatorIOSpark implements ElevatorIO {
         if (currentP != this.tuningP.get() || currentD != this.tuningD.get()){
             this.controller.setPID(this.tuningP.get(), 0, this.tuningD.get());
         }
+    }
+
+    @Override
+    public void setClosedLoop(boolean isClosed) {
+        this.isClosed = isClosed;
+    }
+
+    @Override
+    @AutoLogOutput(key = "Elevator/Error")
+    public double getError() {
+        return controller.getError();
     }
 }

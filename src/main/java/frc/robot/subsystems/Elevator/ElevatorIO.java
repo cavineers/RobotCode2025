@@ -49,5 +49,11 @@ public interface ElevatorIO {
 
     public default void checkBoundry() {
     }
+
+    public default void setClosedLoop(boolean isClosed){}
+
+    public default double getError(){
+        return 0;
+    }
     
 }

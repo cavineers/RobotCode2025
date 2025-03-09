@@ -11,7 +11,7 @@ public class DealgaefierConstants {
 
     public static final int kDeployAbsEncoder = 5;
 
-    public static final double kProportionalGainSpark = 8.0;
+    public static final double kProportionalGainSpark = 5.0;
     public static final double kIntegralTermSpark = 0.0;
     public static final double kDerivativeTermSpark = 0.0;
     public static final double kGravityTermSpark = -0.3;

@@ -8,47 +8,28 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.827893174550925,
-        "y": 0.5227711723050548
+        "x": 6.239307109002514,
+        "y": 1.0288232859424977
       },
       "isLocked": false,
       "linkedName": "RedMiddleCage"
     },
     {
       "anchor": {
-        "x": 5.289265260858051,
-        "y": 2.9268178131620766
+        "x": 5.0081232620497875,
+        "y": 2.8262612552966093
       },
       "prevControl": {
-        "x": 5.85663276284428,
-        "y": 1.9668585308527549
+        "x": 6.290567923508122,
+        "y": 0.8356565099262387
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "FCoral"
+      "linkedName": "ECoral"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.645497489429176,
-      "rotationDegrees": 119.99999999999999
-    }
-  ],
-  "constraintZones": [
-    {
-      "name": "PlaceConstraint",
-      "minWaypointRelativePos": 0.8082070907360415,
-      "maxWaypointRelativePos": 1.0,
-      "constraints": {
-        "maxVelocity": 1.0,
-        "maxAcceleration": 0.75,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    }
-  ],
+  "rotationTargets": [],
+  "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -64,7 +45,7 @@
     "rotation": 119.99999999999999
   },
   "reversed": false,
-  "folder": "3PieceMiddleRedCage",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 125.00000000000001

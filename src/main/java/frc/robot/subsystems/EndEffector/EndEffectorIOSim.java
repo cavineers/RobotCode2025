@@ -31,8 +31,8 @@ public class EndEffectorIOSim implements EndEffectorIO {
         inputs.appliedVolts = appliedVolts;
         inputs.currentAmps = motor.getCurrentDrawAmps();
 
-        inputs.coralPresentIR = getSensor(coralPresentIR);
-        inputs.coralLoadedLimit = getSensor(coralLoadedLimit);
+        inputs.coralPresentIR = false;
+        inputs.coralLoadedLimit = true;
     }
 
     public boolean getSensor(DIOSim sensor) {

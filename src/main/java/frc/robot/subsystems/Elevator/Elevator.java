@@ -8,6 +8,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 import static frc.robot.subsystems.Elevator.ElevatorConstants.*;
 
@@ -31,11 +32,21 @@ public class Elevator extends SubsystemBase {
         Logger.recordOutput("3DMechanisms/Elevator", this.getElevatorStagePoses(inputs.rightPositionRotations));
     }
 
+    /**
+     * Will return a command that controls the Elevator open loop **ADDS GRAVITY TERM SO 1Volt -> 1.3V**
+     * @param volts
+     * @return command
+     */
     public Command setVoltageCommand(double volts) {
-        return Commands.run(() -> io.setVoltage(volts), this).finallyDo(interrupted -> io.setVoltage(0));
+        this.io.setClosedLoop(false);
+        if (Constants.currentMode != Constants.simMode){
+            return Commands.run(() -> io.setVoltage(volts + kGravityTermSpark), this);
+        }
+        return Commands.run(() -> io.setVoltage(volts), this);
     }
 
     public Command goToPresetCommand(double rotations) {
+        this.io.setClosedLoop(true);
         return Commands.run(() -> io.updateSetpoint(rotations), this);
     }
 
@@ -50,7 +61,7 @@ public class Elevator extends SubsystemBase {
 
     @AutoLogOutput(key="Elevator/IsAtSetpoint")
     public boolean IsAtSetpoint(){
-        return Math.abs(inputs.rightPositionRotations - inputs.setpoint) > kSetPointTolerance;
+        return Math.abs(this.io.getError()) < kSetPointTolerance;
     }
 
     public Pose3d getRelativeCoralPose() {

@@ -29,13 +29,14 @@ public class ElevatorConstants {
 
     public static final double kRestRotations = 3;
     public static final double kL1Rotations = 0;
-    public static final double kL2Rotations = 28.3;
-    public static final double kL3Rotations = 42;
+    public static final double kL2Rotations = 30.3;
+    public static final double kL3Rotations = 44;
     public static final double kL4Rotations = 50;
     public static final double kAlgae1Rotations = 25.5;
 
     public static final double kCarriageActivationPoint = 7; //arbitrary value don't have actual meaurements
-
+    public static final double kZone2 = 20;
+    public static final double kZone3 = 30;
 
     public static final double kMinRotations = 0;
     public static final double kMaxRotations = 60;

@@ -219,7 +219,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * Supplier to determine if the path should be flipped
      * @return flipped if Red
      */
-    @AutoLogOutput(key = "Odometry/ShouldFlipPose")
     public Boolean shouldFlipPose() {
         return ally.isPresent() && ally.get() == Alliance.Red;
     }

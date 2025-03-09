@@ -92,8 +92,8 @@ public class RobotContainer {
                 dealgaefier = new Dealgaefier(new DealgaefierIOSpark());
 
                 vision = new Vision(
-                    drivetrain::addVisionMeasurement,
-                    new VisionIOPhoton(frontCameraName, robotToFrontCam));
+                    drivetrain::addVisionMeasurement);
+                    // new VisionIOPhoton(frontCameraName, robotToFrontCam));
                     // new VisionIOPhoton(backCameraName, robotToBackCam));
 
                 canRangeArray = new CanRangeArray(
@@ -119,8 +119,8 @@ public class RobotContainer {
                 dealgaefier = new Dealgaefier(new DealgaefierIOSim());
 
                 vision = new Vision(
-                    drivetrain::addVisionMeasurement,
-                    new VisionIOPhotonSim(frontCameraName, robotToFrontCam, () -> drivetrain.getPose()));
+                    drivetrain::addVisionMeasurement);
+                    // new VisionIOPhotonSim(frontCameraName, robotToFrontCam, () -> drivetrain.getPose()));
                     // new VisionIOPhotonSim(backCameraName, robotToBackCam, () -> drivetrain.getPose()));
 
                 canRangeArray = new CanRangeArray(new CanRangeIOSim(0), new CanRangeIOSim(1), new CanRangeIOSim(2), new CanRangeIOSim(3));

@@ -193,6 +193,7 @@ public class RobotContainer {
                 }
             })
         );
+        
         primaryDriverController.b().onFalse(endEffector.stopCommand());
 
         primaryDriverController.rightTrigger(0.85).onTrue(

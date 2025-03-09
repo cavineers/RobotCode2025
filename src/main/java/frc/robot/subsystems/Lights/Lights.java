@@ -88,6 +88,10 @@ public class Lights extends SubsystemBase {
         breathePattern.applyTo(elevatorRight);
         // Go in order of importance (Last one will overwrite the previous)
 
+        if (this.bumpStop.get()){
+            this.setIntakeReadyEffect();
+        }
+
         if (Math.abs(elevatorVelocity.get()) > LightsConstants.kElevatorVelocityThreshold) {
             this.setElevatorEffect(elevatorVelocity.get());
         }
@@ -161,7 +165,7 @@ public class Lights extends SubsystemBase {
     }
 
     private void setIntakeReadyEffect(){
-        if (intakeTimer.advanceIfElapsed(0.33)){
+        if (intakeTimer.advanceIfElapsed(0.5)){
             toggleState = !toggleState;
         }
         LEDPattern pattern = LEDPattern.solid(Color.kGreen);
@@ -170,16 +174,21 @@ public class Lights extends SubsystemBase {
         if (toggleState){
             pattern.applyTo(funnelLeft);
             pattern.applyTo(topLeft);
+            pattern.applyTo(elevatorLeft);
 
             offPattern.applyTo(funnelRight);
+            offPattern.applyTo(elevatorRight);
             offPattern.applyTo(topRight);
 
         } else {
             offPattern.applyTo(funnelLeft);
             offPattern.applyTo(topLeft);
+            offPattern.applyTo(elevatorLeft);
 
             pattern.applyTo(funnelRight);
             pattern.applyTo(topRight);
+            offPattern.applyTo(elevatorRight);
+
         }
         
     }

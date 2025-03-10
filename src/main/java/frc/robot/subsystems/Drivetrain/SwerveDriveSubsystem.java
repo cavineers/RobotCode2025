@@ -50,8 +50,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     private SysIdRoutine sysId;
 
-    private Optional<Alliance> ally = DriverStation.getAlliance();
-
     // April Tag layout
     public static AprilTagFieldLayout aprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
 
@@ -140,6 +138,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         gyroIO.updateInputs(gyroInputs); // Update gyro values
         Logger.processInputs("Drivetrain/Gyro", gyroInputs);
         gyroDisconnectedAlert.set(!gyroInputs.connected); // Update gyro alert
+        Logger.recordOutput("Odometry/FlipPose", shouldFlipPose());
+
 
         // Run the periodics for each module
         for (Module module : modules) {
@@ -220,6 +220,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * @return flipped if Red
      */
     public Boolean shouldFlipPose() {
+        Optional<Alliance> ally = DriverStation.getAlliance();
         return ally.isPresent() && ally.get() == Alliance.Red;
     }
 

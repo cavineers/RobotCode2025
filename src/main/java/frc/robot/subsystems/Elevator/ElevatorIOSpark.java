@@ -118,8 +118,8 @@ public class ElevatorIOSpark implements ElevatorIO {
         double desiredVoltage = this.controller.calculate(inputs.rightPositionRotations);
         if (desiredVoltage > 4.0){
             desiredVoltage = 4.0;
-        } else if (desiredVoltage < -2.0){
-            desiredVoltage = -2.0;
+        } else if (desiredVoltage < -3.0){
+            desiredVoltage = -3.0;
         }
 
         if (rightEncoder.getPosition() < kCarriageActivationPoint){

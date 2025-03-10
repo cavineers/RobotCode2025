@@ -38,7 +38,9 @@ public class Lights extends SubsystemBase {
     // Four sections of the LED strip
 
     private boolean toggleState = false;
+    private boolean intakeState = false;
     private Timer intakeTimer = new Timer();
+    private Timer intakeOffTimer = new Timer();
     
     private AddressableLEDBufferView elevatorLeft = new AddressableLEDBufferView(ledBuffer, 0, 19);
     private AddressableLEDBufferView topLeft = new AddressableLEDBufferView(ledBuffer, 20, 33);
@@ -89,8 +91,15 @@ public class Lights extends SubsystemBase {
         // Go in order of importance (Last one will overwrite the previous)
 
         if (this.bumpStop.get()){
-            this.setIntakeReadyEffect();
+            LEDPattern intakePattern = LEDPattern.solid(Color.kGreen);
+            intakePattern.applyTo(topLeft);
+            intakePattern.applyTo(topRight);
+            intakePattern.applyTo(funnelLeft);
+            intakePattern.applyTo(funnelRight);
+            intakePattern.applyTo(elevatorLeft);
+            intakePattern.applyTo(elevatorRight);
         }
+        this.intakeState = false;
 
         if (Math.abs(elevatorVelocity.get()) > LightsConstants.kElevatorVelocityThreshold) {
             this.setElevatorEffect(elevatorVelocity.get());
@@ -141,7 +150,7 @@ public class Lights extends SubsystemBase {
     }
 
     private void setIntakeStandbyEffect(){
-        if (intakeTimer.advanceIfElapsed(1)){
+        if (intakeTimer.advanceIfElapsed(0.75)){
             toggleState = !toggleState;
         }
         LEDPattern pattern = LEDPattern.solid(Color.kRed);
@@ -165,7 +174,7 @@ public class Lights extends SubsystemBase {
     }
 
     private void setIntakeReadyEffect(){
-        if (intakeTimer.advanceIfElapsed(0.5)){
+        if (intakeTimer.advanceIfElapsed(1)){
             toggleState = !toggleState;
         }
         LEDPattern pattern = LEDPattern.solid(Color.kGreen);

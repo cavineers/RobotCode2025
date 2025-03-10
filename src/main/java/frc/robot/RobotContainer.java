@@ -227,6 +227,7 @@ public class RobotContainer {
         secondaryDriverController.povDown().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL3Rotations));
         secondaryDriverController.a().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL4Rotations));
         secondaryDriverController.b().onTrue(elevator.goToPresetCommand(ElevatorConstants.kAlgae1Rotations));
+        secondaryDriverController.x().onTrue(elevator.goToPresetCommand(ElevatorConstants.kAlgae2Rotations));
 
     }
 

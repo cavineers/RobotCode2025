@@ -38,15 +38,15 @@ public class AlignToPeg extends Command {
     public void execute() {
         Logger.recordOutput("Commands/AlignToPeg", true);
         double currentRotation = drivetrain.getPose().getRotation().getRadians();
-        double turnSpeed = turnController.calculate(currentRotation, goalRotation);
+        // double turnSpeed = turnController.calculate(currentRotation, goalRotation);
 
         // Rotate the robot first 
         ChassisSpeeds speeds;
-        if (!turnController.atSetpoint()){
-            speeds = new ChassisSpeeds(0, 0, turnSpeed);
-        }else{
+        // if (!turnController.atSetpoint()){
+        //     speeds = new ChassisSpeeds(0, 0, turnSpeed);
+        // }else{
             speeds = new ChassisSpeeds(0, this.canRangeArray.calculateAlignmentSpeed(this.isLeftSide), 0);
-        }
+        // }
         drivetrain.driveVelocity(speeds);
     }
 

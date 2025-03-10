@@ -42,7 +42,7 @@ public class EndEffector extends SubsystemBase {
     }
 
     public Command intakeCommand() {
-        return Commands.run(() -> io.intake(), this).until(this::getBumpStop);
+        return Commands.run(() -> io.intake(), this);
     } 
 
     public Command shootCommand() {
@@ -60,9 +60,6 @@ public class EndEffector extends SubsystemBase {
     }
 
     public Command stopCommand() {
-        if (this.isShooting){
-            return Commands.run(() -> io.setVoltage(0), this);
-        }
-        return new Command() {};
-        }
+        return Commands.run(() -> io.setVoltage(0), this);
+    }
 }

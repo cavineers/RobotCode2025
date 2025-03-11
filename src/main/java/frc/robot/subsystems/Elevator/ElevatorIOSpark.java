@@ -120,21 +120,6 @@ public class ElevatorIOSpark implements ElevatorIO {
         //     desiredVoltage = -3.0;
         // }
 
-        // if (rightEncoder.getPosition() < kCarriageActivationPoint){
-        //     if (desiredVoltage > 1.0){
-        //         desiredVoltage = 1.0;
-        //     } else if (desiredVoltage < -1.0){
-        //         desiredVoltage = -1.0;
-        //     }
-        // } else if (rightEncoder.getPosition() < kZone2) {
-        //     if (desiredVoltage > 2.0){
-        //         desiredVoltage = 2.0;
-        //     }
-        // } else if (rightEncoder.getPosition() < kZone3) {
-        //     if (desiredVoltage > 3.0){
-        //         desiredVoltage = 3.0;
-        //     }
-        // }
         Logger.recordOutput("Elevator/PIDRequestedVoltage", desiredVoltage);
         Logger.recordOutput("Output Current", rightMotor.getAppliedOutput());
 

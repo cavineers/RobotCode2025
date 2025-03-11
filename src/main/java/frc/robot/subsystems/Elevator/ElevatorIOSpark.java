@@ -43,8 +43,6 @@ public class ElevatorIOSpark implements ElevatorIO {
 
     private final DigitalInput limitSwitch = new DigitalInput(ElevatorConstants.kLimitSwitchID);
 
-    private SlewRateLimiter filter = new SlewRateLimiter(3); // volt/second
-
     @AutoLogOutput(key = "Elevator/Setpoint")
     private double motorSetpoint = 0;
 
@@ -137,11 +135,7 @@ public class ElevatorIOSpark implements ElevatorIO {
         //         desiredVoltage = 3.0;
         //     }
         // }
-        double filteredVoltage = 0.0;
-        if (DriverStation.isEnabled())
-            filteredVoltage = filter.calculate(desiredVoltage);
         Logger.recordOutput("Elevator/PIDRequestedVoltage", desiredVoltage);
-        Logger.recordOutput("Elevator/PIDFilteredRequestedVoltage", filteredVoltage);
         Logger.recordOutput("Output Current", rightMotor.getAppliedOutput());
 
         if (this.isClosed){

@@ -24,7 +24,9 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.Elevator.ElevatorConstants.ElevatorState;
@@ -43,11 +45,13 @@ public class ElevatorIOSpark implements ElevatorIO {
 
     private final DigitalInput limitSwitch = new DigitalInput(ElevatorConstants.kLimitSwitchID);
 
-    @AutoLogOutput(key = "Elevator/Setpoint")
+    @AutoLogOutput(key = "Elevator/Goal")
     private double motorSetpoint = 0;
 
     private SparkFlexConfig config;
-    private PIDController controller = new PIDController(kProportionalGainSpark, kIntegralTermSpark, kDerivativeTermSpark);
+
+    private Constraints motionConstraints = new Constraints(kMaxVelocityRPS, kMaxAccelerationRPS2);
+    private ProfiledPIDController controller = new ProfiledPIDController(kProportionalGainSpark, kIntegralTermSpark, kDerivativeTermSpark, motionConstraints);
 
     @AutoLogOutput(key="Elevator/IsClosed")
     private boolean isClosed = true;
@@ -121,7 +125,8 @@ public class ElevatorIOSpark implements ElevatorIO {
         // }
 
         Logger.recordOutput("Elevator/PIDRequestedVoltage", desiredVoltage);
-        Logger.recordOutput("Output Current", rightMotor.getAppliedOutput());
+        Logger.recordOutput("Elevator/OutputCurrent", rightMotor.getAppliedOutput());
+        Logger.recordOutput("Elevator/ProfiledSetpoint", this.controller.getSetpoint().position);
 
         if (this.isClosed){
             this.setVoltage(desiredVoltage);
@@ -131,7 +136,7 @@ public class ElevatorIOSpark implements ElevatorIO {
             this.updatePID();
         }
 
-        if (controller.atSetpoint()) {
+        if (controller.atGoal()) {
             inputs.state = switch ((int) motorSetpoint) {
             case (int) ElevatorConstants.kRestRotations -> ElevatorState.REST;
             case (int) ElevatorConstants.kL1Rotations -> ElevatorState.L1;
@@ -165,7 +170,7 @@ public class ElevatorIOSpark implements ElevatorIO {
 
     public void updateSetpoint(double setpoint) {
         this.motorSetpoint = this.clipSetpoint(setpoint);
-        this.controller.setSetpoint(motorSetpoint);
+        this.controller.setGoal(motorSetpoint);
     }
 
     public double clipSetpoint(double setpoint) {
@@ -194,6 +199,6 @@ public class ElevatorIOSpark implements ElevatorIO {
     @Override
     @AutoLogOutput(key = "Elevator/Error")
     public double getError() {
-        return controller.getError();
+        return controller.getPositionError();
     }
 }

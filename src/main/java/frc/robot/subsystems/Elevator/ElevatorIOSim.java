@@ -114,7 +114,7 @@ public class ElevatorIOSim implements ElevatorIO {
     @Override
     @AutoLogOutput(key = "Elevator/Error")
     public double getError() {
-        return elevPid.getPositionError();
+        return elevPid.getError();
     }
 
     private void update(double dt) {

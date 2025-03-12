@@ -21,6 +21,24 @@
           "data": {
             "name": "elevatorL4"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "elevatorRest"
+          }
         }
       ]
     }

@@ -194,7 +194,6 @@ public class RobotContainer {
             })
         );
         primaryDriverController.b().onFalse(endEffector.stopCommand());
-        primaryDriverController.a().whileTrue(new AlignToClosestTag(drivetrain, drivetrain.getClosestReefPoseSide(false, true)));
         primaryDriverController.rightTrigger(0.85).onTrue(
             Commands.runOnce(() -> {
                 if (dealgaefier.getDeployed() == false){
@@ -213,8 +212,10 @@ public class RobotContainer {
         primaryDriverController.povDown().onTrue(elevator.setVoltageCommand(-1));
         primaryDriverController.povDown().onFalse(elevator.setVoltageCommand(0));
 
-        primaryDriverController.leftBumper().whileTrue(new AlignToPeg(drivetrain, canRangeArray, true));
-        primaryDriverController.rightBumper().whileTrue(new AlignToPeg(drivetrain, canRangeArray, false));
+        // primaryDriverController.leftBumper().whileTrue(new AlignToPeg(drivetrain, canRangeArray, true));
+        // primaryDriverController.rightBumper().whileTrue(new AlignToPeg(drivetrain, canRangeArray, false));
+        primaryDriverController.leftBumper().whileTrue(new AlignToClosestTag(drivetrain, drivetrain.getClosestReefPoseSide(true, true)));
+        primaryDriverController.rightBumper().whileTrue(new AlignToClosestTag(drivetrain, drivetrain.getClosestReefPoseSide(false, true)));
 
         primaryDriverController.povLeft().onTrue(Commands.runOnce(() -> this.drivetrain.zeroHeading()));
       
@@ -230,7 +231,6 @@ public class RobotContainer {
 
     public void configureNamedCommands(){
          // Register Named Commands
-        Command l2Command = new AutoElevatorPreset(elevator, ElevatorConstants.kL2Rotations);
         NamedCommands.registerCommand("pegLeftCanRange", AutoHelpers.alignToPeg(true));
         NamedCommands.registerCommand("pegRightCanRange", AutoHelpers.alignToPeg(false));
         NamedCommands.registerCommand("elevatorL1", new AutoElevatorPreset(elevator, ElevatorConstants.kL1Rotations));

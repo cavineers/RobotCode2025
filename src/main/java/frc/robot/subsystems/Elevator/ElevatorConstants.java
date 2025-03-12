@@ -42,6 +42,9 @@ public class ElevatorConstants {
     public static final double kMinRotations = 0;
     public static final double kMaxRotations = 63;
 
+    public static final double kMaxVelocityRPS = 40; // ROTATIONS PER SECOND
+    public static final double kMaxAccelerationRPS2 = 40; // ROTATIONS PER SECOND^2
+
     public static final double kProportionalGainSpark = 0.4;
     public static final double kIntegralTermSpark = 0;
     public static final double kDerivativeTermSpark = 0;

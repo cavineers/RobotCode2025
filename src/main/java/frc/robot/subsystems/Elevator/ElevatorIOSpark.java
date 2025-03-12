@@ -192,8 +192,8 @@ public class ElevatorIOSpark implements ElevatorIO {
     }
 
     @Override
-    public void setClosedLoop(boolean isClosed) {
-        this.isClosed = isClosed;
+    public void setClosedLoop(boolean val) {
+        this.isClosed = val;
     }
 
     @Override

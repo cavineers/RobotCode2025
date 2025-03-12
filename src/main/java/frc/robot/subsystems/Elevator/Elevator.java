@@ -39,6 +39,7 @@ public class Elevator extends SubsystemBase {
      */
     public Command setVoltageCommand(double volts) {
         this.io.setClosedLoop(false);
+        System.out.println("OPEN");
         if (Constants.currentMode != Constants.simMode){
             return Commands.run(() -> io.setVoltage(volts + kGravityTermSpark), this);
         }

@@ -4,11 +4,15 @@ import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.Elastic;
 import frc.robot.Constants;
@@ -26,8 +30,8 @@ public class AlignToClosestTag extends Command {
     private int tagId;
 
     // PIDs for movement
-    private PIDController translationXController = new PIDController(2.0, 0, 1);
-    private PIDController translationYController = new PIDController(2.0, 0, 1);
+    private PIDController translationXController = new PIDController(DriveConstants.PathPlannerDriveP, 0, 0);
+    private PIDController translationYController = new PIDController(DriveConstants.PathPlannerDriveP, 0, 0);
     private PIDController rotationController = new PIDController(DriveConstants.PathPlannerTurnP, 0, 0);
 
     private Supplier<Pose2d> targetPoseSupplier;
@@ -48,6 +52,7 @@ public class AlignToClosestTag extends Command {
         this.translationYController.setSetpoint(0); 
         this.rotationController.setSetpoint(this.targetPoseSupplier.get().getRotation().getRadians()); // set the rotation setpoint to the goal rotation
         this.rotationController.enableContinuousInput(-Math.PI, Math.PI);
+
     }
 
     @Override
@@ -62,14 +67,35 @@ public class AlignToClosestTag extends Command {
         double ySpeed = -this.translationYController.calculate(currentTranslation.getY());
         double turnSpeed = this.rotationController.calculate(drivePose.getRotation().getRadians()); // ambiguity can cause rotation to be off --> use gyro!!
 
-        ChassisSpeeds speeds = new ChassisSpeeds(xSpeed, ySpeed, turnSpeed);
-        Logger.recordOutput("AlignToTarget/Speeds", speeds);
-        Logger.recordOutput("Translation2D", currentTranslation);
+       
 
+        // boolean flipped = this.drivetrain.shouldFlipPose();
+
+        // Convert to field relative chassis speeds
+        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turnSpeed, drivetrain.getPose().getRotation());
+            // flipped ? drivePose.getRotation().plus(Rotation2d.fromRadians(Math.PI)) : drivetrain.getPose().getRotation());
+        
+        Logger.recordOutput("AlignToTarget/Speeds", speeds);
+        Logger.recordOutput("AlignToTarget/TargetPose", this.targetPoseSupplier.get());
+        Logger.recordOutput("AlignToTarget/Translation2D", currentTranslation);
+        Logger.recordOutput("Commands/alignToTag", true);
+        if (DriverStation.isAutonomous()){
+            PPHolonomicDriveController.overrideXFeedback(() -> {
+                return speeds.vxMetersPerSecond;
+            });
+            PPHolonomicDriveController.overrideYFeedback(() -> {
+                return speeds.vyMetersPerSecond;
+            });
+            PPHolonomicDriveController.overrideRotationFeedback(() -> {
+                return speeds.omegaRadiansPerSecond;
+            });
+        }
         this.drivetrain.driveVelocity(speeds);
-        System.out.println("Aligning to tag");
+        
+        
 
     }
+
 
     @Override
     public boolean isFinished(){
@@ -83,6 +109,7 @@ public class AlignToClosestTag extends Command {
     public void end(boolean interrupted){
         this.drivetrain.driveVelocity(new ChassisSpeeds()); // stop drivetrain
         Logger.recordOutput("Commands/alignToTag", false);
+        PPHolonomicDriveController.clearFeedbackOverrides();   
     }
 
     

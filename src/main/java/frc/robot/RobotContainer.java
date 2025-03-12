@@ -49,8 +49,6 @@ import frc.robot.subsystems.Elevator.ElevatorIOSpark;
 import frc.robot.commands.SystemIdCommands;
 import frc.robot.commands.auto.*;
 import frc.robot.subsystems.Vision.*;
-import frc.robot.commands.auto.AutoShoot;
-import frc.robot.commands.auto.AutoIntake;
 
 public class RobotContainer {
 
@@ -195,9 +193,8 @@ public class RobotContainer {
                 }
             })
         );
-        
         primaryDriverController.b().onFalse(endEffector.stopCommand());
-
+        primaryDriverController.a().whileTrue(new AlignToClosestTag(drivetrain, drivetrain.getClosestReefPoseSide(false, true)));
         primaryDriverController.rightTrigger(0.85).onTrue(
             Commands.runOnce(() -> {
                 if (dealgaefier.getDeployed() == false){
@@ -234,8 +231,8 @@ public class RobotContainer {
     public void configureNamedCommands(){
          // Register Named Commands
         Command l2Command = new AutoElevatorPreset(elevator, ElevatorConstants.kL2Rotations);
-        NamedCommands.registerCommand("pegLeft", AutoHelpers.alignToPeg(true));
-        NamedCommands.registerCommand("pegRight", AutoHelpers.alignToPeg(false));
+        NamedCommands.registerCommand("pegLeftCanRange", AutoHelpers.alignToPeg(true));
+        NamedCommands.registerCommand("pegRightCanRange", AutoHelpers.alignToPeg(false));
         NamedCommands.registerCommand("elevatorL1", new AutoElevatorPreset(elevator, ElevatorConstants.kL1Rotations));
         NamedCommands.registerCommand("elevatorL2", new AutoElevatorPreset(elevator, ElevatorConstants.kL2Rotations));
         NamedCommands.registerCommand("elevatorL3", new AutoElevatorPreset(elevator, ElevatorConstants.kL3Rotations));
@@ -243,8 +240,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("elevatorRest", new AutoElevatorPreset(elevator, ElevatorConstants.kRestRotations));
         NamedCommands.registerCommand("shoot", new AutoShoot(endEffector));
         NamedCommands.registerCommand("intake", new AutoIntake(endEffector));
-
-        
+        NamedCommands.registerCommand("pegLeft", new AlignToClosestTag(drivetrain, drivetrain.getClosestReefPoseSide(true, true)));
+        NamedCommands.registerCommand("pegRight", new AlignToClosestTag(drivetrain, drivetrain.getClosestReefPoseSide(false, true)));
     }
 
     public Command getAutonomousCommand() {

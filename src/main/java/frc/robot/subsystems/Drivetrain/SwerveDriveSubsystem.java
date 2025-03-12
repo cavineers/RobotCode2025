@@ -322,7 +322,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     public void zeroHeading(){
         System.out.println("RESETTING HEADING");
-        this.poseEstimator.resetPosition(gyroRotation, previousModulePositions, new Pose2d(this.getPose().getX(), this.getPose().getY(), new Rotation2d()));
+        this.poseEstimator.resetPosition(gyroRotation, previousModulePositions, new Pose2d(this.getPose().getX(), this.getPose().getY(), this.shouldFlipPose() ? new Rotation2d(Math.PI) : new Rotation2d()));
     }
 
     /**

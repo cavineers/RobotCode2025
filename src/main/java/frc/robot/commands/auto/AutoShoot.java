@@ -37,6 +37,6 @@ public class AutoShoot extends Command {
     @Override
     public boolean isFinished() {
 
-        return endEffector.getIR();
+        return !endEffector.getIR();
     }
 }

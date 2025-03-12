@@ -116,11 +116,11 @@ public class ElevatorIOSpark implements ElevatorIO {
         inputs.setpoint = motorSetpoint;
         
         double desiredVoltage = this.controller.calculate(inputs.rightPositionRotations) + this.calculateFeedforward();
-        // if (desiredVoltage > 4.0){
-        //     desiredVoltage = 4.0;
-        // } else if (desiredVoltage < -3.0){
-        //     desiredVoltage = -3.0;
-        // }
+        if (desiredVoltage > 6.0){
+            desiredVoltage = 6.0;
+        } else if (desiredVoltage < -3.0){
+            desiredVoltage = -3.0;
+        }
 
         // if (rightEncoder.getPosition() < kCarriageActivationPoint){
         //     if (desiredVoltage > 1.0){

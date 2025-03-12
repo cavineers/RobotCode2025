@@ -310,10 +310,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * Accepts a vision measurement and updates the pose estimator.
     */
     public void addVisionMeasurement(Pose2d poseMeters, double timestamp, Matrix<N3, N1> visionMeasurementStdDevs) {
-        // Pose2d withoutGyroOnly = new Pose2d(poseMeters.getTranslation(), gyroRotation);
         if (Constants.currentMode != Constants.Mode.REAL)
             return; // for some reason sim camera is being funky
-        Pose2d pose = new Pose2d(poseMeters.getX(), poseMeters.getY(), this.gyroRotation);
+        
+        Pose2d pose;
+        pose = new Pose2d(poseMeters.getX(), poseMeters.getY(), 
+            DriverStation.isEnabled() ? this.gyroRotation : poseMeters.getRotation());
         poseEstimator.addVisionMeasurement(
             pose, timestamp, visionMeasurementStdDevs);
     }

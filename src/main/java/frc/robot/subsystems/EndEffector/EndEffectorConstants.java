@@ -8,7 +8,7 @@ public class EndEffectorConstants {
     public static final int kCoralPresentIR = 8;
     public static final int kCoralLoadedLimit = 9;
 
-    public static final double kEndEffectorShootSpeed = 0.65;
+    public static final double kEndEffectorShootSpeed = 0.80;
     public static final double kEndEffectorIntakeSpeed = 0.20;
 
     // Motor Configuration

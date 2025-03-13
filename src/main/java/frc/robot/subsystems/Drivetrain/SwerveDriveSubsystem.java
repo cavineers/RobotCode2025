@@ -315,7 +315,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         
         Pose2d pose;
         pose = new Pose2d(poseMeters.getX(), poseMeters.getY(), 
-            DriverStation.isEnabled() ? this.gyroRotation : poseMeters.getRotation());
+            DriverStation.isEnabled() ? poseMeters.getRotation() : poseMeters.getRotation());
         poseEstimator.addVisionMeasurement(
             pose, timestamp, visionMeasurementStdDevs);
     }

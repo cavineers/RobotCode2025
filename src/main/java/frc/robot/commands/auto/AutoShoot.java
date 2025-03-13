@@ -24,7 +24,7 @@ public class AutoShoot extends Command {
     public void execute() {
         Logger.recordOutput("Commands/AutoShoot", true);
 
-        endEffector.setVoltage(kEndEffectorShootSpeed);
+        endEffector.setPercentage(kEndEffectorShootSpeed);
     }
 
     @Override

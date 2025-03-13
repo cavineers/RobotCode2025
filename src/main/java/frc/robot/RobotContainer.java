@@ -90,8 +90,8 @@ public class RobotContainer {
                 dealgaefier = new Dealgaefier(new DealgaefierIOSpark());
 
                 vision = new Vision(
-                    drivetrain::addVisionMeasurement);
-                    // new VisionIOPhoton(frontCameraName, robotToFrontCam));
+                    drivetrain::addVisionMeasurement,
+                    new VisionIOPhoton(frontCameraName, robotToFrontCam));
                     // new VisionIOPhoton(backCameraName, robotToBackCam));
 
                 canRangeArray = new CanRangeArray(

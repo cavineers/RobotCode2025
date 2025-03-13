@@ -74,7 +74,7 @@ public class EndEffectorIOSpark implements EndEffectorIO {
     }
 
     public boolean getIR(){
-        return this.coralPresentIR.get();
+        return !this.coralPresentIR.get();
     }
 
     public boolean getSensor(DigitalInput sensor) {

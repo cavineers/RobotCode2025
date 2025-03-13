@@ -39,16 +39,23 @@ public class Elevator extends SubsystemBase {
      */
     public Command setVoltageCommand(double volts) {
         this.io.setClosedLoop(false);
-        System.out.println("OPEN");
         if (Constants.currentMode != Constants.simMode){
-            return Commands.run(() -> io.setVoltage(volts + kGravityTermSpark), this);
+            return Commands.run(() -> {
+                io.setClosedLoop(false);
+                io.setVoltage(volts + kGravityTermSpark);
+            }, this);
         }
-        return Commands.run(() -> io.setVoltage(volts), this);
+        return Commands.run(() -> {
+            io.setClosedLoop(false);
+            io.setVoltage(volts);
+        }, this);
     }
 
     public Command goToPresetCommand(double rotations) {
-        this.io.setClosedLoop(true);
-        return Commands.run(() -> io.updateSetpoint(rotations), this);
+        return Commands.run(() -> {
+            this.io.setClosedLoop(true);
+            io.updateSetpoint(rotations);
+        }, this);
     }
 
     public double getElevatorPosition() {

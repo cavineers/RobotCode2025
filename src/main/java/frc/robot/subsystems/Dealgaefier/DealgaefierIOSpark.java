@@ -67,6 +67,7 @@ public class DealgaefierIOSpark implements DealgaefierIO {
                     PersistMode.kPersistParameters));
 
         var intakeConfig = new SparkMaxConfig().apply(deployConfig);
+        intakeConfig.smartCurrentLimit(DealgaefierConstants.kIntakeCurrentLimit);
         
         intakeConfig.inverted(true);
         tryUntilOk(

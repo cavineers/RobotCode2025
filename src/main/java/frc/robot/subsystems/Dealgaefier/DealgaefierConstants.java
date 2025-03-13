@@ -7,14 +7,14 @@ public class DealgaefierConstants {
     public static final int kIntakeCanID = 55;
 
     public static final double kRestAbsoluteRotations = 0.22;
-    public static final double kDeployedAbsoluteRotations = -0.06;
+    public static final double kDeployedAbsoluteRotations = -0.05;
 
     public static final int kDeployAbsEncoder = 5;
 
-    public static final double kProportionalGainSpark = 5.0;
+    public static final double kProportionalGainSpark = 10.0;
     public static final double kIntegralTermSpark = 0.0;
     public static final double kDerivativeTermSpark = 0.0;
-    public static final double kGravityTermSpark = -0.3;
+    public static final double kGravityTermSpark = -0.6;
 
     public static final double kProportionalTermSim = 0.1;
     public static final double kDerivativeTermSim = 0.0;

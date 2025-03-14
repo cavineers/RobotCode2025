@@ -102,4 +102,8 @@ public class Elevator extends SubsystemBase {
     public double getElevatorVelocity() {
         return inputs.rightVelocityRPM;
     }
+
+    public void resetPosition() {
+        this.io.resetPosition();
+    }
 }

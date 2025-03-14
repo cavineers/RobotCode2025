@@ -167,6 +167,11 @@ public class ElevatorIOSpark implements ElevatorIO {
     public void setVoltage(double volts) {
         rightMotor.setVoltage(volts);
     }
+    
+    public void resetPosition() {
+        rightEncoder.setPosition(0);
+        leftEncoder.setPosition(0);
+    }
 
     public void updateSetpoint(double setpoint) {
         this.motorSetpoint = this.clipSetpoint(setpoint);

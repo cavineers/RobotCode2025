@@ -11,6 +11,7 @@ public class AutoIntake extends Command {
     private EndEffector endEffector;
 
     public AutoIntake(EndEffector endEffector) {
+        this.endEffector = endEffector;
         addRequirements(endEffector);
     }
 
@@ -23,7 +24,7 @@ public class AutoIntake extends Command {
     public void execute() {
         Logger.recordOutput("Commands/AutoIntake", true);
 
-        endEffector.setVoltage(kEndEffectorIntakeSpeed);
+        endEffector.setVoltage(kEndEffectorIntakeSpeed*12);
     }
 
     @Override

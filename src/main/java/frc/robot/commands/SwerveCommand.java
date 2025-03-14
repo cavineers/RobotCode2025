@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import java.lang.Math;
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,11 +21,13 @@ public class SwerveCommand extends Command {
 
     private final Supplier<Double> xSpdFunction, ySpdFunction, turningSpdFunction;
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
+    private final Supplier<Boolean> slowSpeed;
 
     public SwerveCommand(SwerveDriveSubsystem swerveSubsystem,
             Supplier<Double> xSpdFunction, 
             Supplier<Double> ySpdFunction, 
-            Supplier<Double> turningSpdFunction){
+            Supplier<Double> turningSpdFunction,
+            Supplier<Boolean> slowSpeed){
         // Instance Variables
         this.swerveSubsystem = swerveSubsystem;
         this.xSpdFunction = xSpdFunction;
@@ -33,6 +36,7 @@ public class SwerveCommand extends Command {
         this.xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
         this.yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
         this.turningLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
+        this.slowSpeed = slowSpeed;
         addRequirements(swerveSubsystem);
     }
 
@@ -62,6 +66,12 @@ public class SwerveCommand extends Command {
         turningSpeed = turningLimiter.calculate(turningSpeed)
             * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
         
+        if (slowSpeed.get()){
+            xSpeed *= 0.25;
+            ySpeed *= 0.25;
+            turningSpeed *= 0.25;
+        }
+        Logger.recordOutput("Odometry/SpeedLimit", this.slowSpeed.get());
         
         // Flipped
         boolean flipped = swerveSubsystem.shouldFlipPose();

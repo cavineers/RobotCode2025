@@ -117,6 +117,10 @@ public class ElevatorIOSim implements ElevatorIO {
         return elevPid.getError();
     }
 
+    public void resetPosition(){
+        return;
+    }
+
     private void update(double dt) {
         // Clamp the input voltage to the motor
         // inputTorqueCurrent = MathUtil.clamp(inputTorqueCurrent,

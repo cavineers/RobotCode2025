@@ -4,11 +4,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.AutoLogOutput;
 
 public class EndEffector extends SubsystemBase {
     private final EndEffectorIO io;
     private final EndEffectorIOInputsAutoLogged inputs = new EndEffectorIOInputsAutoLogged();
 
+    @AutoLogOutput(key="EndEffector/isShooting")
     private boolean isShooting = false;
 
     public EndEffector(EndEffectorIO io) {
@@ -61,5 +63,9 @@ public class EndEffector extends SubsystemBase {
 
     public Command stopCommand() {
         return Commands.run(() -> io.setVoltage(0), this);
+    }
+
+    public boolean getIsShooting(){
+        return this.isShooting;
     }
 }

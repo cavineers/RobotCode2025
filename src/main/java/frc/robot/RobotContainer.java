@@ -71,6 +71,7 @@ public class RobotContainer {
 
     
     // Commands
+    private final Command autoIntakeCommand;
 
     // Auto chooser
     private final LoggedDashboardChooser<Command> autoChooser;
@@ -149,6 +150,7 @@ public class RobotContainer {
         }
         lights = new Lights(elevator::getElevatorVelocity, endEffector::isShooting, ()-> false, endEffector::getBumpStop, elevator::isIntakePosition);
         // Create commands
+        this.autoIntakeCommand = new AutoIntake(this.endEffector);
        
         configureButtonBindings();
         configureNamedCommands();
@@ -182,18 +184,23 @@ public class RobotContainer {
                 drivetrain,
                 primaryDriverController::getLeftY,
                 primaryDriverController::getLeftX,
-                primaryDriverController::getRightX));
+                primaryDriverController::getRightX,
+                () -> elevator.getElevatorPosition() > ElevatorConstants.kL2Rotations));
 
         primaryDriverController.b().onTrue(
             Commands.runOnce(() -> {
                 if (elevator.isIntakePosition()){
-                    endEffector.intakeCommand().schedule();
+                    this.autoIntakeCommand.schedule();
                 } else {
                     endEffector.shootCommand().schedule();
                 }
             })
         );
-        primaryDriverController.b().onFalse(endEffector.stopCommand());
+        primaryDriverController.b().onFalse(Commands.runOnce(() -> {
+            if (endEffector.getIsShooting()){
+                endEffector.stopCommand().schedule();
+            }
+        }));
         primaryDriverController.rightTrigger(0.85).onTrue(
             Commands.runOnce(() -> {
                 if (dealgaefier.getDeployed() == false){
@@ -218,7 +225,7 @@ public class RobotContainer {
         primaryDriverController.rightBumper().whileTrue(new AlignToClosestTag(drivetrain, drivetrain.getClosestReefPoseSide(false, true)));
 
         primaryDriverController.povLeft().onTrue(Commands.runOnce(() -> this.drivetrain.zeroHeading()));
-      
+        primaryDriverController.start().onTrue(Commands.runOnce(() -> this.elevator.resetPosition()));
         secondaryDriverController.povLeft().onTrue(elevator.goToPresetCommand(ElevatorConstants.kRestRotations));
         secondaryDriverController.povUp().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL1Rotations));
         secondaryDriverController.povRight().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL2Rotations));
@@ -231,8 +238,6 @@ public class RobotContainer {
 
     public void configureNamedCommands(){
          // Register Named Commands
-        NamedCommands.registerCommand("pegLeftCanRange", AutoHelpers.alignToPeg(true));
-        NamedCommands.registerCommand("pegRightCanRange", AutoHelpers.alignToPeg(false));
         NamedCommands.registerCommand("elevatorL1", new AutoElevatorPreset(elevator, ElevatorConstants.kL1Rotations));
         NamedCommands.registerCommand("elevatorL2", new AutoElevatorPreset(elevator, ElevatorConstants.kL2Rotations));
         NamedCommands.registerCommand("elevatorL3", new AutoElevatorPreset(elevator, ElevatorConstants.kL3Rotations));

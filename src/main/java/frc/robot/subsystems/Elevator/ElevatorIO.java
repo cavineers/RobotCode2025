@@ -56,4 +56,6 @@ public interface ElevatorIO {
         return 0;
     }
     
+    public default void resetPosition(){}
+    
 }

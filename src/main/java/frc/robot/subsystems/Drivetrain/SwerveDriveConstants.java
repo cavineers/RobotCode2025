@@ -25,7 +25,7 @@ public class SwerveDriveConstants {
 
         public static final double kPhysicalMaxSpeedMetersPerSecond = 3.63; 
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = Units.degreesToRadians(720);
-        public static final double kWheelRadiusMeters = Units.inchesToMeters(1.892);
+        public static final double kWheelRadiusMeters = Units.inchesToMeters(1.942);
 
         public static final int kFrontLeftTurningCanID = 3;
         public static final int kFrontRightTurningCanID = 1;
@@ -70,7 +70,7 @@ public class SwerveDriveConstants {
         // Distance between front and back wheels
         public static final double kWheelBase = Units.inchesToMeters(22.36);
         public static final double kDriveBaseRadius = Math.hypot(kTrackWidth / 2.0, kWheelBase / 2.0);
-        public static final double kSideLength = Units.inchesToMeters(30.5); // 2.5 inches bumper: Represents full width
+        public static final double kSideLength = Units.inchesToMeters(29.5); // 2.5 inches bumper: Represents full width
                                                                              // of the robot
 
         public static final Translation2d[] moduleTranslations = new Translation2d[] {

@@ -30,8 +30,8 @@ public class AlignToClosestTag extends Command {
     private int tagId;
 
     // PIDs for movement
-    private PIDController translationXController = new PIDController(DriveConstants.PathPlannerDriveP+2, 0, 0);
-    private PIDController translationYController = new PIDController(DriveConstants.PathPlannerDriveP+2, 0, 0);
+    private PIDController translationXController = new PIDController(DriveConstants.PathPlannerDriveP+2, 0, 0.25);
+    private PIDController translationYController = new PIDController(DriveConstants.PathPlannerDriveP+2, 0, 0.25);
     private PIDController rotationController = new PIDController(DriveConstants.PathPlannerTurnP+1, 0, 0);
 
     private Supplier<Pose2d> targetPoseSupplier;

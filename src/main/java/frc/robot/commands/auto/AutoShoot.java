@@ -3,6 +3,7 @@ import static frc.robot.subsystems.EndEffector.EndEffectorConstants.kEndEffector
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.EndEffector.EndEffector;
 
@@ -10,9 +11,12 @@ public class AutoShoot extends Command {
 
     private EndEffector endEffector;
 
+    private Debouncer endDebouncer;
+
     public AutoShoot(EndEffector endEffector) {
         addRequirements(endEffector);
         this.endEffector = endEffector;
+        this.endDebouncer = new Debouncer(0.25);
     }
 
     @Override
@@ -37,6 +41,6 @@ public class AutoShoot extends Command {
     @Override
     public boolean isFinished() {
 
-        return !endEffector.getIR();
+        return this.endDebouncer.calculate(!endEffector.getIR());
     }
 }

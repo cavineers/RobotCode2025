@@ -190,17 +190,13 @@ public class RobotContainer {
         primaryDriverController.b().onTrue(
             Commands.runOnce(() -> {
                 if (elevator.isIntakePosition()){
-                    this.autoIntakeCommand.schedule();
+                    endEffector.intakeCommand().schedule();
                 } else {
                     endEffector.shootCommand().schedule();
                 }
             })
         );
-        primaryDriverController.b().onFalse(Commands.runOnce(() -> {
-            if (endEffector.getIsShooting()){
-                endEffector.stopCommand().schedule();
-            }
-        }));
+        primaryDriverController.b().onFalse(endEffector.stopCommand());
         primaryDriverController.rightTrigger(0.85).onTrue(
             Commands.runOnce(() -> {
                 if (dealgaefier.getDeployed() == false){

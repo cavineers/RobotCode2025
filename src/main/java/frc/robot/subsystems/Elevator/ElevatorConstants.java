@@ -27,7 +27,7 @@ public class ElevatorConstants {
     public static final double kLoadMassKg = Units.lbsToKilograms(10); // represents the weight shooter
     public static final double kElevatorMassKg = Units.lbsToKilograms(25); // represents the weight of the elevator
 
-    public static final double badReefConstant = 1.5;
+    public static final double badReefConstant = 0;
     public static final double kRestRotations = 0;
     public static final double kL1Rotations = 1.4 + badReefConstant;
     public static final double kL2Rotations = 27.8 + badReefConstant;
@@ -63,6 +63,7 @@ public class ElevatorConstants {
 
     public static final double kShootIntakeBountryOffset = 10;
     public static final double kIntakeShootBoundry = kRestRotations + kShootIntakeBountryOffset;
+
 
     public static final double kSetPointTolerance = 1.5;
 

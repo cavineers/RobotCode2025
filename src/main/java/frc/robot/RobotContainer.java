@@ -185,7 +185,7 @@ public class RobotContainer {
                 primaryDriverController::getLeftY,
                 primaryDriverController::getLeftX,
                 primaryDriverController::getRightX,
-                () -> elevator.getElevatorPosition() > ElevatorConstants.kL2Rotations));
+                () -> elevator.getElevatorPosition() > ElevatorConstants.kL2Rotations - 2 && Math.abs(elevator.getElevatorVelocity()) < 3)); // dummy numbers
 
         primaryDriverController.b().onTrue(
             Commands.runOnce(() -> {
@@ -221,7 +221,8 @@ public class RobotContainer {
         primaryDriverController.rightBumper().whileTrue(new AlignToClosestTag(drivetrain, drivetrain.getClosestReefPoseSide(false, true)));
 
         primaryDriverController.povLeft().onTrue(Commands.runOnce(() -> this.drivetrain.zeroHeading()));
-        primaryDriverController.start().onTrue(Commands.runOnce(() -> this.elevator.resetPosition()));
+
+        
         secondaryDriverController.povLeft().onTrue(elevator.goToPresetCommand(ElevatorConstants.kRestRotations));
         secondaryDriverController.povUp().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL1Rotations));
         secondaryDriverController.povRight().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL2Rotations));
@@ -229,7 +230,7 @@ public class RobotContainer {
         secondaryDriverController.a().onTrue(elevator.goToPresetCommand(ElevatorConstants.kL4Rotations));
         secondaryDriverController.b().onTrue(elevator.goToPresetCommand(ElevatorConstants.kAlgae1Rotations));
         secondaryDriverController.x().onTrue(elevator.goToPresetCommand(ElevatorConstants.kAlgae2Rotations));
-
+        secondaryDriverController.y().onTrue(Commands.runOnce(() -> this.elevator.resetPosition()));
     }
 
     public void configureNamedCommands(){

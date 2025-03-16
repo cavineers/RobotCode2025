@@ -91,9 +91,9 @@ public class ElevatorIOSpark implements ElevatorIO {
 
     @Override
     public void updateInputs(ElevatorIOInputs inputs) {
-        if (limitSwitch.get()){
-            this.resetPosition();
-        }
+        // if (limitSwitch.get()){
+        //     this.resetPosition();
+        // }
         // Update for right motor
         ifOk(rightMotor, rightEncoder::getPosition, (value) -> inputs.rightPositionRotations = value);
         ifOk(rightMotor, rightEncoder::getVelocity, (value) -> inputs.rightVelocityRPM = value);

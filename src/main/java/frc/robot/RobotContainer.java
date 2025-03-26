@@ -21,20 +21,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.SwerveCommand;
 
-import frc.robot.subsystems.Dealgaefier.Dealgaefier;
-import frc.robot.subsystems.Dealgaefier.DealgaefierIO;
-import frc.robot.subsystems.Dealgaefier.DealgaefierIOSim;
-import frc.robot.subsystems.Dealgaefier.DealgaefierIOSpark;
-import frc.robot.subsystems.CanRangeArray.CanRangeArray;
 
 import frc.robot.subsystems.Drivetrain.GyroIO;
 import frc.robot.subsystems.Drivetrain.GyroPigeonIO;
 import frc.robot.subsystems.Drivetrain.ModuleIO;
 import frc.robot.subsystems.Drivetrain.ModuleIOSim;
 import frc.robot.subsystems.Drivetrain.ModuleIOSpark;
-import frc.robot.subsystems.CanRangeArray.CanRangeIOReal;
-import frc.robot.subsystems.CanRangeArray.CanRangeIOSim;
-import frc.robot.subsystems.CanRangeArray.CanRangeIO;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
 import frc.robot.subsystems.EndEffector.EndEffector;
 import frc.robot.subsystems.EndEffector.EndEffectorIO;
@@ -55,10 +47,7 @@ public class RobotContainer {
     // Subsystems
     public final SwerveDriveSubsystem drivetrain;
 
-    public final Dealgaefier dealgaefier;
-
     public final Vision vision;
-    public final CanRangeArray canRangeArray;
 
     public final EndEffector endEffector;
     public final Elevator elevator;
@@ -87,20 +76,12 @@ public class RobotContainer {
                         new ModuleIOSpark(2),
                         new ModuleIOSpark(3));
 
-
-                dealgaefier = new Dealgaefier(new DealgaefierIOSpark());
-
                 vision = new Vision(
                     drivetrain::addVisionMeasurement,
                     new VisionIOPhoton(frontCameraName, robotToFrontCam));
                     // new VisionIOPhoton(backCameraName, robotToBackCam));
 
-                canRangeArray = new CanRangeArray(
-                    new CanRangeIOReal(0),
-                    new CanRangeIOReal(1),
-                    new CanRangeIOReal(2),
-                    new CanRangeIOReal(3)
-                );
+         
                 
                 endEffector = new EndEffector(new EndEffectorIOSpark());
                 elevator = new Elevator(new ElevatorIOSpark());
@@ -115,14 +96,10 @@ public class RobotContainer {
                         new ModuleIOSim(),
                         new ModuleIOSim());
 
-                dealgaefier = new Dealgaefier(new DealgaefierIOSim());
-
                 vision = new Vision(
                     drivetrain::addVisionMeasurement);
                     // new VisionIOPhotonSim(frontCameraName, robotToFrontCam, () -> drivetrain.getPose()));
                     // new VisionIOPhotonSim(backCameraName, robotToBackCam, () -> drivetrain.getPose()));
-
-                canRangeArray = new CanRangeArray(new CanRangeIOSim(0), new CanRangeIOSim(1), new CanRangeIOSim(2), new CanRangeIOSim(3));
 
                 endEffector = new EndEffector(new EndEffectorIOSim());
                 elevator = new Elevator(new ElevatorIOSim());
@@ -139,10 +116,8 @@ public class RobotContainer {
                         new ModuleIO() {});
 
 
-                dealgaefier = new Dealgaefier(new DealgaefierIO(){});     
 
                 vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
-                canRangeArray = new CanRangeArray(new CanRangeIO() {}, new CanRangeIO() {}, new CanRangeIO() {}, new CanRangeIO() {});
                 endEffector = new EndEffector(new EndEffectorIO(){});
                 elevator = new Elevator(new ElevatorIO(){});
 
@@ -197,26 +172,12 @@ public class RobotContainer {
             })
         );
         primaryDriverController.b().onFalse(endEffector.stopCommand());
-        primaryDriverController.rightTrigger(0.85).onTrue(
-            Commands.runOnce(() -> {
-                if (dealgaefier.getDeployed() == false){
-                    dealgaefier.deployCommand().schedule();
-                } else {
-                    dealgaefier.retractCommand().schedule();
-                }
-            })
-        );
-
-        primaryDriverController.leftTrigger(0.85).onTrue(dealgaefier.shootCommand());
-        primaryDriverController.leftTrigger(0.85).onFalse(dealgaefier.retractCommand());
 
         primaryDriverController.povUp().onTrue(elevator.setVoltageCommand(1));
         primaryDriverController.povUp().onFalse(elevator.setVoltageCommand(0));
         primaryDriverController.povDown().onTrue(elevator.setVoltageCommand(-1));
         primaryDriverController.povDown().onFalse(elevator.setVoltageCommand(0));
 
-        // primaryDriverController.leftBumper().whileTrue(new AlignToPeg(drivetrain, canRangeArray, true));
-        // primaryDriverController.rightBumper().whileTrue(new AlignToPeg(drivetrain, canRangeArray, false));
         primaryDriverController.leftBumper().whileTrue(new AlignToClosestTag(drivetrain, drivetrain.getClosestReefPoseSide(true, true)));
         primaryDriverController.rightBumper().whileTrue(new AlignToClosestTag(drivetrain, drivetrain.getClosestReefPoseSide(false, true)));
 

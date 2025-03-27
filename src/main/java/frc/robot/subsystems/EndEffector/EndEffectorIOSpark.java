@@ -18,9 +18,9 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.SparkMax;
-
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.simulation.DIOSim;
+import com.ctre.phoenix6.hardware.CANrange;
+import com.ctre.phoenix6.configs.CANrangeConfiguration;
 
 public class EndEffectorIOSpark implements EndEffectorIO {
     private final SparkFlex motor = new SparkFlex(kEndEffectorCanID, MotorType.kBrushless);
@@ -33,6 +33,9 @@ public class EndEffectorIOSpark implements EndEffectorIO {
     private SparkFlexConfig config;
 
     private boolean shooting;
+
+    private final CANrange funnelSensorRight = new CANrange(EndEffectorConstants.kLineBreakIR);
+    private final CANrange funnelSensorLeft = new CANrange(EndEffectorConstants.kLineBreakIR2);
 
     public EndEffectorIOSpark() {
         config = new SparkFlexConfig();
@@ -54,6 +57,14 @@ public class EndEffectorIOSpark implements EndEffectorIO {
             5,
             () -> motor.configure(config, ResetMode.kResetSafeParameters,
                     PersistMode.kPersistParameters));
+
+
+        // Config the CANranges
+        CANrangeConfiguration funnelSensorConfig = new CANrangeConfiguration();
+        funnelSensorConfig.ProximityParams.ProximityThreshold = 0.25;
+        // funnelSensorConfig.ProximityParams.ProximityHysteresis = 0.1; // Might fix the toggling issue if it appears
+        funnelSensorRight.getConfigurator().apply(funnelSensorConfig);
+        funnelSensorLeft.getConfigurator().apply(funnelSensorConfig);
     }
 
     @Override
@@ -67,6 +78,8 @@ public class EndEffectorIOSpark implements EndEffectorIO {
         ifOk(motor, motor::getOutputCurrent, (value) -> inputs.currentAmps = value);
         inputs.coralLoadedLimit = this.getBumpStop();
         inputs.coralPresentIR = this.getIR();
+
+        inputs.isFunneling = funnelSensorRight.getIsDetected().getValue() || funnelSensorLeft.getIsDetected().getValue();
     }
 
     public boolean getBumpStop(){

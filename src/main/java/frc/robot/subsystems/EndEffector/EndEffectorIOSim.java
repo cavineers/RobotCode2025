@@ -33,6 +33,7 @@ public class EndEffectorIOSim implements EndEffectorIO {
 
         inputs.coralPresentIR = false;
         inputs.coralLoadedLimit = true;
+        inputs.isFunneling = true;
     }
 
     public boolean getSensor(DIOSim sensor) {

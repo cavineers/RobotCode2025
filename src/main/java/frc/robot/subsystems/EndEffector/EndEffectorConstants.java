@@ -5,6 +5,9 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 public class EndEffectorConstants {
     public static final int kEndEffectorCanID = 30;
 
+    public static final int kLineBreakIR = 50;
+    public static final int kLineBreakIR2 = 51;
+
     public static final int kCoralPresentIR = 8;
     public static final int kCoralLoadedLimit = 9;
 

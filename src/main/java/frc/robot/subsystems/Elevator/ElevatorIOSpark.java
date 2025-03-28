@@ -43,6 +43,8 @@ public class ElevatorIOSpark implements ElevatorIO {
     private LoggedNetworkNumber tuningD = new LoggedNetworkNumber("/Tuning/Elevator/D", ElevatorConstants.kDerivativeTermSpark);
     private LoggedNetworkNumber tuningG = new LoggedNetworkNumber("/Tuning/Elevator/G", ElevatorConstants.kGravityTermSpark); 
 
+    private LoggedNetworkNumber tuningMaxVelocity = new LoggedNetworkNumber("/Tuning/Elevator/MaxVelocity", ElevatorConstants.kMaxVelocityRPS);
+    private LoggedNetworkNumber tuningMaxAcceleration = new LoggedNetworkNumber("/Tuning/Elevator/MaxAcceleration", ElevatorConstants.kMaxAccelerationRPS2);
     private final DigitalInput limitSwitch = new DigitalInput(ElevatorConstants.kLimitSwitchID);
 
     @AutoLogOutput(key = "Elevator/Goal")
@@ -137,6 +139,7 @@ public class ElevatorIOSpark implements ElevatorIO {
 
         if (kTuningMode){
             this.updatePID();
+            this.updateMotionProfiling();
         }
 
         if (controller.atGoal()) {
@@ -196,6 +199,15 @@ public class ElevatorIOSpark implements ElevatorIO {
 
         if (currentP != this.tuningP.get() || currentD != this.tuningD.get()){
             this.controller.setPID(this.tuningP.get(), 0, this.tuningD.get());
+        }
+    }
+
+    private void updateMotionProfiling(){
+        double currentMaxVelocity = this.controller.getConstraints().maxVelocity;
+        double currentMaxAcceleration = this.controller.getConstraints().maxAcceleration;
+
+        if (currentMaxVelocity != tuningMaxAcceleration.get() || currentMaxAcceleration != tuningMaxAcceleration.get()){
+            this.controller.setConstraints(new Constraints(tuningMaxVelocity.get(),  tuningMaxAcceleration.get()));
         }
     }
 

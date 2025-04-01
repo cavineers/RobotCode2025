@@ -10,6 +10,7 @@ import static frc.robot.subsystems.EndEffector.EndEffectorConstants.kCoralPresen
 import static frc.robot.subsystems.EndEffector.EndEffectorConstants.kEndEffectorCanID;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -96,9 +97,13 @@ public class EndEffectorIOSpark implements EndEffectorIO {
     }
 
     @Override
-    public void shoot() {
+    public void shoot(boolean isL4) {
         if(getSensor(coralLoadedLimit) == false) {
-            motor.setVoltage(EndEffectorConstants.kEndEffectorShootSpeed * 12.0);
+            if (isL4) {
+                motor.setVoltage(EndEffectorConstants.kEndEffectorShootSpeedL4 * 12.0);
+            } else {
+                motor.setVoltage(EndEffectorConstants.kEndEffectorShootSpeed * 12.0);
+            }
         }
     }
 }

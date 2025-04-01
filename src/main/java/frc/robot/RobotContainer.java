@@ -167,7 +167,7 @@ public class RobotContainer {
                 if (elevator.isIntakePosition()){
                     endEffector.intakeCommand().schedule();
                 } else {
-                    endEffector.shootCommand().schedule();
+                    endEffector.shootCommand(elevator.getElevatorPosition() > ElevatorConstants.kL3Rotations + 5).schedule();
                 }
             })
         );

@@ -2,6 +2,8 @@ package frc.robot.subsystems.EndEffector;
 
 import static frc.robot.subsystems.EndEffector.EndEffectorConstants.*;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -50,7 +52,8 @@ public class EndEffectorIOSim implements EndEffectorIO {
         }
     }
 
-    public void shoot() {
+    @Override
+    public void shoot(boolean isL4) {
         if(getSensor(coralLoadedLimit) == false) {
             setVoltage(EndEffectorConstants.kEndEffectorShootSpeed * 12.0);
         }

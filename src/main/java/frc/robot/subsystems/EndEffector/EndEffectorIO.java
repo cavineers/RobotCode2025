@@ -1,5 +1,7 @@
 package frc.robot.subsystems.EndEffector;
 
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.AutoLog;
 
 public interface EndEffectorIO {
@@ -20,7 +22,7 @@ public interface EndEffectorIO {
     public default void setVoltage(double volts) {
     }
 
-    public default void shoot() {
+    public default void shoot(boolean isL4) {
     }
 
     public default void intake() {}

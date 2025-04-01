@@ -4,6 +4,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
+
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 
 public class EndEffector extends SubsystemBase {
@@ -47,10 +50,10 @@ public class EndEffector extends SubsystemBase {
         return Commands.run(() -> io.intake(), this);
     } 
 
-    public Command shootCommand() {
+    public Command shootCommand(Boolean isL4) {
         return Commands.run(() -> {
             this.isShooting = true;
-            io.shoot();
+            io.shoot(isL4);
         }, this).finallyDo(interrupted -> {
             this.isShooting = false;
             io.setVoltage(0);

@@ -213,6 +213,9 @@ public class ElevatorIOSpark implements ElevatorIO {
 
     @Override
     public void setClosedLoop(boolean val) {
+        if (val != this.isClosed){
+            this.controller.reset(this.rightEncoder.getPosition());
+        }
         this.isClosed = val;
     }
 

@@ -52,7 +52,7 @@ public class ElevatorConstants {
     public static final double kStaticFrictionTermSpark = 0.0;
     public static final double kGravityTermSpark = 0.3;
     public static final double kGravityTermHeightCompensation = 0.0; // once carriage engages, add this to gravity term
-    public static final double kTolerance = 3;
+    public static final double kTolerance = 1;
 
 
     public static final double kProportionalGainSim = 200;
@@ -61,8 +61,8 @@ public class ElevatorConstants {
     public static final double kStaticFrictionTermSim = 0.0;
     public static final double kGravityTermSim = 0.55;
 
-    public static final double kShootIntakeBountryOffset = 7.0;
-    public static final double kIntakeShootBoundry = kL2Rotations - kShootIntakeBountryOffset;
+    public static final double kShootIntakeBountryOffset = 1.0;
+    public static final double kIntakeShootBoundry = kL1Rotations + 1;
 
 
     public static final double kSetPointTolerance = 1.5;

@@ -70,7 +70,7 @@ public class SwerveDriveConstants {
         // Distance between front and back wheels
         public static final double kWheelBase = Units.inchesToMeters(22.36);
         public static final double kDriveBaseRadius = Math.hypot(kTrackWidth / 2.0, kWheelBase / 2.0);
-        public static final double kSideLength = Units.inchesToMeters(29.5); // 2.5 inches bumper: Represents full width
+        public static final double kSideLength = Units.inchesToMeters(17.5); // 2.5 inches bumper: Represents full width
                                                                              // of the robot
 
         public static final Translation2d[] moduleTranslations = new Translation2d[] {

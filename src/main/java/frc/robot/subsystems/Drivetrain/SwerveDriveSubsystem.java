@@ -395,7 +395,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Normalize the direction vector to a magnitude of 1
         direction = direction.div(direction.getNorm());
 
-        Translation2d projectedTranslation = closest.getTranslation().plus(direction.times(DriveConstants.kSideLength / 2.0));
+        Translation2d projectedTranslation = closest.getTranslation().plus(direction.times(DriveConstants.kSideLength));
         // Create the new pose
         Pose2d centerPose = new Pose2d(projectedTranslation, closest.getRotation());      
         

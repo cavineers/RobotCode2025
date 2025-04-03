@@ -30,17 +30,18 @@ public class AlignToClosestTag extends Command {
     private int tagId;
 
     // PIDs for movement
-    private PIDController translationXController = new PIDController(DriveConstants.PathPlannerDriveP+2, 0, 0.25);
-    private PIDController translationYController = new PIDController(DriveConstants.PathPlannerDriveP+2, 0, 0.25);
+    private PIDController translationXController = new PIDController(DriveConstants.PathPlannerDriveP, 0, 0.75);
+    private PIDController translationYController = new PIDController(DriveConstants.PathPlannerDriveP, 0, 0.75);
     private PIDController rotationController = new PIDController(DriveConstants.PathPlannerTurnP+1, 0, 0);
 
     private Supplier<Pose2d> targetPoseSupplier;
+    private boolean speedLow = false;
 
     public AlignToClosestTag(SwerveDriveSubsystem drivetrain, Supplier<Pose2d> targetPoseSupplier){
         this.drivetrain = drivetrain;
         this.rotationController.setTolerance(0.01);
-        this.translationXController.setTolerance(0.01);
-        this.translationYController.setTolerance(0.01);
+        this.translationXController.setTolerance(0.02);
+        this.translationYController.setTolerance(0.02);
         this.targetPoseSupplier = targetPoseSupplier;
         addRequirements(drivetrain);
     }
@@ -52,7 +53,7 @@ public class AlignToClosestTag extends Command {
         this.translationYController.setSetpoint(0); 
         this.rotationController.setSetpoint(this.targetPoseSupplier.get().getRotation().getRadians()); // set the rotation setpoint to the goal rotation
         this.rotationController.enableContinuousInput(-Math.PI, Math.PI);
-
+        this.speedLow = false;
     }
 
     @Override
@@ -90,19 +91,25 @@ public class AlignToClosestTag extends Command {
                 return speeds.omegaRadiansPerSecond;
             });
         }
+        this.speedLow = determineSpeedThreshold(speeds);
+        // if (!this.speedLow){
         this.drivetrain.driveVelocity(speeds);
+        // }
         
         
 
     }
 
-
+    private boolean determineSpeedThreshold(ChassisSpeeds speeds){
+        return false;
+    }
     @Override
     public boolean isFinished(){
         return 
             this.translationXController.atSetpoint() &&
             this.translationYController.atSetpoint() &&
-            this.rotationController.atSetpoint();
+            this.rotationController.atSetpoint() ||
+            this.speedLow;
     }
 
     @Override

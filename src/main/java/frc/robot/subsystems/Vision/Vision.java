@@ -14,6 +14,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
@@ -101,7 +102,11 @@ public class Vision extends SubsystemBase {
 
                 if (i < cameraStdDevFactors.length) {
                     linearStdDev *= cameraStdDevFactors[i];
-                    angularStdDev *= cameraStdDevFactors[i];
+                    if (DriverStation.isEnabled()){
+                        angularStdDev = 100000; // Don't use the angle reading when the robot is enabled
+                    }else{
+                        angularStdDev *= cameraStdDevFactors[i]; // Reduce angular std dev in simulation
+                    }
                 }
 
                 // Send vision observation

@@ -16,7 +16,7 @@ public class VisionConstants {
 
     // Camera palcements
     public static Transform3d robotToRightCamera = new Transform3d(0.16, -0.33, 0.25, new Rotation3d(0.0,0, Units.degreesToRadians(30)));
-    public static Transform3d robotToLeftCamera = new Transform3d(0.16, 0.33, 0.25, new Rotation3d(0.0, 0, Units.degreesToRadians(-30)));
+    public static Transform3d robotToLeftCamera = new Transform3d(0.16, 0.33, 0.25, new Rotation3d(0.0, 0, Units.degreesToRadians(-32)));
 
     public static double maxAmbiguity = 0.3;
     public static double maxZError = 1.0;

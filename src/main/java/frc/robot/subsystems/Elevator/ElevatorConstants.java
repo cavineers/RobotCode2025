@@ -65,7 +65,7 @@ public class ElevatorConstants {
     public static final double kIntakeShootBoundry = kL1Rotations + 1;
 
 
-    public static final double kSetPointTolerance = 1.5;
+    public static final double kSetPointTolerance = 1.0;
 
     public static final int kCurrentLimit = 60;
 

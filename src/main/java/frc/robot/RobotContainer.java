@@ -203,6 +203,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("elevatorRest", new AutoElevatorPreset(elevator, ElevatorConstants.kRestRotations));
         NamedCommands.registerCommand("shoot", new AutoShoot(endEffector));
         NamedCommands.registerCommand("intake", new AutoIntake(endEffector));
+        NamedCommands.registerCommand("waitUntilFunnel", this.endEffector.getIsFunnelingCommand());
         NamedCommands.registerCommand("pegLeft", new AlignToClosestTag(drivetrain, drivetrain.getClosestReefPoseSide(true, true)));
         NamedCommands.registerCommand("pegRight", new AlignToClosestTag(drivetrain, drivetrain.getClosestReefPoseSide(false, true)));
     }

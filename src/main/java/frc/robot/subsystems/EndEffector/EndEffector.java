@@ -71,4 +71,12 @@ public class EndEffector extends SubsystemBase {
     public boolean getIsShooting(){
         return this.isShooting;
     }
+
+    public boolean getIsFunneling(){
+        return this.inputs.isFunneling;
+    }
+
+    public Command getIsFunnelingCommand(){
+        return Commands.waitUntil(this::getIsFunneling);
+    }
 }

@@ -14,6 +14,8 @@ public interface EndEffectorIO {
 
         public boolean coralPresentIR = false;
         public boolean coralLoadedLimit = false;
+
+        public boolean isFunneling = false;
     }
 
     public default void updateInputs(EndEffectorIOInputs inputs) {

@@ -32,7 +32,7 @@ public class ElevatorConstants {
     public static final double kL1Rotations = 19 + badReefConstant;
     public static final double kL2Rotations = 27.8 + badReefConstant;
     public static final double kL3Rotations = 42 + badReefConstant;
-    public static final double kL4Rotations = 62;
+    public static final double kL4Rotations = 63.5;
     public static final double kAlgae1Rotations = 19.5;
     public static final double kAlgae2Rotations = 32;
 
@@ -41,7 +41,7 @@ public class ElevatorConstants {
     public static final double kZone3 = 30;
 
     public static final double kMinRotations = 0;
-    public static final double kMaxRotations = 63;
+    public static final double kMaxRotations = 64;
 
     public static final double kMaxVelocityRPS = 75; // ROTATIONS PER SECOND
     public static final double kMaxAccelerationRPS2 = 90; // ROTATIONS PER SECOND^2

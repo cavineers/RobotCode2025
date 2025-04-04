@@ -11,15 +11,22 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "race",
           "data": {
-            "commands": []
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "pegLeft"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "pegLeft"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              }
+            ]
           }
         },
         {
@@ -35,21 +42,71 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "CPickup"
+            "name": "elevatorRest"
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "intake"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "CPickup"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
+              }
+            ]
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "PickupC"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "pegLeft"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "elevatorL2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "elevatorRest"
           }
         }
       ]

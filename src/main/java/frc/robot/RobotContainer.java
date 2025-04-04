@@ -29,6 +29,7 @@ import frc.robot.subsystems.Drivetrain.ModuleIOSim;
 import frc.robot.subsystems.Drivetrain.ModuleIOSpark;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
 import frc.robot.subsystems.EndEffector.EndEffector;
+import frc.robot.subsystems.EndEffector.EndEffectorConstants;
 import frc.robot.subsystems.EndEffector.EndEffectorIO;
 import frc.robot.subsystems.EndEffector.EndEffectorIOSim;
 import frc.robot.subsystems.EndEffector.EndEffectorIOSpark;
@@ -192,6 +193,8 @@ public class RobotContainer {
         secondaryDriverController.b().onTrue(elevator.goToPresetCommand(ElevatorConstants.kAlgae1Rotations));
         secondaryDriverController.x().onTrue(elevator.goToPresetCommand(ElevatorConstants.kAlgae2Rotations));
         secondaryDriverController.y().onTrue(Commands.runOnce(() -> this.elevator.resetPosition()));
+        secondaryDriverController.rightBumper().onTrue(endEffector.setVoltageCommand(EndEffectorConstants.kEndEffectorIntakeSpeed*12));
+        secondaryDriverController.rightBumper().onFalse(endEffector.stopCommand());
     }
 
     public void configureNamedCommands(){

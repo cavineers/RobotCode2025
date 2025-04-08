@@ -12,8 +12,6 @@ This repository contains Team 4541's robot code for the First Robotics Competiti
 
 Our 2024 robot (Tempo)'s code is available to the public [here!](https://github.com/cavineers/RobotCode2024)
 
-While a majority of the updates are either untested or in development, our issues and project board are update to date with current ongoing developments.
-
 ### Implemented:
 
 - Advantage Kit Logging

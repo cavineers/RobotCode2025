@@ -81,13 +81,12 @@ public class Elevator extends SubsystemBase {
         double inchesMoved = rotations * ElevatorConstants.kRotationToInches; // This is the change in stage height (S1 and S2 ONLY!!!)
     
         // Apply the proportional constant to stage 3 to find the change for S3
-        double deltaStage3 = Units.inchesToMeters(inchesMoved * ElevatorConstants.kStage3HeightProportion);
 
 
         // Calculate the height of the elevator
         double stage1Height = Units.inchesToMeters(inchesMoved);
         double stage2Height =  2 * stage1Height; // S2 is twice the height of S1
-        double stage3Height = stage2Height + deltaStage3;
+        double stage3Height = stage1Height * 3;
         Logger.recordOutput("3DMechanisms/Elevator/Stage1", stage1Height);
         Logger.recordOutput("3DMechanisms/Elevator/Stage2", stage2Height);
         Logger.recordOutput("3DMechanisms/Elevator/Stage3", stage3Height);

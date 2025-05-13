@@ -25,14 +25,14 @@ public class ElevatorConstants {
 
     // some physics constants
     public static final double kLoadMassKg = Units.lbsToKilograms(10); // represents the weight shooter
-    public static final double kElevatorMassKg = Units.lbsToKilograms(25); // represents the weight of the elevator
+    public static final double kElevatorMassKg = Units.lbsToKilograms(0); // represents the weight of the elevator
 
     public static final double badReefConstant = 0;
     public static final double kRestRotations = 0;
     public static final double kL1Rotations = 19 + badReefConstant;
     public static final double kL2Rotations = 27.8 + badReefConstant;
     public static final double kL3Rotations = 42 + badReefConstant;
-    public static final double kL4Rotations = 63.5;
+    public static final double kL4Rotations = 62;
     public static final double kAlgae1Rotations = 19.5;
     public static final double kAlgae2Rotations = 32;
 

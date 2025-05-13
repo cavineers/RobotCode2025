@@ -60,6 +60,8 @@ public class ElevatorIOSim implements ElevatorIO {
 
     private static Vector<N2> X = VecBuilder.fill(0.0, 0.0); // Initial state
 
+    private static final double kMaxCurrent = ElevatorConstants.kCurrentLimit; // Define the maximum allowable current
+
     @AutoLogOutput(key = "Elevator/Setpoint")
     private double motorSetpoint = 0;
     private double appliedVolts = 0.0;
@@ -68,7 +70,6 @@ public class ElevatorIOSim implements ElevatorIO {
     public ElevatorIOSim() {
         elevPid.setTolerance(ElevatorConstants.kTolerance);
     }
-
     public void updateInputs(ElevatorIOInputs inputs) {
         if (this.tuningP.get() != elevPid.getP()) {
             elevPid.setP(this.tuningP.get());
@@ -81,8 +82,8 @@ public class ElevatorIOSim implements ElevatorIO {
             for (int i = 0; i < 0.02 / (1.0 / 1000.0); i++) {
                 inputTorqueCurrent = elevPid.calculate(Units.metersToInches(X.get(0)) / kRotationToInches)
                         + this.tuningG.get();
-                inputTorqueCurrent = MathUtil.clamp(inputTorqueCurrent, -motors.stallCurrentAmps / 2.0,
-                        motors.stallCurrentAmps / 2.0);
+                inputTorqueCurrent = MathUtil.clamp(inputTorqueCurrent, -kMaxCurrent,
+                        kMaxCurrent);
                 setInputTorqueCurrent(
                         inputTorqueCurrent); // expects rotations --> given meters from state vector
                 update(1.0 / 1000.0);

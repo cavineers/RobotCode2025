@@ -2,23 +2,15 @@ package frc.robot.subsystems.EndEffector;
 
 import static frc.lib.SparkUtil.*;
 
-import frc.robot.subsystems.Elevator.Elevator;
-
-import static frc.robot.subsystems.Elevator.ElevatorConstants.kIntakeShootBoundry;
-import static frc.robot.subsystems.Elevator.ElevatorConstants.kShootIntakeBountryOffset;
-import static frc.robot.subsystems.EndEffector.EndEffectorConstants.kCoralPresentIR;
 import static frc.robot.subsystems.EndEffector.EndEffectorConstants.kEndEffectorCanID;
 
 import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
-
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
-import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
 import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.configs.CANrangeConfiguration;
@@ -32,8 +24,6 @@ public class EndEffectorIOSpark implements EndEffectorIO {
     private final DigitalInput coralLoadedLimit = new DigitalInput(EndEffectorConstants.kCoralLoadedLimit);
 
     private SparkFlexConfig config;
-
-    private boolean shooting;
 
     private final CANrange funnelSensorRight = new CANrange(EndEffectorConstants.kLineBreakIR);
     private final CANrange funnelSensorLeft = new CANrange(EndEffectorConstants.kLineBreakIR2);

@@ -13,7 +13,6 @@ import static frc.robot.subsystems.Drivetrain.SwerveDriveConstants.*;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.DriverStation;
 
 public class SwerveCommand extends Command {
 

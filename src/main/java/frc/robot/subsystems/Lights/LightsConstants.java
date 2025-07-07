@@ -1,7 +1,5 @@
 package frc.robot.subsystems.Lights;
 
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
 

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.Drivetrain;
 
-import static frc.robot.subsystems.Drivetrain.SwerveDriveConstants.*;
 import static frc.robot.subsystems.Drivetrain.SwerveDriveConstants.DriveConstants.*;
 import static frc.robot.subsystems.Drivetrain.SwerveDriveConstants.ModuleConstants.*;
 import static frc.lib.SparkUtil.*;
@@ -21,7 +20,6 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Rotation2d;
-import java.util.Queue;
 import java.util.function.DoubleSupplier;
 import com.ctre.phoenix6.hardware.CANcoder;
 
@@ -31,6 +29,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
  * and CanCoder absolute encoder for initial homing.
  */
 public class ModuleIOSpark implements ModuleIO {
+    @SuppressWarnings("unused")
     private final double zeroRotation;
 
     // Hardware objects

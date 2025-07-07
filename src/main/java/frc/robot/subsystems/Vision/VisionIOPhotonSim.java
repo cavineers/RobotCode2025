@@ -7,7 +7,6 @@ import java.util.function.Supplier;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
-import frc.robot.subsystems.Vision.VisionConstants;
 
 public class VisionIOPhotonSim extends VisionIOPhoton {
     private static VisionSystemSim visionSim;

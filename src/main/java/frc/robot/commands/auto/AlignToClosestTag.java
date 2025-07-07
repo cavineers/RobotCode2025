@@ -8,26 +8,16 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.lib.Elastic;
-import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain.SwerveDriveSubsystem;
-import frc.robot.subsystems.Vision.Vision;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import frc.robot.subsystems.Drivetrain.SwerveDriveConstants.DriveConstants;
 
 public class AlignToClosestTag extends Command {
 
     private SwerveDriveSubsystem drivetrain;
-    private Vision vision;
-    private Translation2d offset;
-    private double goalRotation;
-    private int tagId;
 
     // PIDs for movement
     private PIDController translationXController = new PIDController(DriveConstants.PathPlannerDriveP, 0, 0.0);

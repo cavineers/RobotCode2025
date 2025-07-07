@@ -1,7 +1,5 @@
 package frc.robot.subsystems.EndEffector;
 
-import java.util.function.Supplier;
-
 import org.littletonrobotics.junction.AutoLog;
 
 public interface EndEffectorIO {

@@ -18,6 +18,10 @@ import frc.robot.subsystems.Example.Example;
 import frc.robot.subsystems.Example.ExampleIO;
 import frc.robot.subsystems.Example.ExampleIOSim;
 import frc.robot.subsystems.Example.ExampleIOSpark;
+import frc.robot.subsystems.ExampleKraken.ExampleKraken;
+import frc.robot.subsystems.ExampleKraken.ExampleKrakenIO;
+import frc.robot.subsystems.ExampleKraken.ExampleKrakenIOSim;
+import frc.robot.subsystems.ExampleKraken.ExampleKrakenIOKraken;
 import frc.robot.commands.SystemIdCommands;
 
 public class RobotContainer {
@@ -25,6 +29,7 @@ public class RobotContainer {
     // Subsystems
     private final SwerveDriveSubsystem drivetrain;
     private final Example exampleSubsystem;
+    private final ExampleKraken exampleKrakenSubsystem;
 
     // Controllers
     private final CommandXboxController driverController = new CommandXboxController(0);
@@ -44,6 +49,7 @@ public class RobotContainer {
                         new ModuleIOSpark(3));
 
                 exampleSubsystem = new Example(new ExampleIOSpark());
+                exampleKrakenSubsystem = new ExampleKraken(new ExampleKrakenIOKraken());
                 break;
             case SIM:
                 drivetrain = new SwerveDriveSubsystem(
@@ -54,6 +60,7 @@ public class RobotContainer {
                         new ModuleIOSim());
                 
                 exampleSubsystem = new Example(new ExampleIOSim());
+                exampleKrakenSubsystem = new ExampleKraken(new ExampleKrakenIOSim());
                 break;
             default:
                 // Replay
@@ -65,6 +72,7 @@ public class RobotContainer {
                         new ModuleIO() {});
 
                 exampleSubsystem = new Example(new ExampleIO(){});
+                exampleKrakenSubsystem = new ExampleKraken(new ExampleKrakenIO(){});
                 break;
         }
         configureButtonBindings();

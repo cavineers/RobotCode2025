@@ -2,6 +2,9 @@ package frc.robot.subsystems.Example;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
+
+import frc.robot.subsystems.Example.ExampleIO.ExampleIOInputsAutoLogged;
 
 public class Example extends SubsystemBase {
     private final ExampleIO io;
@@ -14,7 +17,7 @@ public class Example extends SubsystemBase {
     @Override
     public void periodic() { // Called once per scheduler run
         io.updateInputs(inputs); // inputs is passed as a reference here
-        Logger.processInputs("Example", inputs); // required for logging and replay to work
+        Logger.processInputs("Example", (LoggableInputs)inputs); // required for logging and replay to work
 
         // Set the voltage to something random every periodic for fun
         io.setVoltage(Math.random() * 12.0);

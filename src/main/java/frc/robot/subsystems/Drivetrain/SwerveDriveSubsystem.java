@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.lib.LocalADStarAK;
+import frc.robot.subsystems.Drivetrain.GyroIO.GyroIOInputsAutoLogged;
 import frc.robot.subsystems.Drivetrain.SwerveDriveConstants.DriveConstants;
 import frc.robot.subsystems.Drivetrain.SwerveDriveConstants.PathPlanConstants;
 import frc.robot.subsystems.Drivetrain.SwerveDriveConstants.TranslationConstants;
@@ -35,6 +36,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
+
 
 public class SwerveDriveSubsystem extends SubsystemBase {
     static final Lock odometryLock = new ReentrantLock();
@@ -142,7 +145,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
         // Gyro
         gyroIO.updateInputs(gyroInputs); // Update gyro values
-        Logger.processInputs("Drivetrain/Gyro", gyroInputs);
+        Logger.processInputs("Drivetrain/Gyro", (LoggableInputs) gyroInputs);
         gyroDisconnectedAlert.set(!gyroInputs.connected); // Update gyro alert
 
         // Run the periodics for each module

@@ -40,7 +40,7 @@ public class ModuleIOSim implements ModuleIO {
     }
 
     @Override
-    public void updateInputs(ModuleIOInputs inputs) {
+    public void updateInputs(ModuleIOInputsAutoLogged inputs) {
         // Run closed-loop control
         if (driveClosedLoop) {
             driveAppliedVolts = driveFFVolts + driveController.calculate(driveSim.getAngularVelocityRadPerSec());

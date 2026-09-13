@@ -19,7 +19,7 @@ public class ExampleIOSpark implements ExampleIO {
     }
 
     @Override
-    public void updateInputs(ExampleIOInputs inputs) {
+    public void updateInputs(ExampleIOInputsAutoLogged inputs) {
         ifOk(motor, encoder::getPosition, (value) -> inputs.positionRad = value); // only updates the value if the output is valid
         ifOk(motor, encoder::getVelocity, (value) -> inputs.velocityRadPerSec = value);
         ifOk(

@@ -65,7 +65,7 @@ public class ExampleKrakenIOKraken implements ExampleKrakenIO {
     }
 
     @Override
-    public void updateInputs(ExampleKrakenIOInputs inputs) {
+    public void updateInputs(ExampleKrakenIOInputsAutoLogged inputs) {
         inputs.velocityRotationsPerSec = motor.getVelocity().getValueAsDouble();
         inputs.appliedVoltage = motor.getMotorVoltage().getValueAsDouble();
         inputs.currentAmps = motor.getSupplyCurrent().getValueAsDouble();

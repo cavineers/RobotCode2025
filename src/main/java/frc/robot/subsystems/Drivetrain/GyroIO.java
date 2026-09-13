@@ -5,7 +5,7 @@ import org.littletonrobotics.junction.AutoLog;
 
 public interface GyroIO {
   @AutoLog
-  public static class GyroIOInputs {
+  public static class GyroIOInputsAutoLogged {
     public boolean connected = false;
     public Rotation2d yawPosition = new Rotation2d();
     public double yawVelocityRadPerSec = 0.0;
@@ -13,5 +13,5 @@ public interface GyroIO {
     public Rotation2d[] odometryYawPositions = new Rotation2d[] {};
   }
 
-  public default void updateInputs(GyroIOInputs inputs) {}
+  public default void updateInputs(GyroIOInputsAutoLogged inputs) {}
 }

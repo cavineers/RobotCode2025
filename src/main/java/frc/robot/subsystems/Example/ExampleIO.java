@@ -4,7 +4,7 @@ import org.littletonrobotics.junction.AutoLog;
 
 public interface ExampleIO {
     @AutoLog
-    public static class ExampleIOInputs {
+    public static class ExampleIOInputsAutoLogged {
         public double positionRad = 0.0;
         public double velocityRadPerSec = 0.0;
         public double appliedVolts = 0.0;
@@ -12,7 +12,7 @@ public interface ExampleIO {
     }
 
     /** Update the set of loggable inputs. */
-    public default void updateInputs(ExampleIOInputs inputs) {
+    public default void updateInputs(ExampleIOInputsAutoLogged inputs) {
     }
 
     /** Run open loop at the specified voltage. */

@@ -1,7 +1,10 @@
 package frc.robot.subsystems.ExampleKraken;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.ExampleKraken.ExampleKrakenIO.ExampleKrakenIOInputsAutoLogged;
+
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public class ExampleKraken extends SubsystemBase {
     private final ExampleKrakenIO io;
@@ -14,7 +17,7 @@ public class ExampleKraken extends SubsystemBase {
     @Override
     public void periodic() { // Called once per scheduler run
         io.updateInputs(inputs); // inputs is passed as a reference here
-        Logger.processInputs("Example", inputs); // required for logging and replay to work
+        Logger.processInputs("Example", (LoggableInputs) inputs); // required for logging and replay to work
 
         // Set the voltage to something random every periodic for fun
         io.setVoltage(Math.random() * 12.0);

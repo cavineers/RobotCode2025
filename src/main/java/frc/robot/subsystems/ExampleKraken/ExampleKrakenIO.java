@@ -4,7 +4,7 @@ import org.littletonrobotics.junction.AutoLog;
 
 public interface ExampleKrakenIO {
     @AutoLog
-    public static class ExampleKrakenIOInputs {
+    public static class ExampleKrakenIOInputsAutoLogged {
         public double velocityRotationsPerSec = 0.0;
         public double appliedVoltage = 0.0;
         public double currentAmps = 0.0;
@@ -12,7 +12,7 @@ public interface ExampleKrakenIO {
     }
 
     /** Update the set of loggable inputs. */
-    public default void updateInputs(ExampleKrakenIOInputs inputs) {
+    public default void updateInputs(ExampleKrakenIOInputsAutoLogged inputs) {
     }
 
     /** Run open loop at the specified voltage. */

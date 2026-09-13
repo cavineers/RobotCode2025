@@ -31,16 +31,16 @@ public class Robot extends LoggedRobot {
 
         // Setup Advantage Kit Logging
         // Record metadata
-        Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
-        Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
-        Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
-        Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
-        Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
-        switch (BuildConstants.DIRTY) {
-            case 0 -> Logger.recordMetadata("GitDirty", "All changes committed");
-            case 1 -> Logger.recordMetadata("GitDirty", "Uncomitted changes");
-            default -> Logger.recordMetadata("GitDirty", "Unknown");
-        }
+        // Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+        // Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+        // Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+        // Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+        // Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+        // switch (BuildConstants.DIRTY) {
+        //     case 0 -> Logger.recordMetadata("GitDirty", "All changes committed");
+        //     case 1 -> Logger.recordMetadata("GitDirty", "Uncomitted changes");
+        //     default -> Logger.recordMetadata("GitDirty", "Unknown");
+        // }
 
         // Set up data receivers & replay source
         switch (Constants.currentMode) {

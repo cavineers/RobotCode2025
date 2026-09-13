@@ -20,8 +20,10 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 
 import static frc.robot.subsystems.Drivetrain.SwerveDriveConstants.DriveConstants.*;
+import frc.robot.subsystems.Drivetrain.ModuleIO.ModuleIOInputsAutoLogged;
 
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public class Module {
     private final ModuleIO io;
@@ -44,7 +46,7 @@ public class Module {
 
     public void periodic() {
         io.updateInputs(inputs);
-        Logger.processInputs("Drivetrain/Module" + Integer.toString(index), inputs);
+        Logger.processInputs("Drivetrain/Module" + Integer.toString(index), (LoggableInputs) inputs);
 
         // Calculate positions for odometry
         int sampleCount = inputs.odometryTimestamps.length; // All signals are sampled together

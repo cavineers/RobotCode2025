@@ -16,7 +16,7 @@ public class ExampleIOSim implements ExampleIO {
     private double appliedVolts = 0.0; // The applied voltage to the motor (can't be read from the motor this is set by us)
 
     @Override
-    public void updateInputs(ExampleIOInputs inputs) { // called from a periodic method
+    public void updateInputs(ExampleIOInputsAutoLogged inputs) { // called from a periodic method
         motor.setInputVoltage(appliedVolts);
         motor.update(0.02);
 

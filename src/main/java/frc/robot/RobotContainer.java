@@ -1,6 +1,5 @@
 package frc.robot;
 
-import static frc.robot.subsystems.Vision.VisionConstants.*;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -32,14 +31,11 @@ import frc.robot.subsystems.Elevator.ElevatorIOSim;
 import frc.robot.subsystems.Elevator.ElevatorIOSpark;
 import frc.robot.commands.SystemIdCommands;
 import frc.robot.commands.auto.*;
-import frc.robot.subsystems.Vision.*;
 
 public class RobotContainer {
 
     // Subsystems
     public final SwerveDriveSubsystem drivetrain;
-
-    public final Vision vision;
 
     public final EndEffector endEffector;
     public final Elevator elevator;
@@ -63,12 +59,6 @@ public class RobotContainer {
                         new ModuleIOSpark(1),
                         new ModuleIOSpark(2),
                         new ModuleIOSpark(3));
-
-                vision = new Vision(
-                    drivetrain::addVisionMeasurement,
-                    new VisionIOPhoton(rightCameraName, robotToRightCamera),
-                    new VisionIOPhoton(leftCameraName, robotToLeftCamera));
-
          
                 
                 endEffector = new EndEffector(new EndEffectorIOSpark());
@@ -84,11 +74,6 @@ public class RobotContainer {
                         new ModuleIOSim(),
                         new ModuleIOSim());
 
-                vision = new Vision(
-                    drivetrain::addVisionMeasurement);
-                    // new VisionIOPhotonSim(frontCameraName, robotToFrontCam, () -> drivetrain.getPose()));
-                    // new VisionIOPhotonSim(backCameraName, robotToBackCam, () -> drivetrain.getPose()));
-
                 endEffector = new EndEffector(new EndEffectorIOSim());
                 elevator = new Elevator(new ElevatorIOSim());
             
@@ -103,9 +88,6 @@ public class RobotContainer {
                         new ModuleIO() {},
                         new ModuleIO() {});
 
-
-
-                vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
                 endEffector = new EndEffector(new EndEffectorIO(){});
                 elevator = new Elevator(new ElevatorIO(){});
 
@@ -185,11 +167,11 @@ public class RobotContainer {
 
     public void configureNamedCommands(){
          // Register Named Commands
-        NamedCommands.registerCommand("elevatorL1", new AutoElevatorPreset(elevator, ElevatorConstants.kL1Rotations));
-        NamedCommands.registerCommand("elevatorL2", new AutoElevatorPreset(elevator, ElevatorConstants.kL2Rotations));
-        NamedCommands.registerCommand("elevatorL3", new AutoElevatorPreset(elevator, ElevatorConstants.kL3Rotations));
-        NamedCommands.registerCommand("elevatorL4", new AutoElevatorPreset(elevator, ElevatorConstants.kL4Rotations));
-        NamedCommands.registerCommand("elevatorRest", new AutoElevatorPreset(elevator, ElevatorConstants.kRestRotations));
+        // NamedCommands.registerCommand("elevatorL1", new AutoElevatorPreset(elevator, ElevatorConstants.kL1Rotations));
+        // NamedCommands.registerCommand("elevatorL2", new AutoElevatorPreset(elevator, ElevatorConstants.kL2Rotations));
+        // NamedCommands.registerCommand("elevatorL3", new AutoElevatorPreset(elevator, ElevatorConstants.kL3Rotations));
+        // NamedCommands.registerCommand("elevatorL4", new AutoElevatorPreset(elevator, ElevatorConstants.kL4Rotations));
+        // NamedCommands.registerCommand("elevatorRest", new AutoElevatorPreset(elevator, ElevatorConstants.kRestRotations));
         NamedCommands.registerCommand("shoot", new AutoShoot(endEffector));
         NamedCommands.registerCommand("intake", new AutoIntake(endEffector));
         NamedCommands.registerCommand("waitUntilFunnel", this.endEffector.getIsFunnelingCommand());
